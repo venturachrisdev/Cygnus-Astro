@@ -1,6 +1,9 @@
 import { Stack } from 'expo-router';
 
-import { Welcome } from '@/templates/Welcome';
+import { Capture } from '@/templates/Capture';
+import { Mount } from '@/templates/Mount';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import React from 'react';
 
 const Home = () => (
   <>
@@ -10,7 +13,9 @@ const Home = () => (
         headerShown: false,
       }}
     />
-    <Welcome />
+    <SafeAreaView edges={['left', 'right']} style={{ backgroundColor: '#171717' }}>
+      <Mount />
+    </SafeAreaView>
   </>
 );
 
