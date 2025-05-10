@@ -1,0 +1,361 @@
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
+import { LineChart } from 'react-native-gifted-charts';
+
+import {
+  framingSlew,
+  setFramingCoordinates,
+  setFramingSource,
+} from '@/actions/framing';
+import {
+  convertDMStoDegrees,
+  convertHMStoDegrees,
+  getAltitude,
+} from '@/actions/mount';
+import { getNGCTypeText, searchNGC } from '@/actions/ngc';
+import { setSequenceTarget } from '@/actions/sequence';
+import { initializeEventsSocket } from '@/actions/tppa';
+import { CircleButton } from '@/components/CircleButton';
+import { CustomButton } from '@/components/CustomButton';
+import { TextInputLabel } from '@/components/TextInputLabel';
+import { useCameraStore } from '@/stores/camera.store';
+import { useConfigStore } from '@/stores/config.store';
+import { useMountStore } from '@/stores/mount.store';
+import type { NGCObject } from '@/stores/ngc.store';
+import { useNGCStore } from '@/stores/ngc.store';
+import { useSequenceStore } from '@/stores/sequence.store';
+
+export const TargetSearch = () => {
+  const router = useRouter();
+  const configState = useConfigStore();
+  const ngcState = useNGCStore();
+  const mountState = useMountStore();
+  const cameraState = useCameraStore();
+  const sequenceState = useSequenceStore();
+
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [debounceID, setDebounceID] = useState<NodeJS.Timer>();
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [slewingTimeout, setSlewingTimeout] = useState<NodeJS.Timer>();
+  const [didPlatesolveFailed, setDidPlatesolveFailed] =
+    useState<boolean>(false);
+
+  const onValueChange = (value: string) => {
+    setSearchValue(value);
+
+    if (value.trim().length >= 3) {
+      if (debounceID) {
+        clearTimeout(debounceID);
+      }
+
+      const debounce = setTimeout(() => {
+        searchNGC(value);
+      }, 1000);
+
+      setDebounceID(debounce);
+    }
+  };
+
+  initializeEventsSocket((message) => {
+    if (message.Response.Event === 'ERROR-PLATESOLVE') {
+      setDidPlatesolveFailed(true);
+    }
+  });
+
+  useEffect(() => {
+    if (isModalVisible && !mountState.isSlewing && !cameraState.isExposing) {
+      if (slewingTimeout) {
+        clearTimeout(slewingTimeout);
+      }
+
+      const slewingT = setTimeout(() => {
+        setIsModalVisible(false);
+      }, 5000);
+
+      setSlewingTimeout(slewingT);
+    } else if (mountState.isSlewing || cameraState.isExposing) {
+      setDidPlatesolveFailed(false);
+    }
+  }, [mountState.isSlewing, cameraState.isExposing]);
+
+  useEffect(() => {
+    return () => {
+      if (slewingTimeout) {
+        clearTimeout(slewingTimeout);
+      }
+    };
+  });
+
+  const onGoto = async (center: boolean) => {
+    if (
+      ngcState.selectedObject &&
+      mountState.isConnected &&
+      cameraState.isConnected
+    ) {
+      const raInDegrees = convertHMStoDegrees(ngcState.selectedObject.ra, true);
+      const decInDegrees = convertDMStoDegrees(
+        ngcState.selectedObject.dec,
+        true,
+      );
+
+      await setFramingSource();
+      await setFramingCoordinates(raInDegrees, decInDegrees);
+      await framingSlew(center);
+      setIsModalVisible(true);
+    }
+  };
+
+  const onAddToSequence = async () => {
+    if (ngcState.selectedObject && sequenceState.sequence.length > 0) {
+      const name =
+        ngcState.selectedObject.names.split(',')[0] ||
+        ngcState.selectedObject.type;
+      const raInDegrees = convertHMStoDegrees(ngcState.selectedObject.ra, true);
+      const decInDegrees = convertDMStoDegrees(
+        ngcState.selectedObject.dec,
+        true,
+      );
+
+      await setSequenceTarget(name, raInDegrees, decInDegrees);
+      router.back();
+    }
+  };
+
+  const getAltitudePoints = (ngc: NGCObject) =>
+    [...Array(24).keys()].map((i: number) => {
+      const now = new Date().addHours(i);
+
+      const altitude = getAltitude({
+        decDeg: convertDMStoDegrees(ngc.dec, true),
+        latDeg: configState.config.astrometry.latitude,
+        raDeg: convertHMStoDegrees(ngc.ra, true),
+        date: now,
+        lonDeg: configState.config.astrometry.longitude,
+      });
+
+      return altitude.altDeg;
+    });
+
+  const spinValue = new Animated.Value(0);
+  Animated.loop(
+    Animated.timing(spinValue, {
+      toValue: 1,
+      duration: 1200,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }),
+  ).start();
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  return (
+    <>
+      <Modal
+        visible={
+          isModalVisible &&
+          (mountState.isSlewing ||
+            cameraState.isExposing ||
+            didPlatesolveFailed)
+        }
+        transparent
+        supportedOrientations={['landscape']}
+      >
+        <View className="absolute h-full w-full bg-black opacity-50" />
+        <View className="flex flex-1 items-center justify-center">
+          <View className="flex flex-row rounded-lg bg-neutral-900 p-5">
+            <View className="mr-10 flex gap-y-6">
+              {mountState.isSlewing && (
+                <View className="flex flex-row items-center">
+                  <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                    <Icon name="loading" size={16} color="white" />
+                  </Animated.View>
+                  <Text className="ml-3 text-xl text-white">
+                    Slewing to target...
+                  </Text>
+                </View>
+              )}
+              {cameraState.isExposing && (
+                <View className="flex flex-row items-center">
+                  <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                    <Icon name="loading" size={16} color="white" />
+                  </Animated.View>
+                  <Text className="ml-3 text-xl text-white">Exposing...</Text>
+                </View>
+              )}
+              {didPlatesolveFailed && (
+                <View className="flex flex-row items-center">
+                  <View>
+                    <Icon
+                      name="information-outline"
+                      size={18}
+                      color="#a71914"
+                    />
+                  </View>
+                  <Text className="ml-1 text-xl text-red-600">
+                    Platesolve failed. Retrying...
+                  </Text>
+                </View>
+              )}
+            </View>
+            <CircleButton
+              disabled={mountState.isSlewing || cameraState.isExposing}
+              onPress={() => setIsModalVisible(false)}
+              color="transparent"
+              icon="close"
+            />
+          </View>
+        </View>
+      </Modal>
+      <ScrollView
+        bounces={false}
+        className="flex h-full flex-1 bg-neutral-950 px-4"
+      >
+        <View className="flex w-full flex-row items-center">
+          <View className="w-12">
+            <CustomButton
+              onPress={() => router.back()}
+              color="transparent"
+              icon="arrow-left"
+              iconSize={24}
+            />
+          </View>
+          <Text className="ml-2 text-xl font-medium text-white">
+            Target Search
+          </Text>
+        </View>
+        <View className="mt-4 flex w-full flex-row items-center">
+          <TextInputLabel
+            value={searchValue}
+            placeholder="Search Object (e.g NGC4665)"
+            onChange={onValueChange}
+          />
+        </View>
+        <View className="mb-10 h-full">
+          {ngcState.results.length === 0 && searchValue.length > 0 && (
+            <Text className="mt-8 text-center text-lg font-medium text-neutral-700">
+              {`No results for '${searchValue}'`}
+            </Text>
+          )}
+          {ngcState.results.length === 0 && searchValue.length === 0 && (
+            <View className="flex flex-1 items-center justify-center opacity-10">
+              <Icon name="selection-search" size={140} color="gray" />
+            </View>
+          )}
+          {ngcState.results.map((ngc) => {
+            return (
+              <View key={ngc.id}>
+                <Pressable
+                  className={`my-1 flex rounded-lg px-3 pt-3 ${
+                    ngcState.selectedObject?.id === ngc.id ? 'bg-black' : ''
+                  }`}
+                  onPress={() => ngcState.set({ selectedObject: ngc })}
+                >
+                  <View className="flex flex-row justify-between">
+                    <View className="flex w-52 flex-row">
+                      <View className="mr-3 h-24 w-1 rounded-lg bg-neutral-900" />
+                      <View className="flex">
+                        <Text className="text-xl font-semibold text-white">
+                          {ngc.id}
+                        </Text>
+                        <Text className="text-sm font-medium text-neutral-300">
+                          {ngc.names.split(',')[0] || getNGCTypeText(ngc.type)}
+                        </Text>
+                        <Text className="mt-3 text-sm text-neutral-500">
+                          RA: {ngc.ra}
+                        </Text>
+                        <Text className="text-sm text-neutral-500">
+                          Dec: {ngc.dec}
+                        </Text>
+                      </View>
+                    </View>
+                    <View>
+                      <LineChart
+                        curved
+                        width={360}
+                        height={90}
+                        adjustToWidth
+                        maxValue={90}
+                        hideYAxisText
+                        hideAxesAndRules
+                        showVerticalLines
+                        noOfVerticalLines={1}
+                        verticalLinesSpacing={70}
+                        verticalLinesThickness={1}
+                        verticalLinesShift={125}
+                        verticalLinesStrokeDashArray={[6]}
+                        verticalLinesColor="#88ad75"
+                        yAxisThickness={0}
+                        showReferenceLine1
+                        stepValue={1}
+                        referenceLine1Position={-65}
+                        referenceLine1Config={{
+                          thickness: 1,
+                          width: 360,
+                          dashWidth: 5,
+                          dashGap: 0,
+                          color: 'gray',
+                        }}
+                        xAxisColor="white"
+                        yAxisColor="white"
+                        dataPointsRadius1={0}
+                        mostNegativeValue={0}
+                        color1="#e77"
+                        dataPointsColor1="white"
+                        data={getAltitudePoints(ngc).map((i) => ({ value: i }))}
+                      />
+                    </View>
+                  </View>
+                  <View />
+                </Pressable>
+                <View className="h-[0.5px] w-full bg-neutral-900" />
+              </View>
+            );
+          })}
+        </View>
+        <View className="h-8" />
+      </ScrollView>
+      {/* {ngcState.selectedObject &&
+        mountState.isConnected &&
+        cameraState.isConnected &&
+        !mountState.isSlewing &&
+        !cameraState.isExposing && ( */}
+      <View className="absolute bottom-0 flex w-full flex-row justify-end bg-black opacity-90">
+        <CircleButton
+          disabled={!ngcState.selectedObject}
+          onPress={() => onGoto(false)}
+          color="transparent"
+          icon="target"
+          label="Slew"
+        />
+        <CircleButton
+          disabled={!ngcState.selectedObject}
+          onPress={() => onGoto(true)}
+          color="transparent"
+          icon="target-variant"
+          label="Slew & Center"
+        />
+        <CircleButton
+          disabled={!ngcState.selectedObject || !sequenceState.sequence.length}
+          onPress={() => onAddToSequence()}
+          color="transparent"
+          icon="star-plus-outline"
+          label="Use as target"
+        />
+      </View>
+      {/* )} */}
+    </>
+  );
+};

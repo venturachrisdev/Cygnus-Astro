@@ -12,10 +12,20 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ioflat.app.cygnus"
+      "bundleIdentifier": "com.ioflat.app.cygnus",
+      "infoPlist": {
+        "NSExceptionDomains": {
+          "localhost": {
+            "NSExceptionAllowsInsecureHTTPLoads": true
+          }
+        },
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +38,17 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": ["@config-plugins/detox", "expo-router"]
+    "plugins": [
+      "@config-plugins/detox",
+      "expo-router"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1bb1164d-e250-4fe7-adc6-2442712af6ca"
+      }
+    }
   }
 }

@@ -1,0 +1,1946 @@
+[
+  {
+    "name":"Alpheratz",
+    "magnitude":2.06,
+    "ra":"00h 08m 23.3s",
+    "dec":"+29\u00b0 05\u2032 26\u2033"
+  },
+  {
+    "name":"Caph",
+    "magnitude":2.27,
+    "ra":"00h 09m 10.7s",
+    "dec":"+59\u00b0 08\u2032 59\u2033"
+  },
+  {
+    "name":"Algenib",
+    "magnitude":2.83,
+    "ra":"00h 13m 14.2s",
+    "dec":"+15\u00b0 11\u2032 01\u2033"
+  },
+  {
+    "name":"Deneb Kaitos Schemali",
+    "magnitude":3.56,
+    "ra":"00h 19m 25.7s",
+    "dec":"-08\u00b0 49\u2032 26\u2033"
+  },
+  {
+    "name":"Ankaa",
+    "magnitude":2.39,
+    "ra":"00h 26m 17.0s",
+    "dec":"-42\u00b0 18\u2032 22\u2033"
+  },
+  {
+    "name":"Schedar",
+    "magnitude":2.23,
+    "ra":"00h 40m 30.5s",
+    "dec":"+56\u00b0 32\u2032 14\u2033"
+  },
+  {
+    "name":"Diphda",
+    "magnitude":2.04,
+    "ra":"00h 43m 35.4s",
+    "dec":"-17\u00b0 59\u2032 12\u2033"
+  },
+  {
+    "name":"Achird",
+    "magnitude":3.44,
+    "ra":"00h 49m 06.0s",
+    "dec":"+57\u00b0 48\u2032 57\u2033"
+  },
+  {
+    "name":"Navi",
+    "magnitude":2.47,
+    "ra":"00h 56m 42.5s",
+    "dec":"+60\u00b0 43\u2032 00\u2033"
+  },
+  {
+    "name":"Marfak",
+    "magnitude":5.17,
+    "ra":"01h 08m 16.4s",
+    "dec":"+54\u00b0 55\u2032 13\u2033"
+  },
+  {
+    "name":"Dheneb",
+    "magnitude":3.45,
+    "ra":"01h 08m 35.4s",
+    "dec":"-10\u00b0 10\u2032 56\u2033"
+  },
+  {
+    "name":"Mirach",
+    "magnitude":2.06,
+    "ra":"01h 09m 43.9s",
+    "dec":"+35\u00b0 37\u2032 14\u2033"
+  },
+  {
+    "name":"Marfark",
+    "magnitude":4.33,
+    "ra":"01h 11m 06.2s",
+    "dec":"+55\u00b0 08\u2032 59\u2033"
+  },
+  {
+    "name":"Adhil",
+    "magnitude":4.88,
+    "ra":"01h 22m 20.4s",
+    "dec":"+45\u00b0 31\u2032 44\u2033"
+  },
+  {
+    "name":"Ruchbah",
+    "magnitude":2.68,
+    "ra":"01h 25m 49.0s",
+    "dec":"+60\u00b0 14\u2032 07\u2033"
+  },
+  {
+    "name":"Polaris",
+    "magnitude":2.02,
+    "ra":"02h 31m 48.7s",
+    "dec":"+89\u00b0 15\u2032 51\u2033"
+  },
+  {
+    "name":"Kullat Nunu",
+    "magnitude":3.62,
+    "ra":"01h 31m 29.0s",
+    "dec":"+15\u00b0 20\u2032 45\u2033"
+  },
+  {
+    "name":"Nembus",
+    "magnitude":3.57,
+    "ra":"01h 37m 59.6s",
+    "dec":"+48\u00b0 37\u2032 42\u2033"
+  },
+  {
+    "name":"Achernar",
+    "magnitude":0.46,
+    "ra":"01h 37m 42.9s",
+    "dec":"-57\u00b0 14\u2032 12\u2033"
+  },
+  {
+    "name":"Torcularis Septentrionalis",
+    "magnitude":4.26,
+    "ra":"01h 45m 23.6s",
+    "dec":"+09\u00b0 09\u2032 28\u2033"
+  },
+  {
+    "name":"Baten Kaitos",
+    "magnitude":3.73,
+    "ra":"01h 51m 27.6s",
+    "dec":"-10\u00b0 20\u2032 06\u2033"
+  },
+  {
+    "name":"Segin",
+    "magnitude":3.38,
+    "ra":"01h 54m 23.7s",
+    "dec":"+63\u00b0 40\u2032 12\u2033"
+  },
+  {
+    "name":"Mothallah",
+    "magnitude":3.41,
+    "ra":"01h 53m 04.9s",
+    "dec":"+29\u00b0 34\u2032 44\u2033"
+  },
+  {
+    "name":"Mesarthim",
+    "magnitude":4.83,
+    "ra":"01h 53m 31.8s",
+    "dec":"+19\u00b0 17\u2032 45\u2033"
+  },
+  {
+    "name":"Sheratan",
+    "magnitude":2.64,
+    "ra":"01h 54m 38.4s",
+    "dec":"+20\u00b0 48\u2032 29\u2033"
+  },
+  {
+    "name":"Head of Hydrus",
+    "magnitude":2.86,
+    "ra":"01h 58m 46.2s",
+    "dec":"-61\u00b0 34\u2032 11\u2033"
+  },
+  {
+    "name":"Alrescha",
+    "magnitude":5.23,
+    "ra":"02h 02m 02.8s",
+    "dec":"+02\u00b0 45\u2032 49\u2033"
+  },
+  {
+    "name":"Almach",
+    "magnitude":2.26,
+    "ra":"02h 03m 54.0s",
+    "dec":"+42\u00b0 19\u2032 47\u2033"
+  },
+  {
+    "name":"Hamal",
+    "magnitude":2.0,
+    "ra":"02h 07m 10.4s",
+    "dec":"+23\u00b0 27\u2032 45\u2033"
+  },
+  {
+    "name":"Mira",
+    "magnitude":3.04,
+    "ra":"02h 19m 20.7s",
+    "dec":"-02\u00b0 58\u2032 39\u2033"
+  },
+  {
+    "name":"Kaffaljidhma",
+    "magnitude":3.47,
+    "ra":"02h 43m 18.0s",
+    "dec":"+03\u00b0 14\u2032 09\u2033"
+  },
+  {
+    "name":"Miram",
+    "magnitude":3.76,
+    "ra":"02h 50m 41.8s",
+    "dec":"+55\u00b0 53\u2032 44\u2033"
+  },
+  {
+    "name":"Angetenar",
+    "magnitude":4.75,
+    "ra":"02h 51m 02.3s",
+    "dec":"-21\u00b0 00\u2032 15\u2033"
+  },
+  {
+    "name":"Azha",
+    "magnitude":3.89,
+    "ra":"02h 56m 25.7s",
+    "dec":"-08\u00b0 53\u2032 53\u2033"
+  },
+  {
+    "name":"Acamar",
+    "magnitude":3.24,
+    "ra":"02h 58m 15.7s",
+    "dec":"-40\u00b0 18\u2032 17\u2033"
+  },
+  {
+    "name":"Menkar",
+    "magnitude":2.53,
+    "ra":"03h 02m 16.8s",
+    "dec":"+04\u00b0 05\u2032 23\u2033"
+  },
+  {
+    "name":"Gorgonea Tertia",
+    "magnitude":3.39,
+    "ra":"03h 05m 10.6s",
+    "dec":"+38\u00b0 50\u2032 25\u2033"
+  },
+  {
+    "name":"Algol",
+    "magnitude":2.12,
+    "ra":"03h 08m 10.1s",
+    "dec":"+40\u00b0 57\u2032 20\u2033"
+  },
+  {
+    "name":"Misam",
+    "magnitude":3.8,
+    "ra":"03h 09m 29.8s",
+    "dec":"+44\u00b0 51\u2032 26\u2033"
+  },
+  {
+    "name":"Botein",
+    "magnitude":4.35,
+    "ra":"03h 11m 37.8s",
+    "dec":"+19\u00b0 43\u2032 36\u2033"
+  },
+  {
+    "name":"Fornacis",
+    "magnitude":3.87,
+    "ra":"03h 12m 04.3s",
+    "dec":"-28\u00b0 59\u2032 13\u2033"
+  },
+  {
+    "name":"Zibal",
+    "magnitude":4.8,
+    "ra":"03h 15m 50.0s",
+    "dec":"-08\u00b0 49\u2032 11\u2033"
+  },
+  {
+    "name":"Mirfak",
+    "magnitude":1.79,
+    "ra":"03h 24m 19.4s",
+    "dec":"+49\u00b0 51\u2032 40\u2033"
+  },
+  {
+    "name":"Ran",
+    "magnitude":3.73,
+    "ra":"03h 32m 55.8s",
+    "dec":"-09\u00b0 27\u2032 30\u2033"
+  },
+  {
+    "name":"Atik",
+    "magnitude":3.83,
+    "ra":"03h 44m 19.1s",
+    "dec":"+32\u00b0 17\u2032 18\u2033"
+  },
+  {
+    "name":"Rana",
+    "magnitude":3.54,
+    "ra":"03h 43m 14.9s",
+    "dec":"-09\u00b0 45\u2032 48\u2033"
+  },
+  {
+    "name":"Celaeno",
+    "magnitude":5.46,
+    "ra":"03h 44m 48.2s",
+    "dec":"+24\u00b0 17\u2032 22\u2033"
+  },
+  {
+    "name":"Electra",
+    "magnitude":3.7,
+    "ra":"03h 44m 52.5s",
+    "dec":"+24\u00b0 06\u2032 48\u2033"
+  },
+  {
+    "name":"Taygeta",
+    "magnitude":4.3,
+    "ra":"03h 45m 12.5s",
+    "dec":"+24\u00b0 28\u2032 02\u2033"
+  },
+  {
+    "name":"Maia",
+    "magnitude":3.87,
+    "ra":"03h 45m 49.6s",
+    "dec":"+24\u00b0 22\u2032 04\u2033"
+  },
+  {
+    "name":"Asterope",
+    "magnitude":5.76,
+    "ra":"03h 45m 54.4s",
+    "dec":"+24\u00b0 33\u2032 17\u2033"
+  },
+  {
+    "name":"Sterope",
+    "magnitude":6.43,
+    "ra":"03h 46m 02.9s",
+    "dec":"+24\u00b0 31\u2032 41\u2033"
+  },
+  {
+    "name":"Merope",
+    "magnitude":4.18,
+    "ra":"03h 46m 19.6s",
+    "dec":"+23\u00b0 56\u2032 54\u2033"
+  },
+  {
+    "name":"Alcyone",
+    "magnitude":2.87,
+    "ra":"03h 47m 29.1s",
+    "dec":"+24\u00b0 06\u2032 18\u2033"
+  },
+  {
+    "name":"Atlas",
+    "magnitude":3.63,
+    "ra":"03h 49m 09.7s",
+    "dec":"+24\u00b0 03\u2032 12\u2033"
+  },
+  {
+    "name":"Pleione",
+    "magnitude":5.09,
+    "ra":"03h 49m 11.2s",
+    "dec":"+24\u00b0 08\u2032 12\u2033"
+  },
+  {
+    "name":"Menkib",
+    "magnitude":4.04,
+    "ra":"03h 58m 57.9s",
+    "dec":"+35\u00b0 47\u2032 28\u2033"
+  },
+  {
+    "name":"Zaurak",
+    "magnitude":2.95,
+    "ra":"03h 58m 01.8s",
+    "dec":"-13\u00b0 30\u2032 31\u2033"
+  },
+  {
+    "name":"Beid",
+    "magnitude":4.04,
+    "ra":"04h 11m 51.9s",
+    "dec":"-06\u00b0 50\u2032 15\u2033"
+  },
+  {
+    "name":"Keid",
+    "magnitude":4.43,
+    "ra":"04h 15m 16.3s",
+    "dec":"-07\u00b0 39\u2032 10\u2033"
+  },
+  {
+    "name":"Hyadum I",
+    "magnitude":3.65,
+    "ra":"04h 19m 47.6s",
+    "dec":"+15\u00b0 37\u2032 39\u2033"
+  },
+  {
+    "name":"Hyadum II",
+    "magnitude":3.76,
+    "ra":"04h 22m 56.1s",
+    "dec":"+17\u00b0 32\u2032 33\u2033"
+  },
+  {
+    "name":"Ain",
+    "magnitude":3.53,
+    "ra":"04h 28m 37.0s",
+    "dec":"+19\u00b0 10\u2032 49\u2033"
+  },
+  {
+    "name":"Aldebaran",
+    "magnitude":0.85,
+    "ra":"04h 35m 55.2s",
+    "dec":"+16\u00b0 30\u2032 33\u2033"
+  },
+  {
+    "name":"Theemin",
+    "magnitude":3.82,
+    "ra":"04h 35m 33.0s",
+    "dec":"-30\u00b0 33\u2032 44\u2033"
+  },
+  {
+    "name":"Sceptrum",
+    "magnitude":3.87,
+    "ra":"04h 38m 10.8s",
+    "dec":"-14\u00b0 18\u2032 14\u2033"
+  },
+  {
+    "name":"Tabit",
+    "magnitude":3.19,
+    "ra":"04h 49m 50.4s",
+    "dec":"+06\u00b0 57\u2032 41\u2033"
+  },
+  {
+    "name":"Kabdhilinan",
+    "magnitude":2.69,
+    "ra":"04h 56m 59.6s",
+    "dec":"+33\u00b0 09\u2032 58\u2033"
+  },
+  {
+    "name":"Haldus",
+    "magnitude":2.99,
+    "ra":"05h 01m 58.1s",
+    "dec":"+43\u00b0 49\u2032 24\u2033"
+  },
+  {
+    "name":"Haedus",
+    "magnitude":3.75,
+    "ra":"05h 02m 28.7s",
+    "dec":"+41\u00b0 04\u2032 33\u2033"
+  },
+  {
+    "name":"Hoedus II",
+    "magnitude":3.17,
+    "ra":"05h 06m 30.9s",
+    "dec":"+41\u00b0 14\u2032 04\u2033"
+  },
+  {
+    "name":"Cursa",
+    "magnitude":2.79,
+    "ra":"05h 07m 51.0s",
+    "dec":"-05\u00b0 05\u2032 11\u2033"
+  },
+  {
+    "name":"Capella",
+    "magnitude":0.08,
+    "ra":"05h 16m 41.4s",
+    "dec":"+45\u00b0 59\u2032 53\u2033"
+  },
+  {
+    "name":"Rigel",
+    "magnitude":0.12,
+    "ra":"05h 14m 32.3s",
+    "dec":"-08\u00b0 12\u2032 06\u2033"
+  },
+  {
+    "name":"Bellatrix",
+    "magnitude":1.64,
+    "ra":"05h 25m 07.9s",
+    "dec":"+06\u00b0 20\u2032 59\u2033"
+  },
+  {
+    "name":"Elnath",
+    "magnitude":1.65,
+    "ra":"05h 26m 17.5s",
+    "dec":"+28\u00b0 36\u2032 27\u2033"
+  },
+  {
+    "name":"Nihal",
+    "magnitude":2.84,
+    "ra":"05h 28m 14.7s",
+    "dec":"-20\u00b0 45\u2032 34\u2033"
+  },
+  {
+    "name":"Mintaka",
+    "magnitude":6.85,
+    "ra":"05h 32m 00.5s",
+    "dec":"-00\u00b0 17\u2032 04\u2033"
+  },
+  {
+    "name":"Thabit",
+    "magnitude":4.62,
+    "ra":"05h 31m 55.8s",
+    "dec":"-07\u00b0 18\u2032 05\u2033"
+  },
+  {
+    "name":"Arneb",
+    "magnitude":2.58,
+    "ra":"05h 32m 43.8s",
+    "dec":"-17\u00b0 49\u2032 20\u2033"
+  },
+  {
+    "name":"Meissa",
+    "magnitude":3.54,
+    "ra":"05h 35m 08.3s",
+    "dec":"+09\u00b0 56\u2032 03\u2033"
+  },
+  {
+    "name":"Nair Al Saif",
+    "magnitude":2.77,
+    "ra":"05h 35m 26.0s",
+    "dec":"-05\u00b0 54\u2032 36\u2033"
+  },
+  {
+    "name":"Alnilam",
+    "magnitude":1.7,
+    "ra":"05h 36m 12.8s",
+    "dec":"-01\u00b0 12\u2032 07\u2033"
+  },
+  {
+    "name":"Tien Kwan",
+    "magnitude":3.0,
+    "ra":"05h 37m 38.7s",
+    "dec":"+21\u00b0 08\u2032 33\u2033"
+  },
+  {
+    "name":"Alnitak",
+    "magnitude":2.05,
+    "ra":"05h 40m 45.5s",
+    "dec":"-01\u00b0 56\u2032 34\u2033"
+  },
+  {
+    "name":"Phact",
+    "magnitude":2.64,
+    "ra":"05h 39m 38.9s",
+    "dec":"-34\u00b0 04\u2032 27\u2033"
+  },
+  {
+    "name":"Saiph",
+    "magnitude":2.06,
+    "ra":"05h 47m 45.4s",
+    "dec":"-09\u00b0 40\u2032 11\u2033"
+  },
+  {
+    "name":"Wazn",
+    "magnitude":3.12,
+    "ra":"05h 50m 57.6s",
+    "dec":"-35\u00b0 46\u2032 06\u2033"
+  },
+  {
+    "name":"Betelgeuse",
+    "magnitude":0.5,
+    "ra":"05h 55m 10.3s",
+    "dec":"+07\u00b0 24\u2032 25\u2033"
+  },
+  {
+    "name":"Menkalinan",
+    "magnitude":1.9,
+    "ra":"05h 59m 31.7s",
+    "dec":"+44\u00b0 56\u2032 51\u2033"
+  },
+  {
+    "name":"Mahasim",
+    "magnitude":2.62,
+    "ra":"05h 59m 43.3s",
+    "dec":"+37\u00b0 12\u2032 45\u2033"
+  },
+  {
+    "name":"Al Kurud",
+    "magnitude":5.02,
+    "ra":"06h 07m 31.6s",
+    "dec":"-37\u00b0 15\u2032 11\u2033"
+  },
+  {
+    "name":"Propus",
+    "magnitude":3.28,
+    "ra":"06h 14m 52.6s",
+    "dec":"+22\u00b0 30\u2032 24\u2033"
+  },
+  {
+    "name":"Furud",
+    "magnitude":3.02,
+    "ra":"06h 20m 18.8s",
+    "dec":"-30\u00b0 03\u2032 48\u2033"
+  },
+  {
+    "name":"Tejat Posterior",
+    "magnitude":2.88,
+    "ra":"06h 22m 57.6s",
+    "dec":"+22\u00b0 30\u2032 49\u2033"
+  },
+  {
+    "name":"Mirzam",
+    "magnitude":1.98,
+    "ra":"06h 22m 42.0s",
+    "dec":"-17\u00b0 57\u2032 21\u2033"
+  },
+  {
+    "name":"Canopus",
+    "magnitude":-0.72,
+    "ra":"06h 23m 57.1s",
+    "dec":"-52\u00b0 41\u2032 45\u2033"
+  },
+  {
+    "name":"Alhena",
+    "magnitude":1.93,
+    "ra":"06h 37m 42.7s",
+    "dec":"+16\u00b0 23\u2032 57\u2033"
+  },
+  {
+    "name":"Mebsuta",
+    "magnitude":2.98,
+    "ra":"06h 43m 55.9s",
+    "dec":"+25\u00b0 07\u2032 52\u2033"
+  },
+  {
+    "name":"Alzir",
+    "magnitude":3.36,
+    "ra":"06h 45m 17.4s",
+    "dec":"+12\u00b0 53\u2032 44\u2033"
+  },
+  {
+    "name":"Sirius",
+    "magnitude":-1.46,
+    "ra":"06h 45m 08.9s",
+    "dec":"-16\u00b0 42\u2032 58\u2033"
+  },
+  {
+    "name":"Adhara",
+    "magnitude":1.5,
+    "ra":"06h 58m 37.5s",
+    "dec":"-28\u00b0 58\u2032 20\u2033"
+  },
+  {
+    "name":"Mekbuda",
+    "magnitude":3.79,
+    "ra":"07h 04m 06.5s",
+    "dec":"+20\u00b0 34\u2032 13\u2033"
+  },
+  {
+    "name":"Muliphein",
+    "magnitude":4.12,
+    "ra":"07h 03m 45.5s",
+    "dec":"-15\u00b0 38\u2032 00\u2033"
+  },
+  {
+    "name":"Wezen",
+    "magnitude":1.84,
+    "ra":"07h 08m 23.5s",
+    "dec":"-26\u00b0 23\u2032 36\u2033"
+  },
+  {
+    "name":"Wasat",
+    "magnitude":3.53,
+    "ra":"07h 20m 07.4s",
+    "dec":"+21\u00b0 58\u2032 56\u2033"
+  },
+  {
+    "name":"Aludra",
+    "magnitude":2.45,
+    "ra":"07h 24m 05.7s",
+    "dec":"-29\u00b0 18\u2032 11\u2033"
+  },
+  {
+    "name":"Gomeisa",
+    "magnitude":2.9,
+    "ra":"07h 27m 09.0s",
+    "dec":"+08\u00b0 17\u2032 22\u2033"
+  },
+  {
+    "name":"Castor",
+    "magnitude":2.88,
+    "ra":"07h 34m 36.0s",
+    "dec":"+31\u00b0 53\u2032 19\u2033"
+  },
+  {
+    "name":"Procyon",
+    "magnitude":0.38,
+    "ra":"07h 39m 18.1s",
+    "dec":"+05\u00b0 13\u2032 30\u2033"
+  },
+  {
+    "name":"Markab",
+    "magnitude":4.5,
+    "ra":"07h 38m 49.3s",
+    "dec":"-26\u00b0 48\u2032 06\u2033"
+  },
+  {
+    "name":"Pollux",
+    "magnitude":1.14,
+    "ra":"07h 45m 18.9s",
+    "dec":"+28\u00b0 01\u2032 34\u2033"
+  },
+  {
+    "name":"Azmidiske",
+    "magnitude":3.34,
+    "ra":"07h 49m 17.7s",
+    "dec":"-24\u00b0 51\u2032 35\u2033"
+  },
+  {
+    "name":"Naos",
+    "magnitude":2.25,
+    "ra":"08h 03m 35.1s",
+    "dec":"-40\u00b0 00\u2032 12\u2033"
+  },
+  {
+    "name":"Tureis",
+    "magnitude":2.81,
+    "ra":"08h 07m 32.6s",
+    "dec":"-24\u00b0 18\u2032 15\u2033"
+  },
+  {
+    "name":"Tegmine",
+    "magnitude":5.63,
+    "ra":"08h 12m 12.7s",
+    "dec":"+17\u00b0 38\u2032 52\u2033"
+  },
+  {
+    "name":"Altarf",
+    "magnitude":3.52,
+    "ra":"08h 16m 30.9s",
+    "dec":"+09\u00b0 11\u2032 08\u2033"
+  },
+  {
+    "name":"Alsciaukat",
+    "magnitude":4.25,
+    "ra":"08h 22m 50.1s",
+    "dec":"+43\u00b0 11\u2032 17\u2033"
+  },
+  {
+    "name":"Avior",
+    "magnitude":1.86,
+    "ra":"08h 22m 30.8s",
+    "dec":"-59\u00b0 30\u2032 35\u2033"
+  },
+  {
+    "name":"Muscida",
+    "magnitude":3.36,
+    "ra":"08h 30m 15.9s",
+    "dec":"+60\u00b0 43\u2032 05\u2033"
+  },
+  {
+    "name":"Minchir",
+    "magnitude":4.44,
+    "ra":"08h 38m 45.4s",
+    "dec":"+03\u00b0 20\u2032 29\u2033"
+  },
+  {
+    "name":"Asellus Borealis",
+    "magnitude":4.66,
+    "ra":"08h 43m 17.1s",
+    "dec":"+21\u00b0 28\u2032 07\u2033"
+  },
+  {
+    "name":"Asellus Australis",
+    "magnitude":3.94,
+    "ra":"08h 44m 41.1s",
+    "dec":"+18\u00b0 09\u2032 15\u2033"
+  },
+  {
+    "name":"Hydrobius",
+    "magnitude":3.11,
+    "ra":"08h 55m 23.6s",
+    "dec":"+05\u00b0 56\u2032 44\u2033"
+  },
+  {
+    "name":"Talitha",
+    "magnitude":3.14,
+    "ra":"08h 59m 12.4s",
+    "dec":"+48\u00b0 02\u2032 30\u2033"
+  },
+  {
+    "name":"Acubens",
+    "magnitude":4.25,
+    "ra":"08h 58m 29.2s",
+    "dec":"+11\u00b0 51\u2032 28\u2033"
+  },
+  {
+    "name":"Talitha Australis",
+    "magnitude":3.6,
+    "ra":"09h 03m 37.5s",
+    "dec":"+47\u00b0 09\u2032 24\u2033"
+  },
+  {
+    "name":"Suhail",
+    "magnitude":2.21,
+    "ra":"09h 07m 59.8s",
+    "dec":"-43\u00b0 25\u2032 57\u2033"
+  },
+  {
+    "name":"Miaplacidus",
+    "magnitude":1.68,
+    "ra":"09h 13m 12.0s",
+    "dec":"-69\u00b0 43\u2032 02\u2033"
+  },
+  {
+    "name":"Aspidiske",
+    "magnitude":2.25,
+    "ra":"09h 17m 05.4s",
+    "dec":"-59\u00b0 16\u2032 31\u2033"
+  },
+  {
+    "name":"Al Minliar al Asad",
+    "magnitude":4.46,
+    "ra":"09h 24m 39.3s",
+    "dec":"+26\u00b0 10\u2032 56\u2033"
+  },
+  {
+    "name":"Alphard",
+    "magnitude":1.98,
+    "ra":"09h 27m 35.2s",
+    "dec":"-08\u00b0 39\u2032 31\u2033"
+  },
+  {
+    "name":"Alterf",
+    "magnitude":4.31,
+    "ra":"09h 31m 43.2s",
+    "dec":"+22\u00b0 58\u2032 05\u2033"
+  },
+  {
+    "name":"Sarir",
+    "magnitude":3.17,
+    "ra":"09h 32m 51.4s",
+    "dec":"+51\u00b0 40\u2032 38\u2033"
+  },
+  {
+    "name":"Subra",
+    "magnitude":3.52,
+    "ra":"09h 41m 09.0s",
+    "dec":"+09\u00b0 53\u2032 32\u2033"
+  },
+  {
+    "name":"Ras Elased Australis",
+    "magnitude":2.98,
+    "ra":"09h 45m 51.1s",
+    "dec":"+23\u00b0 46\u2032 27\u2033"
+  },
+  {
+    "name":"Rasalas",
+    "magnitude":3.88,
+    "ra":"09h 52m 45.8s",
+    "dec":"+26\u00b0 00\u2032 25\u2033"
+  },
+  {
+    "name":"Regulus",
+    "magnitude":1.35,
+    "ra":"10h 08m 22.3s",
+    "dec":"+11\u00b0 58\u2032 02\u2033"
+  },
+  {
+    "name":"Adhafera",
+    "magnitude":3.44,
+    "ra":"10h 16m 41.4s",
+    "dec":"+23\u00b0 25\u2032 02\u2033"
+  },
+  {
+    "name":"Tania Borealis",
+    "magnitude":3.45,
+    "ra":"10h 17m 05.8s",
+    "dec":"+42\u00b0 54\u2032 52\u2033"
+  },
+  {
+    "name":"Algieba",
+    "magnitude":2.61,
+    "ra":"10h 19m 58.3s",
+    "dec":"+19\u00b0 50\u2032 30\u2033"
+  },
+  {
+    "name":"Tania Australis",
+    "magnitude":3.05,
+    "ra":"10h 22m 19.7s",
+    "dec":"+41\u00b0 29\u2032 58\u2033"
+  },
+  {
+    "name":"Praecipua",
+    "magnitude":3.83,
+    "ra":"10h 53m 18.7s",
+    "dec":"+34\u00b0 12\u2032 54\u2033"
+  },
+  {
+    "name":"Chalawan",
+    "magnitude":5.05,
+    "ra":"10h 59m 28.0s",
+    "dec":"+40\u00b0 25\u2032 49\u2033"
+  },
+  {
+    "name":"Alkes",
+    "magnitude":4.08,
+    "ra":"10h 59m 46.5s",
+    "dec":"-18\u00b0 17\u2032 56\u2033"
+  },
+  {
+    "name":"Merak",
+    "magnitude":2.37,
+    "ra":"11h 01m 50.5s",
+    "dec":"+56\u00b0 22\u2032 57\u2033"
+  },
+  {
+    "name":"Dubhe",
+    "magnitude":1.79,
+    "ra":"11h 03m 43.7s",
+    "dec":"+61\u00b0 45\u2032 03\u2033"
+  },
+  {
+    "name":"Zosma",
+    "magnitude":2.56,
+    "ra":"11h 14m 06.5s",
+    "dec":"+20\u00b0 31\u2032 25\u2033"
+  },
+  {
+    "name":"Chertan",
+    "magnitude":3.34,
+    "ra":"11h 14m 14.4s",
+    "dec":"+15\u00b0 25\u2032 46\u2033"
+  },
+  {
+    "name":"Alula Australis",
+    "magnitude":4.87,
+    "ra":"11h 18m 10.9s",
+    "dec":"+31\u00b0 31\u2032 45\u2033"
+  },
+  {
+    "name":"Alula Borealis",
+    "magnitude":3.48,
+    "ra":"11h 18m 28.7s",
+    "dec":"+33\u00b0 05\u2032 39\u2033"
+  },
+  {
+    "name":"Gianfar",
+    "magnitude":3.84,
+    "ra":"11h 31m 24.2s",
+    "dec":"+69\u00b0 19\u2032 52\u2033"
+  },
+  {
+    "name":"Al Kaphrah",
+    "magnitude":3.71,
+    "ra":"11h 46m 03.0s",
+    "dec":"+47\u00b0 46\u2032 46\u2033"
+  },
+  {
+    "name":"Denebola",
+    "magnitude":2.14,
+    "ra":"11h 49m 03.6s",
+    "dec":"+14\u00b0 34\u2032 19\u2033"
+  },
+  {
+    "name":"Zavijava",
+    "magnitude":3.61,
+    "ra":"11h 50m 41.7s",
+    "dec":"+01\u00b0 45\u2032 53\u2033"
+  },
+  {
+    "name":"Phecda",
+    "magnitude":2.44,
+    "ra":"11h 53m 49.8s",
+    "dec":"+53\u00b0 41\u2032 41\u2033"
+  },
+  {
+    "name":"Tonatiuh",
+    "magnitude":5.8,
+    "ra":"12h 05m 15.1s",
+    "dec":"+76\u00b0 54\u2032 21\u2033"
+  },
+  {
+    "name":"Alchiba",
+    "magnitude":4.02,
+    "ra":"12h 08m 24.8s",
+    "dec":"-24\u00b0 43\u2032 44\u2033"
+  },
+  {
+    "name":"Minkar",
+    "magnitude":3.0,
+    "ra":"12h 10m 07.5s",
+    "dec":"-22\u00b0 37\u2032 11\u2033"
+  },
+  {
+    "name":"Megrez",
+    "magnitude":3.31,
+    "ra":"12h 15m 25.6s",
+    "dec":"+57\u00b0 01\u2032 57\u2033"
+  },
+  {
+    "name":"Gienah",
+    "magnitude":2.59,
+    "ra":"12h 15m 48.4s",
+    "dec":"-17\u00b0 32\u2032 31\u2033"
+  },
+  {
+    "name":"Zaniah",
+    "magnitude":3.89,
+    "ra":"12h 19m 54.4s",
+    "dec":"-00\u00b0 40\u2032 01\u2033"
+  },
+  {
+    "name":"Acrux",
+    "magnitude":1.33,
+    "ra":"12h 26m 35.9s",
+    "dec":"-63\u00b0 05\u2032 57\u2033"
+  },
+  {
+    "name":"Algorab",
+    "magnitude":2.95,
+    "ra":"12h 29m 51.9s",
+    "dec":"-16\u00b0 30\u2032 56\u2033"
+  },
+  {
+    "name":"Gacrux",
+    "magnitude":1.63,
+    "ra":"12h 31m 09.9s",
+    "dec":"-57\u00b0 06\u2032 48\u2033"
+  },
+  {
+    "name":"Chara",
+    "magnitude":4.26,
+    "ra":"12h 33m 44.5s",
+    "dec":"+41\u00b0 21\u2032 27\u2033"
+  },
+  {
+    "name":"Kraz",
+    "magnitude":2.65,
+    "ra":"12h 34m 23.2s",
+    "dec":"-23\u00b0 23\u2032 48\u2033"
+  },
+  {
+    "name":"Porrima",
+    "magnitude":3.65,
+    "ra":"12h 41m 39.6s",
+    "dec":"-01\u00b0 26\u2032 58\u2033"
+  },
+  {
+    "name":"Mimosa",
+    "magnitude":1.25,
+    "ra":"12h 47m 43.2s",
+    "dec":"-59\u00b0 41\u2032 19\u2033"
+  },
+  {
+    "name":"Alioth",
+    "magnitude":1.77,
+    "ra":"12h 54m 01.7s",
+    "dec":"+55\u00b0 57\u2032 35\u2033"
+  },
+  {
+    "name":"Auva",
+    "magnitude":3.38,
+    "ra":"12h 55m 36.2s",
+    "dec":"+03\u00b0 23\u2032 51\u2033"
+  },
+  {
+    "name":"Vindemiatrix",
+    "magnitude":2.83,
+    "ra":"13h 02m 10.6s",
+    "dec":"+10\u00b0 57\u2032 33\u2033"
+  },
+  {
+    "name":"Diadem",
+    "magnitude":5.22,
+    "ra":"13h 09m 59.3s",
+    "dec":"+17\u00b0 31\u2032 46\u2033"
+  },
+  {
+    "name":"Mizar",
+    "magnitude":3.95,
+    "ra":"13h 23m 56.4s",
+    "dec":"+54\u00b0 55\u2032 18\u2033"
+  },
+  {
+    "name":"Spica",
+    "magnitude":0.98,
+    "ra":"13h 25m 11.6s",
+    "dec":"-11\u00b0 09\u2032 41\u2033"
+  },
+  {
+    "name":"Alcor",
+    "magnitude":4.01,
+    "ra":"13h 25m 13.5s",
+    "dec":"+54\u00b0 59\u2032 17\u2033"
+  },
+  {
+    "name":"Heze",
+    "magnitude":3.37,
+    "ra":"13h 34m 41.6s",
+    "dec":"-00\u00b0 35\u2032 45\u2033"
+  },
+  {
+    "name":"Alkaid",
+    "magnitude":1.86,
+    "ra":"13h 47m 32.4s",
+    "dec":"+49\u00b0 18\u2032 48\u2033"
+  },
+  {
+    "name":"Muphrid",
+    "magnitude":2.68,
+    "ra":"13h 54m 41.1s",
+    "dec":"+18\u00b0 23\u2032 52\u2033"
+  },
+  {
+    "name":"Hadar",
+    "magnitude":0.61,
+    "ra":"14h 03m 49.4s",
+    "dec":"-60\u00b0 22\u2032 23\u2033"
+  },
+  {
+    "name":"Menkent",
+    "magnitude":2.06,
+    "ra":"14h 06m 41.0s",
+    "dec":"-36\u00b0 22\u2032 12\u2033"
+  },
+  {
+    "name":"Thuban",
+    "magnitude":3.65,
+    "ra":"14h 04m 23.3s",
+    "dec":"+64\u00b0 22\u2032 33\u2033"
+  },
+  {
+    "name":"Syrma",
+    "magnitude":4.08,
+    "ra":"14h 16m 00.9s",
+    "dec":"-06\u00b0 00\u2032 02\u2033"
+  },
+  {
+    "name":"Arcturus",
+    "magnitude":-0.04,
+    "ra":"14h 15m 39.7s",
+    "dec":"+19\u00b0 10\u2032 57\u2033"
+  },
+  {
+    "name":"Asellus Secundus",
+    "magnitude":4.75,
+    "ra":"14h 16m 09.9s",
+    "dec":"+51\u00b0 22\u2032 02\u2033"
+  },
+  {
+    "name":"Asellus Primus",
+    "magnitude":4.05,
+    "ra":"14h 25m 11.8s",
+    "dec":"+51\u00b0 51\u2032 03\u2033"
+  },
+  {
+    "name":"Seginus",
+    "magnitude":3.03,
+    "ra":"14h 32m 04.7s",
+    "dec":"+38\u00b0 18\u2032 30\u2033"
+  },
+  {
+    "name":"Rigil Kentaurus",
+    "magnitude":-0.01,
+    "ra":"14h 39m 35.9s",
+    "dec":"-60\u00b0 50\u2032 07\u2033"
+  },
+  {
+    "name":"Rijl al Awwa",
+    "magnitude":3.88,
+    "ra":"14h 43m 03.6s",
+    "dec":"-05\u00b0 39\u2032 30\u2033"
+  },
+  {
+    "name":"Izar",
+    "magnitude":5.12,
+    "ra":"14h 44m 59.2s",
+    "dec":"+27\u00b0 04\u2032 30\u2033"
+  },
+  {
+    "name":"Zubenelgenubi",
+    "magnitude":2.75,
+    "ra":"14h 50m 52.7s",
+    "dec":"-16\u00b0 02\u2032 30\u2033"
+  },
+  {
+    "name":"Merga",
+    "magnitude":5.74,
+    "ra":"14h 49m 18.7s",
+    "dec":"+46\u00b0 06\u2032 58\u2033"
+  },
+  {
+    "name":"Kochab",
+    "magnitude":2.08,
+    "ra":"14h 50m 42.3s",
+    "dec":"+74\u00b0 09\u2032 20\u2033"
+  },
+  {
+    "name":"Zuben-el-Akribi",
+    "magnitude":4.92,
+    "ra":"15h 00m 58.4s",
+    "dec":"-08\u00b0 31\u2032 08\u2033"
+  },
+  {
+    "name":"Nekkar",
+    "magnitude":3.5,
+    "ra":"15h 01m 56.8s",
+    "dec":"+40\u00b0 23\u2032 26\u2033"
+  },
+  {
+    "name":"Brachium",
+    "magnitude":3.29,
+    "ra":"15h 04m 04.2s",
+    "dec":"-25\u00b0 16\u2032 55\u2033"
+  },
+  {
+    "name":"Gatria",
+    "magnitude":2.89,
+    "ra":"15h 18m 54.6s",
+    "dec":"-68\u00b0 40\u2032 46\u2033"
+  },
+  {
+    "name":"Zubeneschamali",
+    "magnitude":2.61,
+    "ra":"15h 17m 00.4s",
+    "dec":"-09\u00b0 22\u2032 59\u2033"
+  },
+  {
+    "name":"Alkalurops",
+    "magnitude":4.31,
+    "ra":"15h 24m 29.4s",
+    "dec":"+37\u00b0 22\u2032 38\u2033"
+  },
+  {
+    "name":"Pherkad",
+    "magnitude":3.05,
+    "ra":"15h 20m 43.7s",
+    "dec":"+71\u00b0 50\u2032 02\u2033"
+  },
+  {
+    "name":"Edasich",
+    "magnitude":3.29,
+    "ra":"15h 24m 55.8s",
+    "dec":"+58\u00b0 57\u2032 58\u2033"
+  },
+  {
+    "name":"Nusakan",
+    "magnitude":3.68,
+    "ra":"15h 27m 49.7s",
+    "dec":"+29\u00b0 06\u2032 21\u2033"
+  },
+  {
+    "name":"Zuben-el-Akrab",
+    "magnitude":3.91,
+    "ra":"15h 35m 31.6s",
+    "dec":"-14\u00b0 47\u2032 22\u2033"
+  },
+  {
+    "name":"Alphecca",
+    "magnitude":2.23,
+    "ra":"15h 34m 41.3s",
+    "dec":"+26\u00b0 42\u2032 53\u2033"
+  },
+  {
+    "name":"Unukalhai",
+    "magnitude":2.65,
+    "ra":"15h 44m 16.1s",
+    "dec":"+06\u00b0 25\u2032 32\u2033"
+  },
+  {
+    "name":"Chow",
+    "magnitude":3.67,
+    "ra":"15h 46m 11.3s",
+    "dec":"+15\u00b0 25\u2032 19\u2033"
+  },
+  {
+    "name":"Betria",
+    "magnitude":2.85,
+    "ra":"15h 55m 08.5s",
+    "dec":"-63\u00b0 25\u2032 50\u2033"
+  },
+  {
+    "name":"Dschubba",
+    "magnitude":2.32,
+    "ra":"16h 00m 20.0s",
+    "dec":"-22\u00b0 37\u2032 18\u2033"
+  },
+  {
+    "name":"Graffias",
+    "magnitude":5.07,
+    "ra":"16h 04m 22.1s",
+    "dec":"-11\u00b0 22\u2032 23\u2033"
+  },
+  {
+    "name":"Acrab",
+    "magnitude":2.62,
+    "ra":"16h 05m 26.2s",
+    "dec":"-19\u00b0 48\u2032 20\u2033"
+  },
+  {
+    "name":"Marfik",
+    "magnitude":5.0,
+    "ra":"16h 08m 04.5s",
+    "dec":"+17\u00b0 02\u2032 49\u2033"
+  },
+  {
+    "name":"Jabbah",
+    "magnitude":6.3,
+    "ra":"16h 11m 58.6s",
+    "dec":"-19\u00b0 26\u2032 59\u2033"
+  },
+  {
+    "name":"Jabbah",
+    "magnitude":4.01,
+    "ra":"16h 11m 59.7s",
+    "dec":"-19\u00b0 27\u2032 38\u2033"
+  },
+  {
+    "name":"Yed Prior",
+    "magnitude":2.74,
+    "ra":"16h 14m 20.7s",
+    "dec":"-03\u00b0 41\u2032 40\u2033"
+  },
+  {
+    "name":"Yed Posterior",
+    "magnitude":3.24,
+    "ra":"16h 18m 19.3s",
+    "dec":"-04\u00b0 41\u2032 33\u2033"
+  },
+  {
+    "name":"Al Niyat",
+    "magnitude":2.89,
+    "ra":"16h 21m 11.3s",
+    "dec":"-25\u00b0 35\u2032 34\u2033"
+  },
+  {
+    "name":"Kajam",
+    "magnitude":4.57,
+    "ra":"16h 25m 25.0s",
+    "dec":"+14\u00b0 02\u2032 00\u2033"
+  },
+  {
+    "name":"Antares",
+    "magnitude":0.96,
+    "ra":"16h 29m 24.4s",
+    "dec":"-26\u00b0 25\u2032 55\u2033"
+  },
+  {
+    "name":"Kornephoros",
+    "magnitude":2.77,
+    "ra":"16h 30m 13.2s",
+    "dec":"+21\u00b0 29\u2032 23\u2033"
+  },
+  {
+    "name":"Marfik",
+    "magnitude":3.82,
+    "ra":"16h 30m 54.8s",
+    "dec":"+01\u00b0 59\u2032 02\u2033"
+  },
+  {
+    "name":"Alniyat",
+    "magnitude":2.82,
+    "ra":"16h 35m 53.0s",
+    "dec":"-28\u00b0 12\u2032 58\u2033"
+  },
+  {
+    "name":"Atria",
+    "magnitude":1.92,
+    "ra":"16h 48m 39.9s",
+    "dec":"-69\u00b0 01\u2032 40\u2033"
+  },
+  {
+    "name":"Arrakis",
+    "magnitude":5.83,
+    "ra":"17h 05m 19.8s",
+    "dec":"+54\u00b0 28\u2032 13\u2033"
+  },
+  {
+    "name":"Arrakis",
+    "magnitude":5.8,
+    "ra":"17h 05m 19.7s",
+    "dec":"+54\u00b0 28\u2032 13\u2033"
+  },
+  {
+    "name":"Sabik",
+    "magnitude":2.43,
+    "ra":"17h 10m 22.7s",
+    "dec":"-15\u00b0 43\u2032 29\u2033"
+  },
+  {
+    "name":"Aldhibain",
+    "magnitude":3.17,
+    "ra":"17h 08m 47.2s",
+    "dec":"+65\u00b0 42\u2032 53\u2033"
+  },
+  {
+    "name":"Rasalgethi",
+    "magnitude":3.48,
+    "ra":"17h 14m 38.9s",
+    "dec":"+14\u00b0 23\u2032 25\u2033"
+  },
+  {
+    "name":"Sarin",
+    "magnitude":3.14,
+    "ra":"17h 15m 01.9s",
+    "dec":"+24\u00b0 50\u2032 21\u2033"
+  },
+  {
+    "name":"Lesath",
+    "magnitude":2.69,
+    "ra":"17h 30m 45.8s",
+    "dec":"-37\u00b0 17\u2032 45\u2033"
+  },
+  {
+    "name":"Maasym",
+    "magnitude":4.41,
+    "ra":"17h 30m 44.3s",
+    "dec":"+26\u00b0 06\u2032 38\u2033"
+  },
+  {
+    "name":"Shaula",
+    "magnitude":1.63,
+    "ra":"17h 33m 36.5s",
+    "dec":"-37\u00b0 06\u2032 14\u2033"
+  },
+  {
+    "name":"Rastaban",
+    "magnitude":2.79,
+    "ra":"17h 30m 26.0s",
+    "dec":"+52\u00b0 18\u2032 05\u2033"
+  },
+  {
+    "name":"Sargas",
+    "magnitude":1.87,
+    "ra":"17h 37m 19.2s",
+    "dec":"-42\u00b0 59\u2032 52\u2033"
+  },
+  {
+    "name":"Kuma",
+    "magnitude":4.87,
+    "ra":"17h 32m 16.0s",
+    "dec":"+55\u00b0 10\u2032 23\u2033"
+  },
+  {
+    "name":"Rasalhague",
+    "magnitude":2.08,
+    "ra":"17h 34m 56.1s",
+    "dec":"+12\u00b0 33\u2032 36\u2033"
+  },
+  {
+    "name":"Girtab",
+    "magnitude":2.41,
+    "ra":"17h 42m 29.3s",
+    "dec":"-39\u00b0 01\u2032 48\u2033"
+  },
+  {
+    "name":"Cervantes",
+    "magnitude":5.15,
+    "ra":"17h 44m 08.7s",
+    "dec":"-51\u00b0 50\u2032 03\u2033"
+  },
+  {
+    "name":"Cebalrai",
+    "magnitude":2.77,
+    "ra":"17h 43m 28.4s",
+    "dec":"+04\u00b0 34\u2032 02\u2033"
+  },
+  {
+    "name":"Dsiban",
+    "magnitude":4.58,
+    "ra":"17h 41m 56.3s",
+    "dec":"+72\u00b0 08\u2032 56\u2033"
+  },
+  {
+    "name":"Grumium",
+    "magnitude":3.75,
+    "ra":"17h 53m 31.7s",
+    "dec":"+56\u00b0 52\u2032 22\u2033"
+  },
+  {
+    "name":"Sinistra",
+    "magnitude":3.34,
+    "ra":"17h 59m 01.6s",
+    "dec":"-09\u00b0 46\u2032 25\u2033"
+  },
+  {
+    "name":"Eltanin",
+    "magnitude":2.23,
+    "ra":"17h 56m 36.4s",
+    "dec":"+51\u00b0 29\u2032 20\u2033"
+  },
+  {
+    "name":"Alnasl",
+    "magnitude":2.99,
+    "ra":"18h 05m 48.5s",
+    "dec":"-30\u00b0 25\u2032 27\u2033"
+  },
+  {
+    "name":"Yildun",
+    "magnitude":4.36,
+    "ra":"17h 32m 12.9s",
+    "dec":"+86\u00b0 35\u2032 11\u2033"
+  },
+  {
+    "name":"Kaus Media",
+    "magnitude":2.7,
+    "ra":"18h 20m 59.7s",
+    "dec":"-29\u00b0 49\u2032 41\u2033"
+  },
+  {
+    "name":"Kaus Australis",
+    "magnitude":1.85,
+    "ra":"18h 24m 10.3s",
+    "dec":"-34\u00b0 23\u2032 05\u2033"
+  },
+  {
+    "name":"Alathfar",
+    "magnitude":5.12,
+    "ra":"18h 24m 13.8s",
+    "dec":"+39\u00b0 30\u2032 26\u2033"
+  },
+  {
+    "name":"Kaus Borealis",
+    "magnitude":2.81,
+    "ra":"18h 27m 58.2s",
+    "dec":"-25\u00b0 25\u2032 18\u2033"
+  },
+  {
+    "name":"Fafnir",
+    "magnitude":4.82,
+    "ra":"18h 25m 59.1s",
+    "dec":"+65\u00b0 33\u2032 49\u2033"
+  },
+  {
+    "name":"Vega",
+    "magnitude":0.03,
+    "ra":"18h 36m 56.3s",
+    "dec":"+38\u00b0 47\u2032 01\u2033"
+  },
+  {
+    "name":"Sheliak",
+    "magnitude":3.45,
+    "ra":"18h 50m 04.8s",
+    "dec":"+33\u00b0 21\u2032 46\u2033"
+  },
+  {
+    "name":"Nunki",
+    "magnitude":2.02,
+    "ra":"18h 55m 15.9s",
+    "dec":"-26\u00b0 17\u2032 48\u2033"
+  },
+  {
+    "name":"Alya",
+    "magnitude":4.62,
+    "ra":"18h 56m 13.2s",
+    "dec":"+04\u00b0 12\u2032 13\u2033"
+  },
+  {
+    "name":"Sulafat",
+    "magnitude":3.24,
+    "ra":"18h 58m 56.6s",
+    "dec":"+32\u00b0 41\u2032 22\u2033"
+  },
+  {
+    "name":"Ascella",
+    "magnitude":2.6,
+    "ra":"19h 02m 36.7s",
+    "dec":"-29\u00b0 52\u2032 49\u2033"
+  },
+  {
+    "name":"Polaris Australis",
+    "magnitude":5.47,
+    "ra":"21h 08m 46.2s",
+    "dec":"-88\u00b0 57\u2032 23\u2033"
+  },
+  {
+    "name":"Deneb el Okab",
+    "magnitude":2.99,
+    "ra":"19h 05m 24.6s",
+    "dec":"+13\u00b0 51\u2032 48\u2033"
+  },
+  {
+    "name":"Al Thalimain",
+    "magnitude":3.44,
+    "ra":"19h 06m 14.9s",
+    "dec":"-04\u00b0 52\u2032 57\u2033"
+  },
+  {
+    "name":"Alfecca Meridiana",
+    "magnitude":4.11,
+    "ra":"19h 09m 28.3s",
+    "dec":"-37\u00b0 54\u2032 16\u2033"
+  },
+  {
+    "name":"Albaldah",
+    "magnitude":2.89,
+    "ra":"19h 09m 45.8s",
+    "dec":"-21\u00b0 01\u2032 25\u2033"
+  },
+  {
+    "name":"Aladfar",
+    "magnitude":4.39,
+    "ra":"19h 13m 45.5s",
+    "dec":"+39\u00b0 08\u2032 46\u2033"
+  },
+  {
+    "name":"Altais",
+    "magnitude":3.07,
+    "ra":"19h 12m 33.3s",
+    "dec":"+67\u00b0 39\u2032 42\u2033"
+  },
+  {
+    "name":"Arkab Prior",
+    "magnitude":4.01,
+    "ra":"19h 22m 38.3s",
+    "dec":"-44\u00b0 27\u2032 32\u2033"
+  },
+  {
+    "name":"Arkab Posterior",
+    "magnitude":4.29,
+    "ra":"19h 23m 13.2s",
+    "dec":"-44\u00b0 47\u2032 59\u2033"
+  },
+  {
+    "name":"Rukbat",
+    "magnitude":3.97,
+    "ra":"19h 23m 53.2s",
+    "dec":"-40\u00b0 36\u2032 58\u2033"
+  },
+  {
+    "name":"Lucida Anseris",
+    "magnitude":4.44,
+    "ra":"19h 28m 42.3s",
+    "dec":"+24\u00b0 39\u2032 54\u2033"
+  },
+  {
+    "name":"Albireo",
+    "magnitude":3.08,
+    "ra":"19h 30m 43.3s",
+    "dec":"+27\u00b0 57\u2032 35\u2033"
+  },
+  {
+    "name":"Al Thalimain",
+    "magnitude":4.36,
+    "ra":"19h 36m 43.3s",
+    "dec":"-01\u00b0 17\u2032 11\u2033"
+  },
+  {
+    "name":"Alsafi",
+    "magnitude":4.68,
+    "ra":"19h 32m 21.6s",
+    "dec":"+69\u00b0 39\u2032 40\u2033"
+  },
+  {
+    "name":"Sham",
+    "magnitude":4.37,
+    "ra":"19h 40m 05.8s",
+    "dec":"+18\u00b0 00\u2032 50\u2033"
+  },
+  {
+    "name":"Tarazed",
+    "magnitude":2.72,
+    "ra":"19h 46m 15.6s",
+    "dec":"+10\u00b0 36\u2032 48\u2033"
+  },
+  {
+    "name":"Al Fawaris",
+    "magnitude":2.87,
+    "ra":"19h 44m 58.5s",
+    "dec":"+45\u00b0 07\u2032 51\u2033"
+  },
+  {
+    "name":"Altair",
+    "magnitude":0.77,
+    "ra":"19h 50m 47.0s",
+    "dec":"+08\u00b0 52\u2032 06\u2033"
+  },
+  {
+    "name":"Tyl",
+    "magnitude":3.83,
+    "ra":"19h 48m 10.4s",
+    "dec":"+70\u00b0 16\u2032 04\u2033"
+  },
+  {
+    "name":"Libertas",
+    "magnitude":4.71,
+    "ra":"19h 54m 14.9s",
+    "dec":"+08\u00b0 27\u2032 41\u2033"
+  },
+  {
+    "name":"Terebellum",
+    "magnitude":4.7,
+    "ra":"19h 55m 50.4s",
+    "dec":"-26\u00b0 17\u2032 58\u2033"
+  },
+  {
+    "name":"Alshain",
+    "magnitude":3.71,
+    "ra":"19h 55m 18.8s",
+    "dec":"+06\u00b0 24\u2032 24\u2033"
+  },
+  {
+    "name":"Al Giedi",
+    "magnitude":4.24,
+    "ra":"20h 17m 38.9s",
+    "dec":"-12\u00b0 30\u2032 30\u2033"
+  },
+  {
+    "name":"Algedi",
+    "magnitude":3.57,
+    "ra":"20h 18m 03.3s",
+    "dec":"-12\u00b0 32\u2032 41\u2033"
+  },
+  {
+    "name":"Alshat",
+    "magnitude":4.76,
+    "ra":"20h 20m 39.8s",
+    "dec":"-12\u00b0 45\u2032 33\u2033"
+  },
+  {
+    "name":"Dabih",
+    "magnitude":3.08,
+    "ra":"20h 21m 00.7s",
+    "dec":"-14\u00b0 46\u2032 53\u2033"
+  },
+  {
+    "name":"Peacock",
+    "magnitude":1.94,
+    "ra":"20h 25m 38.9s",
+    "dec":"-56\u00b0 44\u2032 06\u2033"
+  },
+  {
+    "name":"Sadr",
+    "magnitude":2.2,
+    "ra":"20h 22m 13.7s",
+    "dec":"+40\u00b0 15\u2032 24\u2033"
+  },
+  {
+    "name":"Okul",
+    "magnitude":5.25,
+    "ra":"20h 27m 19.2s",
+    "dec":"-18\u00b0 12\u2032 42\u2033"
+  },
+  {
+    "name":"Ruchba",
+    "magnitude":5.44,
+    "ra":"20h 31m 18.8s",
+    "dec":"+49\u00b0 13\u2032 13\u2033"
+  },
+  {
+    "name":"Deneb Dulfim",
+    "magnitude":4.03,
+    "ra":"20h 33m 12.8s",
+    "dec":"+11\u00b0 18\u2032 12\u2033"
+  },
+  {
+    "name":"Rotanev",
+    "magnitude":3.63,
+    "ra":"20h 37m 33.0s",
+    "dec":"+14\u00b0 35\u2032 43\u2033"
+  },
+  {
+    "name":"Sualocin",
+    "magnitude":3.77,
+    "ra":"20h 39m 38.3s",
+    "dec":"+15\u00b0 54\u2032 43\u2033"
+  },
+  {
+    "name":"Deneb",
+    "magnitude":1.25,
+    "ra":"20h 41m 25.9s",
+    "dec":"+45\u00b0 16\u2032 49\u2033"
+  },
+  {
+    "name":"Albali",
+    "magnitude":3.77,
+    "ra":"20h 47m 40.6s",
+    "dec":"-09\u00b0 29\u2032 45\u2033"
+  },
+  {
+    "name":"Musica",
+    "magnitude":5.48,
+    "ra":"20h 58m 25.9s",
+    "dec":"+10\u00b0 50\u2032 21\u2033"
+  },
+  {
+    "name":"Armus",
+    "magnitude":4.84,
+    "ra":"21h 04m 24.3s",
+    "dec":"-19\u00b0 51\u2032 18\u2033"
+  },
+  {
+    "name":"Kitalpha",
+    "magnitude":3.92,
+    "ra":"21h 15m 49.4s",
+    "dec":"+05\u00b0 14\u2032 52\u2033"
+  },
+  {
+    "name":"Alderamin",
+    "magnitude":2.44,
+    "ra":"21h 18m 34.8s",
+    "dec":"+62\u00b0 35\u2032 08\u2033"
+  },
+  {
+    "name":"Sadalsuud",
+    "magnitude":2.91,
+    "ra":"21h 31m 33.5s",
+    "dec":"-05\u00b0 34\u2032 16\u2033"
+  },
+  {
+    "name":"Alfirk",
+    "magnitude":3.23,
+    "ra":"21h 28m 39.6s",
+    "dec":"+70\u00b0 33\u2032 39\u2033"
+  },
+  {
+    "name":"Kastra",
+    "magnitude":4.68,
+    "ra":"21h 37m 04.8s",
+    "dec":"-19\u00b0 27\u2032 58\u2033"
+  },
+  {
+    "name":"Bunda",
+    "magnitude":4.69,
+    "ra":"21h 37m 45.1s",
+    "dec":"-07\u00b0 51\u2032 15\u2033"
+  },
+  {
+    "name":"Nashira",
+    "magnitude":3.68,
+    "ra":"21h 40m 05.5s",
+    "dec":"-16\u00b0 39\u2032 44\u2033"
+  },
+  {
+    "name":"Azelfafage",
+    "magnitude":4.67,
+    "ra":"21h 42m 05.7s",
+    "dec":"+51\u00b0 11\u2032 23\u2033"
+  },
+  {
+    "name":"Enif",
+    "magnitude":2.39,
+    "ra":"21h 44m 11.2s",
+    "dec":"+09\u00b0 52\u2032 30\u2033"
+  },
+  {
+    "name":"Garnet Star",
+    "magnitude":4.08,
+    "ra":"21h 43m 30.4s",
+    "dec":"+58\u00b0 46\u2032 48\u2033"
+  },
+  {
+    "name":"Deneb Algedi",
+    "magnitude":2.87,
+    "ra":"21h 47m 02.4s",
+    "dec":"-16\u00b0 07\u2032 38\u2033"
+  },
+  {
+    "name":"Aldhanab",
+    "magnitude":3.01,
+    "ra":"21h 53m 55.7s",
+    "dec":"-37\u00b0 21\u2032 54\u2033"
+  },
+  {
+    "name":"Sadalmelik",
+    "magnitude":2.96,
+    "ra":"22h 05m 47.0s",
+    "dec":"-00\u00b0 19\u2032 11\u2033"
+  },
+  {
+    "name":"Kurhah",
+    "magnitude":4.29,
+    "ra":"22h 03m 47.4s",
+    "dec":"+64\u00b0 37\u2032 40\u2033"
+  },
+  {
+    "name":"Alnair",
+    "magnitude":1.74,
+    "ra":"22h 08m 14.0s",
+    "dec":"-46\u00b0 57\u2032 40\u2033"
+  },
+  {
+    "name":"Biham",
+    "magnitude":3.53,
+    "ra":"22h 10m 12.0s",
+    "dec":"+06\u00b0 11\u2032 52\u2033"
+  },
+  {
+    "name":"Ancha",
+    "magnitude":4.16,
+    "ra":"22h 16m 50.0s",
+    "dec":"-07\u00b0 47\u2032 00\u2033"
+  },
+  {
+    "name":"Sadachbia",
+    "magnitude":3.84,
+    "ra":"22h 21m 39.4s",
+    "dec":"-01\u00b0 23\u2032 14\u2033"
+  },
+  {
+    "name":"Al Kalb al Rai",
+    "magnitude":5.5,
+    "ra":"22h 29m 52.9s",
+    "dec":"+78\u00b0 49\u2032 27\u2033"
+  },
+  {
+    "name":"Situla",
+    "magnitude":5.03,
+    "ra":"22h 37m 45.4s",
+    "dec":"-04\u00b0 13\u2032 41\u2033"
+  },
+  {
+    "name":"Homam",
+    "magnitude":3.4,
+    "ra":"22h 41m 27.7s",
+    "dec":"+10\u00b0 49\u2032 53\u2033"
+  },
+  {
+    "name":"Matar",
+    "magnitude":2.94,
+    "ra":"22h 43m 00.1s",
+    "dec":"+30\u00b0 13\u2032 17\u2033"
+  },
+  {
+    "name":"Sadalbari",
+    "magnitude":3.48,
+    "ra":"22h 50m 00.2s",
+    "dec":"+24\u00b0 36\u2032 06\u2033"
+  },
+  {
+    "name":"Skat",
+    "magnitude":3.27,
+    "ra":"22h 54m 39.0s",
+    "dec":"-15\u00b0 49\u2032 15\u2033"
+  },
+  {
+    "name":"Fomalhaut",
+    "magnitude":1.16,
+    "ra":"22h 57m 39.1s",
+    "dec":"-29\u00b0 37\u2032 20\u2033"
+  },
+  {
+    "name":"Helvetios",
+    "magnitude":5.49,
+    "ra":"22h 57m 27.9s",
+    "dec":"+20\u00b0 46\u2032 08\u2033"
+  },
+  {
+    "name":"Fum al Samakah",
+    "magnitude":4.53,
+    "ra":"23h 03m 52.6s",
+    "dec":"+03\u00b0 49\u2032 12\u2033"
+  },
+  {
+    "name":"Scheat",
+    "magnitude":2.42,
+    "ra":"23h 03m 46.5s",
+    "dec":"+28\u00b0 04\u2032 58\u2033"
+  },
+  {
+    "name":"Markab",
+    "magnitude":2.49,
+    "ra":"23h 04m 45.7s",
+    "dec":"+15\u00b0 12\u2032 19\u2033"
+  },
+  {
+    "name":"Salm",
+    "magnitude":4.6,
+    "ra":"23h 20m 38.2s",
+    "dec":"+23\u00b0 44\u2032 25\u2033"
+  },
+  {
+    "name":"Veritate",
+    "magnitude":5.22,
+    "ra":"23h 31m 17.4s",
+    "dec":"+39\u00b0 14\u2032 11\u2033"
+  },
+  {
+    "name":"Errai",
+    "magnitude":3.21,
+    "ra":"23h 39m 20.8s",
+    "dec":"+77\u00b0 37\u2032 57\u2033"
+  }
+]

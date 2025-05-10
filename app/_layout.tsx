@@ -6,5 +6,12 @@ NativeWindStyleSheet.setOutput({
 });
 
 export default function Layout() {
-  return <Stack />;
+  return (
+    <Stack
+      screenOptions={{
+        title: 'Cygnus',
+        headerShown: false,
+      }}
+    />
+  );
 }

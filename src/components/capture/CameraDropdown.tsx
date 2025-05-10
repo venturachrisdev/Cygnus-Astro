@@ -11,13 +11,24 @@ interface CameraDropDownItemProps {
 }
 
 export const CameraDropDown = ({ children }: CameraDropDownProps) => (
-  <ScrollView contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} className="absolute right-24 flex h-full w-24 py-6 bg-neutral-900 bg-opacity-50 flex-column">
+  <ScrollView
+    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+    className="absolute right-24 flex h-full w-24 bg-neutral-900 bg-opacity-50 py-6"
+  >
     {children}
   </ScrollView>
 );
 
-export const CameraDropDownItem = ({ onPress, label, isActive }: CameraDropDownItemProps) => (
+export const CameraDropDownItem = ({
+  onPress,
+  label,
+  isActive,
+}: CameraDropDownItemProps) => (
   <Pressable className="mb-4 p-2" onPress={onPress}>
-    <Text className={`${isActive ? "text-yellow-500" : "text-white"} font-bold`}>{label}</Text>
+    <Text
+      className={`${isActive ? 'text-yellow-500' : 'text-white'} font-bold`}
+    >
+      {label}
+    </Text>
   </Pressable>
 );

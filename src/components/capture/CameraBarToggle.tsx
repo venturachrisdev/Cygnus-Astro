@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 
 interface CameraBarToggleProps {
@@ -6,7 +6,7 @@ interface CameraBarToggleProps {
 }
 
 export const CameraBarToggle = ({ children }: CameraBarToggleProps) => (
-  <View className="bg-neutral-900 flex flex-row justify-end py-3 px-8">
+  <View className="flex flex-row items-center justify-between bg-neutral-900 px-8 py-3">
     {children}
   </View>
 );

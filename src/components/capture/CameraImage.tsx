@@ -1,23 +1,33 @@
-import { Text, ActivityIndicator, Image } from 'react-native';
+import type { ImageResizeMode } from 'react-native';
+import { ActivityIndicator, Image, Text } from 'react-native';
 
 interface CameraImageProps {
   image: string | null;
   isLoading: boolean;
   defaultText: string;
+  resizeMode?: ImageResizeMode;
+  children?: React.ReactNode;
 }
 
-export const CameraImage = ({ image, isLoading, defaultText }: CameraImageProps) => (
+export const CameraImage = ({
+  image,
+  isLoading,
+  defaultText,
+  children,
+  resizeMode = 'center',
+}: CameraImageProps) => (
   <>
     {image && (
-      <Image resizeMode="center" className="h-full w-full" source={{ uri: `data:image/jpeg;base64,${image}` }}></Image>
+      <Image
+        resizeMode={resizeMode}
+        className="h-full w-full"
+        source={{ uri: `data:image/jpeg;base64,${image}` }}
+      />
     )}
     {!image && !isLoading && (
-      <Text className='text-gray-800 font-bold text-3xl'>{defaultText}</Text>
+      <Text className="text-3xl font-bold text-gray-800">{defaultText}</Text>
     )}
-    {
-      isLoading && (
-        <ActivityIndicator size="large" className="absolute" />
-      )
-    }
+    {isLoading && <ActivityIndicator size="large" className="absolute" />}
+    {children}
   </>
 );

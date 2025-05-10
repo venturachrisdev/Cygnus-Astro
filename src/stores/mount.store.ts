@@ -1,9 +1,6 @@
 import { create } from 'zustand';
 
-export interface MountDevice {
-  id: string;
-  name: string;
-}
+import type { Device } from '@/actions/constants';
 
 interface MountStore {
   isConnected: boolean;
@@ -12,10 +9,19 @@ interface MountStore {
   isHome: boolean;
   isTracking: boolean;
   trackingMode: string | null;
-  currentDevice: MountDevice | null;
-  devices: MountDevice[];
-  setCurrentDevice: (device: MountDevice) => void;
-  setMount: (options: Partial<MountStore>) => void;
+  siderealTime: string;
+  latitude: number;
+  longitude: number;
+  elevation: number;
+  sideOfPier: string;
+  ra: string;
+  dec: string;
+  timeToMeridianFlip: number;
+  epoch: string;
+
+  currentDevice: Device | null;
+  devices: Device[];
+  set: (options: Partial<MountStore>) => void;
 }
 
 export const useMountStore = create<MountStore>((set) => ({
@@ -27,7 +33,15 @@ export const useMountStore = create<MountStore>((set) => ({
   trackingMode: null,
   devices: [],
   currentDevice: null,
+  siderealTime: '',
+  latitude: 0,
+  longitude: 0,
+  elevation: 0,
+  sideOfPier: '',
+  ra: '',
+  dec: '',
+  timeToMeridianFlip: 0,
+  epoch: '',
 
-  setCurrentDevice: (device) => set({ currentDevice: device }),
-  setMount: (options) => set({ ...options }),
+  set: (options) => set({ ...options }),
 }));

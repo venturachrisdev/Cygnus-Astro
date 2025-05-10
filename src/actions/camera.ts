@@ -1,20 +1,125 @@
+/* eslint-disable no-await-in-loop */
 import Axios from 'axios';
-import { API_CAMERA_ABORT, API_CAMERA_CAPTURE, API_CAMERA_INFO, API_URL, sleep } from './constants';
+
 import { useCameraStore } from '@/stores/camera.store';
+
+import {
+  API_CAMERA_ABORT,
+  API_CAMERA_CAPTURE,
+  API_CAMERA_CONNECT,
+  API_CAMERA_DISCONNECT,
+  API_CAMERA_INFO,
+  API_CAMERA_LIST,
+  API_CAMERA_RESCAN,
+  sleep,
+} from './constants';
+import { getApiUrl } from './hosts';
 
 export const getCameraInfo = async () => {
   const cameraState = useCameraStore.getState();
   try {
-    console.log("Getting camera info");
-    const response = (await Axios.get(`${API_URL}/${API_CAMERA_INFO}`)).data;
+    const response = (
+      await Axios.get(`${await getApiUrl()}/${API_CAMERA_INFO}`)
+    ).data;
     cameraState.set({
       temperature: response.Response.Temperature,
+      exposureEndTime: response.Response.ExposureEndTime,
       cooling: response.Response.CoolerOn,
       dewHeater: response.Response.DewHeaterOn,
       isConnected: response.Response.Connected,
+      gain: response.Response.Gain,
+      offset: response.Response.Offset,
+      pixelSize: response.Response.PixelSize,
+      isExposing: response.Response.IsExposing,
+      readoutModes: response.Response.ReadoutModes,
+      readoutMode: response.Response.ReadoutMode,
+      currentDevice: {
+        id: response.Response.DeviceId,
+        name: response.Response.DisplayName,
+      },
     });
 
+    if (cameraState.exposureEndTime) {
+      const now = new Date();
+      const endTime = new Date(cameraState.exposureEndTime);
+
+      if (endTime - now > 0) {
+        const countdown = Math.ceil((endTime - now) / 1000);
+        cameraState.set({ countdown });
+      } else {
+        cameraState.set({ countdown: -1 });
+      }
+    }
+
+    if (cameraState.customGain === null) {
+      cameraState.set({ customGain: response.Response.Gain });
+    }
+
+    if (cameraState.customOffset === null) {
+      cameraState.set({ customOffset: response.Response.Offset });
+    }
+
     return response.Response;
+  } catch (e) {
+    console.log('Error getting camera', e);
+  }
+};
+
+export const listCameraDevices = async () => {
+  const mountState = useCameraStore.getState();
+
+  try {
+    const response = (
+      await Axios.get(`${await getApiUrl()}/${API_CAMERA_LIST}`)
+    ).data;
+    const devices = response.Response.map((device: any) => ({
+      id: device.Id,
+      name: device.DisplayName,
+    }));
+
+    mountState.set({ devices });
+
+    return response.Response;
+  } catch (e) {
+    console.log('Error getting camera', e);
+  }
+};
+
+export const rescanCameraDevices = async () => {
+  const mountState = useCameraStore.getState();
+
+  try {
+    const response = (
+      await Axios.get(`${await getApiUrl()}/${API_CAMERA_RESCAN}`)
+    ).data;
+    const devices = response.Response.map((device: any) => ({
+      id: device.Id,
+      name: device.DisplayName,
+    }));
+
+    mountState.set({ devices });
+    await getCameraInfo();
+
+    return response.Response;
+  } catch (e) {
+    console.log('Error getting camera', e);
+  }
+};
+
+export const connectCamera = async (id: string) => {
+  try {
+    console.log('Connecting to', id);
+    await Axios.get(`${await getApiUrl()}/${API_CAMERA_CONNECT}?to=${id}`);
+    await getCameraInfo();
+  } catch (e) {
+    console.log('Error getting camera', e);
+  }
+};
+
+export const disconnectCamera = async () => {
+  try {
+    await Axios.get(`${await getApiUrl()}/${API_CAMERA_DISCONNECT}`);
+    await getCameraInfo();
   } catch (e) {
     console.log('Error getting camera', e);
   }
@@ -25,73 +130,127 @@ export const runCountdown = async () => {
 
   if (cameraState.duration >= 1) {
     for (let i = cameraState.duration; i >= 0; i -= 1) {
-      cameraState.set({ countdown: i });
       if (!cameraState.isCapturing) {
-        cameraState.set({ countdown: 0 });
         return;
       }
       await sleep(1000);
     }
   }
-}
+};
 
 export const getCapturedImage = async () => {
   try {
-    const response = (await (Axios.get(`${API_URL}/${API_CAMERA_CAPTURE}?getResult=true&quality=70&scale=0.5&resize=true&autoPrepare=true`))).data;
+    const response = (
+      await Axios.get(
+        `${await getApiUrl()}/${API_CAMERA_CAPTURE}?getResult=true&quality=70&scale=0.5&resize=true&autoPrepare=true`,
+      )
+    ).data;
     return response.Response;
   } catch (e) {
     console.log('Error getting image from camera', e);
   }
-}
+};
 
 export const abortCaptureImage = async () => {
   try {
     console.log('Aborting capture');
-    await Axios.get(`${API_URL}/${API_CAMERA_ABORT}`);
+    await Axios.get(`${await getApiUrl()}/${API_CAMERA_ABORT}`);
   } catch (e) {
     console.log('Error aborting capture', e);
   }
 };
 
-export const sendCapture = async (duration: number) => {
+export const sendCapture = async (duration: number, solve: boolean = false) => {
   try {
-    await Axios.get(`${API_URL}/${API_CAMERA_CAPTURE}?duration=${duration}&gain=0&solve=false`);
+    await Axios.get(
+      `${await getApiUrl()}/${API_CAMERA_CAPTURE}?duration=${duration}&gain=0&solve=${
+        solve ? 'true' : 'false'
+      }`,
+    );
   } catch (e) {
     console.log('Error sending capture', e);
   }
-}
+};
+
+export const getCapturedImageWithRetries = async () => {
+  const cameraState = useCameraStore.getState();
+
+  cameraState.set({ isLoading: true });
+  let response = await getCapturedImage();
+
+  let retries = 0;
+  while ((typeof response === 'string' || !response.Image) && retries < 10) {
+    console.log('Retrying capture');
+    response = await getCapturedImage();
+    retries += 1;
+    await sleep(250);
+  }
+
+  cameraState.set({ isLoading: false });
+  cameraState.set({ countdown: 0 });
+  cameraState.set({ image: response.Image });
+};
 
 export const captureImage = async () => {
-    const cameraState = useCameraStore.getState();
-    console.log('Capturing...');
-    useCameraStore.getState().set({ isCapturing: true });
+  const cameraState = useCameraStore.getState();
+  console.log('Capturing...');
+  useCameraStore.getState().set({ isCapturing: true });
 
-    try {
-      do {
-        console.log('Current Duration', cameraState.duration);
-        await sendCapture(cameraState.duration);
+  try {
+    do {
+      console.log(
+        'Current Duration',
+        cameraState.duration,
+        cameraState.platesolve,
+      );
+      await sendCapture(cameraState.duration, cameraState.platesolve);
 
-        await runCountdown();
+      await runCountdown();
 
-        if (useCameraStore.getState().isCapturing) {
-          cameraState.set({ isLoading: true });
-          let response = await getCapturedImage();
+      if (useCameraStore.getState().isCapturing) {
+        await getCapturedImageWithRetries();
+      }
+    } while (
+      useCameraStore.getState().loop &&
+      useCameraStore.getState().isCapturing
+    );
 
-          while (typeof response === "string" || !response.Image) {
-            console.log('Retrying capture');
-            response = await getCapturedImage();
-            await sleep(250);
-          }
-
-          cameraState.set({ isLoading: false });
-          cameraState.set({ countdown: 0 });
-          cameraState.set({ image: response.Image });
-        }
-      } while (useCameraStore.getState().loop && useCameraStore.getState().isCapturing);
-
-      cameraState.set({ isCapturing: false });
-
-    } catch (e) {
-      console.log('Error capturing image', e);
-    }
+    cameraState.set({ isCapturing: false });
+  } catch (e) {
+    console.log('Error capturing image', e);
+    cameraState.set({
+      isCapturing: false,
+      countdown: 0,
+      isLoading: false,
+    });
   }
+};
+
+export const coolCamera = async (
+  temperature: number,
+  cancel: boolean = false,
+) => {
+  try {
+    await Axios.get(
+      `${await getApiUrl()}/equipment/camera/cool?minutes=-1&temperature=${temperature}${
+        cancel ? '&cancel=true' : ''
+      }`,
+    );
+    await getCameraInfo();
+  } catch (e) {
+    console.log('Error getting camera', e);
+  }
+};
+
+export const warmCamera = async (cancel: boolean = false) => {
+  try {
+    await Axios.get(
+      `${await getApiUrl()}/equipment/camera/warm?minutes=-1${
+        cancel ? '&cancel=true' : ''
+      }`,
+    );
+    await getCameraInfo();
+  } catch (e) {
+    console.log('Error getting camera', e);
+  }
+};

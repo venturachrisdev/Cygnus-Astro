@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 interface CaptureButtonProps {
@@ -9,8 +9,17 @@ interface CaptureButtonProps {
   onCancel: () => void;
 }
 
-export const CaptureButton = ({ progressPercentage, isCapturing, disabled, onCancel, onCapture }: CaptureButtonProps) => (
-  <View className={`border-white rounded-full w-14 h-14 flex justify-center items-center`}>
+export const CaptureButton = ({
+  progressPercentage,
+  isCapturing,
+  disabled,
+  onCancel,
+  onCapture,
+}: CaptureButtonProps) => (
+  <View
+    className="flex h-14 w-14 items-center justify-center rounded-full border-white"
+    style={{ opacity: disabled ? 0.4 : 1.0 }}
+  >
     <AnimatedCircularProgress
       size={60}
       width={2}
@@ -18,16 +27,25 @@ export const CaptureButton = ({ progressPercentage, isCapturing, disabled, onCan
       delay={0}
       duration={250}
       tintColor="#008000"
-      backgroundColor={disabled ? "#808080" : "#ffffff"}>
+      backgroundColor={disabled ? '#808080' : '#ffffff'}
+    >
       {() => (
         <>
           {!isCapturing && (
-            <Pressable disabled={disabled} onPress={() => onCapture()} className={`${disabled ? "bg-gray-400" : "bg-white"} w-12 h-12 rounded-full flex justify-center items-center`}>
-            </Pressable>
+            <Pressable
+              disabled={disabled}
+              onPress={() => onCapture()}
+              className={`${
+                disabled ? 'bg-gray-400' : 'bg-white'
+              } flex h-12 w-12 items-center justify-center rounded-full`}
+            />
           )}
           {isCapturing && (
-            <Pressable disabled={disabled} onPress={() => onCancel()} className={`bg-white w-6 h-6 rounded-sm`}>
-            </Pressable>
+            <Pressable
+              disabled={disabled}
+              onPress={() => onCancel()}
+              className="h-6 w-6 rounded-sm bg-white"
+            />
           )}
         </>
       )}

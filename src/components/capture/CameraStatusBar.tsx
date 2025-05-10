@@ -1,25 +1,48 @@
-import { View, Text } from 'react-native';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import { Text, View } from 'react-native';
+
 import { StatusChip } from '../StatusChip';
 
 interface CameraStatusBarProps {
   cameraTemp: number;
   cameraCooling: boolean;
-  cameraDewHeater: boolean;
-  mountParked: boolean;
   mountTracking: boolean;
+  mountSlewing: boolean;
+  cameraConnected: boolean;
+  mountConnected: boolean;
 }
 
-export const CameraStatusBar = ({ cameraTemp, cameraCooling, cameraDewHeater, mountParked, mountTracking }: CameraStatusBarProps) => (
-  <View className="absolute bottom-5 left-5 flex flex-row opacity-60 items-center">
-    <View className="rounded-xl bg-neutral-900 py-1 px-4 h-8 flex justify-center items-center flex-row mr-4">
-      <Text className="text-white font-medium text-xs">{cameraTemp}</Text>
-      <Icon name="temperature-celsius" size={10} color="white" />
+export const CameraStatusBar = ({
+  cameraTemp,
+  cameraCooling,
+  mountTracking,
+  mountSlewing,
+  cameraConnected,
+  mountConnected,
+}: CameraStatusBarProps) => (
+  <View className="flex h-[30px] flex-row items-center">
+    <View
+      style={{ opacity: cameraConnected ? 1.0 : 0.4 }}
+      className="mr-4 flex flex-row items-center justify-center"
+    >
+      <Text className="text-xs font-medium text-gray-300">{cameraTemp}</Text>
+      <Icon name="temperature-celsius" size={10} color="gray" />
     </View>
-  
-    <StatusChip label="Cooling" isActive={cameraCooling}></StatusChip>
-    <StatusChip label="Dew Heater" isActive={cameraDewHeater}></StatusChip>
-    <StatusChip label="Parked" isActive={mountParked}></StatusChip>
-    <StatusChip label="Tracking" isActive={mountTracking}></StatusChip>
+
+    <StatusChip
+      isConnected={cameraConnected}
+      label="Cooling"
+      isActive={cameraCooling}
+    />
+    <StatusChip
+      isConnected={mountConnected}
+      label="Tracking"
+      isActive={mountTracking}
+    />
+    <StatusChip
+      isConnected={mountConnected}
+      label="Slewing"
+      isActive={mountSlewing}
+    />
   </View>
 );

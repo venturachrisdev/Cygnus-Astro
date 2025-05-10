@@ -1,59 +1,67 @@
-import { View, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { LabelSwitch } from '@/components/capture/LabelSwitch';
-import { CaptureButton } from '@/components/capture/CaptureButton';
-import { CameraControl } from '@/components/capture/CameraControl';
-import { CameraDropDown, CameraDropDownItem } from '@/components/capture/CameraDropdown';
-import { CameraStatusBar } from '@/components/capture/CameraStatusBar';
-import { CameraGuidingBar } from '@/components/capture/CameraGuidingBar';
-import { CameraFocuserControlBar } from '@/components/capture/CameraFocuserControlBar';
-import { CameraMountControlBar } from '@/components/capture/CameraMountControlBar';
-import { CameraImage } from '@/components/capture/CameraImage';
-import { CameraBarToggle } from '@/components/capture/CameraBarToggle';
-import { MenuItem } from '@/components/MenuItem';
-import { Layout } from './Layout';
-import { useCameraStore } from '@/stores/camera.store';
-import { abortCaptureImage, captureImage, getCameraInfo } from '@/actions/camera';
-import { getMountInfo } from '@/actions/mount';
-import { useMountStore } from '@/stores/mount.store';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Dimensions, Pressable, Text, View } from 'react-native';
+
+import {
+  abortCaptureImage,
+  captureImage,
+  getCameraInfo,
+} from '@/actions/camera';
 import { changeFilter, getFilterWheelInfo } from '@/actions/filterwheel';
+import {
+  getFocuserInfo,
+  moveFocuserDown,
+  moveFocuserUp,
+} from '@/actions/focuser';
+import { getGuiderInfo, getGuidingGraph } from '@/actions/guider';
+import { getCurrentProfile } from '@/actions/hosts';
+import {
+  getMountInfo,
+  initializeMountSocket,
+  sendMountEvent,
+} from '@/actions/mount';
+import {
+  getFullImageByIndex,
+  getImageHistory,
+  getSequenceState,
+} from '@/actions/sequence';
+import { CameraBarToggle } from '@/components/capture/CameraBarToggle';
+import { CameraControl } from '@/components/capture/CameraControl';
+import {
+  CameraDropDown,
+  CameraDropDownItem,
+} from '@/components/capture/CameraDropdown';
+import { CameraFocuserControlBar } from '@/components/capture/CameraFocuserControlBar';
+import { CameraGuidingBar } from '@/components/capture/CameraGuidingBar';
+import { CameraImage } from '@/components/capture/CameraImage';
+import { CameraMountControlBar } from '@/components/capture/CameraMountControlBar';
+import { CameraStatusBar } from '@/components/capture/CameraStatusBar';
+import { CaptureButton } from '@/components/capture/CaptureButton';
+import { LabelSwitch } from '@/components/capture/LabelSwitch';
+import { ZoomableCameraImage } from '@/components/capture/ZoomableCameraImage';
+import { MenuItem } from '@/components/MenuItem';
+import { useCameraStore } from '@/stores/camera.store';
+import { useConfigStore } from '@/stores/config.store';
 import { useFilterWheelStore } from '@/stores/filterwheel.store';
-import { getFocuserInfo, moveFocuserDown, moveFocuserUp } from '@/actions/focuser';
 import { useFocuserStore } from '@/stores/focuser.store';
+import { useGuiderStore } from '@/stores/guider.store';
+import { useMountStore } from '@/stores/mount.store';
+import { useSequenceStore } from '@/stores/sequence.store';
 
 const durations = [
-  0.0001,
-  0.001,
-  0.01,
-  0.05,
-  0.1,
-  0.5,
-  1,
-  2,
-  3,
-  4,
-  5,
-  10,
-  15,
-  20,
-  25,
-  30,
-  45,
-  60,
-  120,
-  180,
-  240,
-  300,
-  600,
-  900,
+  0.0001, 0.001, 0.01, 0.05, 0.1, 0.5, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 45,
+  60, 120, 180, 240, 300, 600, 900,
 ];
 
 const Capture = () => {
-
+  const configState = useConfigStore();
   const cameraState = useCameraStore();
   const mountState = useMountStore();
   const filterWheelState = useFilterWheelStore();
   const focuserState = useFocuserStore();
+  const guiderState = useGuiderStore();
+  const sequenceState = useSequenceStore();
+  const router = useRouter();
 
   const [showDurationView, setShowDurationView] = useState(false);
   const [showFilterView, setShowFilterView] = useState(false);
@@ -61,101 +69,253 @@ const Capture = () => {
   const [showGuiding, setShowGuiding] = useState(false);
   const [showMountControl, setShowMountControl] = useState(false);
   const [showFocuserControl, setShowFocuserControl] = useState(false);
-  const [showStatusBar, setShowStatusBar] = useState(true);
 
   const abortCapture = async () => {
     await abortCaptureImage();
     cameraState.set({ isCapturing: false });
-  }
+  };
 
   useEffect(() => {
+    initializeMountSocket(() => {});
     getCameraInfo();
     getFocuserInfo();
     getMountInfo();
     getFilterWheelInfo();
+    getImageHistory();
+
+    const interval = setInterval((_) => {
+      getCurrentProfile();
+      getFocuserInfo();
+      getMountInfo();
+      getFilterWheelInfo();
+      getGuidingGraph();
+      getGuiderInfo();
+      getSequenceState();
+      getImageHistory(false);
+    }, 1000);
+    const intervalCapture = setInterval((_) => {
+      getCameraInfo();
+    }, 500);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(intervalCapture);
+    };
   }, []);
-  
-  const currentFilterText = filterWheelState.availableFilters.find(f => f.id === filterWheelState.currentFilter)?.name;
+
+  useEffect(() => {
+    if (
+      sequenceState.images.length &&
+      (cameraState.image === null || sequenceState.isRunning)
+    ) {
+      const action = async () => {
+        const lastIndex = sequenceState.images.length - 1;
+        cameraState.set({ isLoading: true });
+        const fullImage = await getFullImageByIndex(lastIndex);
+        cameraState.set({ image: fullImage, isLoading: false });
+      };
+
+      action();
+    }
+  }, [sequenceState.images]);
+
+  // useEffect(() => {
+  //   if (cameraState.countdown === 1 && !cameraState.isCapturing) {
+  //     getCapturedImageWithRetries();
+  //   }
+  // }, [cameraState.countdown]);
+
+  const currentFilterText = filterWheelState.availableFilters.find(
+    (f) => f.id === filterWheelState.currentFilter,
+  )?.name;
 
   return (
-    <Layout>
-        <View className="bg-black h-full flex flex-1">
-
-          <CameraBarToggle>
-            <MenuItem direction="horizontal" size={24} icon="image-filter-center-focus-strong-outline" onPress={() => setShowFocuserControl(!showFocuserControl)} isActive={showFocuserControl} />
-            <MenuItem direction="horizontal" size={24} icon="telescope" onPress={() => setShowMountControl(!showMountControl)} isActive={showMountControl} />
-            <MenuItem direction="horizontal" size={24} icon="target" onPress={() => setShowGuiding(!showGuiding)} isActive={showGuiding} />
-            <MenuItem direction="horizontal" size={24} icon="information-outline" onPress={() => setShowStatusBar(!showStatusBar)} isActive={showStatusBar} />
-          </CameraBarToggle>
-
-          <View className="h-full w-full flex flex-1 justify-center items-center">
-            <CameraImage
-              image={cameraState.image}
-              defaultText="Cygnus"
-              isLoading={cameraState.isLoading}
+    <>
+      <View className="flex h-full flex-1 bg-black">
+        <CameraBarToggle>
+          <View className="flex flex-row">
+            <CameraStatusBar
+              cameraTemp={cameraState.temperature}
+              cameraCooling={cameraState.cooling}
+              mountTracking={mountState.isTracking}
+              mountSlewing={mountState.isSlewing}
+              cameraConnected={cameraState.isConnected}
+              mountConnected={mountState.isConnected}
             />
-
-            { showMountControl && (
-              <CameraMountControlBar />
-            )}
-
-            { showFocuserControl && (
-              <CameraFocuserControlBar
-                position={focuserState.position}
-                onMoveUp={moveFocuserUp}
-                onMoveDown={moveFocuserDown}
-              ></CameraFocuserControlBar>
-            )}
-
-            { showGuiding && (
-              <CameraGuidingBar />
-            )}
-
-            { showStatusBar && (
-              <CameraStatusBar
-                cameraTemp={cameraState.temperature}
-                cameraCooling={cameraState.cooling}
-                cameraDewHeater={cameraState.dewHeater}
-                mountParked={mountState.isParked}
-                mountTracking={mountState.isTracking}
-              />
-            )}
           </View>
-        </View>
 
-        {showDurationView && (
-          <CameraDropDown>
-            { durations.map((duration) => (
-              <CameraDropDownItem key={duration} label={`${duration}s`} onPress={() => { cameraState.set({ duration }) ; setShowDurationView(false) }} isActive={duration === cameraState.duration} />
-            ))}
-          </CameraDropDown>
-        )}
+          <View className="flex flex-row">
+            <MenuItem
+              disabled={!filterWheelState.isConnected}
+              direction="horizontal"
+              size={24}
+              icon="image-filter-center-focus-strong-outline"
+              onPress={() => setShowFocuserControl(!showFocuserControl)}
+              isActive={showFocuserControl}
+            />
+            <MenuItem
+              disabled={!mountState.isConnected}
+              direction="horizontal"
+              size={24}
+              icon="telescope"
+              onPress={() => setShowMountControl(!showMountControl)}
+              isActive={showMountControl}
+            />
+            <MenuItem
+              disabled={!guiderState.isConnected}
+              direction="horizontal"
+              size={24}
+              icon="target"
+              onPress={() => setShowGuiding(!showGuiding)}
+              isActive={showGuiding}
+            />
+          </View>
+        </CameraBarToggle>
 
-        {showFilterView && (
-          <CameraDropDown>
-            { filterWheelState.availableFilters.map((filter) => (
-              <CameraDropDownItem key={filter.id} label={filter.name} onPress={() => { changeFilter(filter.id); setShowFilterView(false) }} isActive={filter.id == filterWheelState.currentFilter} />
-            ))}
-          </CameraDropDown>
-        )}
-
-        <View className="bg-neutral-900 h-full w-24 flex flex-column items-center pt-5">
-          <CameraControl label={`${cameraState.duration}s`} onPress={() => setShowDurationView(!showDurationView)}></CameraControl>
-          <CameraControl label={currentFilterText || ''} onPress={() => setShowFilterView(!showFilterView)}></CameraControl>
-
-          <CaptureButton
-            progressPercentage={(cameraState.countdown / cameraState.duration) * 100}
-            isCapturing={cameraState.isCapturing}
-            disabled={cameraState.isLoading || !cameraState.canCapture}
-            onCancel={abortCapture}
-            onCapture={captureImage}
+        <View className="flex h-full w-full flex-1 items-center justify-center">
+          <ZoomableCameraImage
+            image={cameraState.image}
+            cropHeight={Dimensions.get('window').height - 75}
+            cropWidth={Dimensions.get('window').width - 300}
+            height={Dimensions.get('window').height - 75}
+            width={Dimensions.get('window').width - 300}
+            resizeMode="contain"
+            defaultText="Cygnus"
+            isLoading={cameraState.isLoading}
           />
 
-          <Text className="text-gray-100 text-center text-sm my-3">{cameraState.countdown > 0 ? `${cameraState.countdown}s` : ' '}</Text>
+          {showMountControl && (
+            <CameraMountControlBar
+              disabled={!mountState.isConnected || mountState.isParked}
+              absolute
+              showStop={false}
+              onMoveLeft={() =>
+                sendMountEvent({ direction: 'west', rate: 2.0 })
+              }
+              onMoveRight={() =>
+                sendMountEvent({ direction: 'east', rate: 2.0 })
+              }
+              onMoveUp={() => sendMountEvent({ direction: 'north', rate: 2.0 })}
+              onMoveDown={() =>
+                sendMountEvent({ direction: 'south', rate: 2.0 })
+              }
+              onMoveStop={() => {}}
+            />
+          )}
 
-          <LabelSwitch label="Loop" value={cameraState.loop} onChange={(value) => cameraState.set({ loop: value}) } />
+          {showFocuserControl && (
+            <CameraFocuserControlBar
+              position={focuserState.position}
+              onMoveUp={moveFocuserUp}
+              onMoveDown={moveFocuserDown}
+            />
+          )}
+
+          {showGuiding && (
+            <CameraGuidingBar
+              graph={guiderState.graph}
+              error={guiderState.error}
+            />
+          )}
         </View>
-    </Layout>
+      </View>
+
+      {showDurationView && (
+        <CameraDropDown>
+          {durations.map((duration) => (
+            <CameraDropDownItem
+              key={duration}
+              label={`${duration}s`}
+              onPress={() => {
+                cameraState.set({ duration });
+                setShowDurationView(false);
+              }}
+              isActive={duration === cameraState.duration}
+            />
+          ))}
+        </CameraDropDown>
+      )}
+
+      {showFilterView && filterWheelState.isConnected && (
+        <CameraDropDown>
+          {filterWheelState.availableFilters.map((filter) => (
+            <CameraDropDownItem
+              key={filter.id}
+              label={filter.name}
+              onPress={() => {
+                changeFilter(filter.id);
+                setShowFilterView(false);
+              }}
+              isActive={filter.id === filterWheelState.currentFilter}
+            />
+          ))}
+        </CameraDropDown>
+      )}
+
+      <View className="flex h-full w-24 items-center justify-center bg-neutral-900">
+        <CameraControl
+          label={`${cameraState.duration}s`}
+          onPress={() => setShowDurationView(!showDurationView)}
+        />
+        <CameraControl
+          label={currentFilterText || '...'}
+          onPress={() => setShowFilterView(!showFilterView)}
+        />
+
+        <CaptureButton
+          progressPercentage={
+            (cameraState.countdown /
+              (cameraState.isCapturing
+                ? cameraState.duration
+                : configState.config.snapshot.duration)) *
+            100
+          }
+          isCapturing={
+            cameraState.isCapturing ||
+            (cameraState.isExposing && !sequenceState.isRunning)
+          }
+          disabled={
+            !configState.isConnected ||
+            !cameraState.isConnected ||
+            cameraState.isLoading ||
+            !cameraState.canCapture ||
+            sequenceState.isRunning
+          }
+          onCancel={abortCapture}
+          onCapture={captureImage}
+        />
+
+        <Text className="my-3 text-center text-sm text-gray-100">
+          {cameraState.countdown > 0 ? `${cameraState.countdown}s` : ' '}
+        </Text>
+
+        {!sequenceState.isRunning && !sequenceState.images.length && (
+          <LabelSwitch
+            label="Loop"
+            disabled={!cameraState.isConnected}
+            value={cameraState.loop}
+            onChange={(value) => cameraState.set({ loop: value })}
+          />
+        )}
+
+        {sequenceState.images.length > 0 && (
+          <Pressable
+            disabled={sequenceState.isLoadingImages}
+            onPress={() => router.push('/image-history')}
+            className="mt-4 h-14 w-14 overflow-hidden rounded-lg border-2 border-neutral-600 bg-gray-900 p-[1px]"
+          >
+            <View className="flex h-full w-full flex-1 items-center justify-center">
+              <CameraImage
+                image={sequenceState.images[0]?.image || null}
+                resizeMode="center"
+                isLoading={sequenceState.isLoadingImages}
+                defaultText=""
+              />
+            </View>
+          </Pressable>
+        )}
+      </View>
+    </>
   );
 };
 
