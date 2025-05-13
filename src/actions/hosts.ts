@@ -6,13 +6,14 @@ import { useAlertsStore } from '@/stores/alerts.store';
 import type { ProfileConfig } from '@/stores/config.store';
 import {
   ApplicationTab,
+  ConnectionStatus,
   NINAConfigMap,
   useConfigStore,
 } from '@/stores/config.store';
 
 import type { Device } from './constants';
 
-export const scanHosts = async () => {
+export const scanHosts = async (autoConnect?: boolean) => {
   const configState = useConfigStore.getState();
   const alertState = useAlertsStore.getState();
 
@@ -24,38 +25,53 @@ export const scanHosts = async () => {
     threads: 150,
   };
 
-  LanPortScanner.startScan(
-    config,
-    (_totalHosts: number, _hostScanned: number) => {},
-    (_result) => {},
-    (results) => {
-      console.log('Hosts scanned', results.length);
-      const devices = results.map(
-        (host) =>
-          ({
-            id: host.ip,
-            name: `${host.ip}:${host.port}`,
-          }) as Device,
-      );
-      configState.set({ devices });
-      if (
-        !configState.isConnected &&
-        devices.length === 1 &&
-        configState.currentDevice?.id !== devices[0]?.id
-      ) {
-        configState.set({ currentDevice: devices[0] });
-      } else if (devices.length === 0) {
-        alertState.set({
-          message: 'No devices found!',
-          type: 'info',
-        });
-        configState.set({
-          isConnected: false,
-          currentDevice: null,
-        });
-      }
-    },
-  );
+  try {
+    LanPortScanner.startScan(
+      config,
+      (_totalHosts: number, _hostScanned: number) => {},
+      (_result) => {},
+      (results) => {
+        console.log('Hosts scanned', results.length);
+        const devices = results.map(
+          (host) =>
+            ({
+              id: host.ip,
+              name: `${host.ip}:${host.port}`,
+            }) as Device,
+        );
+        configState.set({ devices });
+        if (!configState.isConnected && devices.length === 1) {
+          configState.set({ currentDevice: devices[0] });
+          if (autoConnect) {
+            console.log('Autoconnecting...');
+            getApplicationVersion();
+          }
+        } else if (devices.length === 0) {
+          alertState.set({
+            message:
+              'No NINA instance found. Connect to the same network as your PC',
+            type: 'info',
+          });
+          configState.set({
+            isConnected: false,
+            currentDevice: null,
+            connectionStatus: ConnectionStatus.FAILED,
+          });
+        }
+      },
+    );
+  } catch (e) {
+    console.log('Error scanning hosts', e);
+    alertState.set({
+      message: 'No network available. Unable to auto-detect NINA instance',
+      type: 'error',
+    });
+    configState.set({
+      isConnected: false,
+      currentDevice: null,
+      connectionStatus: ConnectionStatus.FAILED,
+    });
+  }
 };
 
 export const getApiUrl = async (
@@ -204,6 +220,7 @@ export const getApplicationVersion = async () => {
       configState.set({
         isConnected: true,
         apiVersion: response.Response,
+        connectionStatus: ConnectionStatus.CONNECTED,
       });
 
       await getProfiles();

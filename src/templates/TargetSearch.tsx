@@ -327,35 +327,31 @@ export const TargetSearch = () => {
         </View>
         <View className="h-8" />
       </ScrollView>
-      {/* {ngcState.selectedObject &&
-        mountState.isConnected &&
-        cameraState.isConnected &&
-        !mountState.isSlewing &&
-        !cameraState.isExposing && ( */}
-      <View className="absolute bottom-0 flex w-full flex-row justify-end bg-black opacity-90">
-        <CircleButton
-          disabled={!ngcState.selectedObject}
-          onPress={() => onGoto(false)}
-          color="transparent"
-          icon="target"
-          label="Slew"
-        />
-        <CircleButton
-          disabled={!ngcState.selectedObject}
-          onPress={() => onGoto(true)}
-          color="transparent"
-          icon="target-variant"
-          label="Slew & Center"
-        />
-        <CircleButton
-          disabled={!ngcState.selectedObject || !sequenceState.sequence.length}
-          onPress={() => onAddToSequence()}
-          color="transparent"
-          icon="star-plus-outline"
-          label="Use as target"
-        />
-      </View>
-      {/* )} */}
+      {ngcState.selectedObject && (
+        <View className="absolute bottom-0 flex w-full flex-row justify-end bg-black opacity-90">
+          <CircleButton
+            disabled={!mountState.isConnected || mountState.isSlewing}
+            onPress={() => onGoto(false)}
+            color="transparent"
+            icon="target"
+            label="Slew"
+          />
+          <CircleButton
+            disabled={!mountState.isConnected || mountState.isSlewing}
+            onPress={() => onGoto(true)}
+            color="transparent"
+            icon="target-variant"
+            label="Slew & Center"
+          />
+          <CircleButton
+            disabled={!sequenceState.sequence.length}
+            onPress={() => onAddToSequence()}
+            color="transparent"
+            icon="star-plus-outline"
+            label="Set as target"
+          />
+        </View>
+      )}
     </>
   );
 };

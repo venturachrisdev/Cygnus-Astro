@@ -13,6 +13,12 @@ export const NINAConfigMap: Record<string, string> = {
   'telescope.name': 'TelescopeSettings-Name',
 };
 
+export enum ConnectionStatus {
+  IDLE = 0,
+  CONNECTED = 1,
+  FAILED = 2,
+}
+
 interface EventLog {
   message: string;
   time: string;
@@ -48,6 +54,7 @@ interface ConfigStore {
   isLoading: boolean;
   isConnected: boolean;
   apiVersion: string | null;
+  connectionStatus: ConnectionStatus;
 
   currentDevice: Device | null;
   devices: Device[];
@@ -88,6 +95,7 @@ export const useConfigStore = create<ConfigStore>()(
       profiles: [],
       currentProfile: null,
       logs: [],
+      connectionStatus: ConnectionStatus.IDLE,
 
       config: profileConfigInitialState,
       draftConfig: profileConfigInitialState,

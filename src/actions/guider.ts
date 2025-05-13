@@ -20,14 +20,19 @@ export const getGuiderInfo = async () => {
       await Axios.get(`${await getApiUrl()}/${API_GUIDER_INFO}`)
     ).data;
 
+    if (response.Response?.DeviceId) {
+      guiderState.set({
+        currentDevice: {
+          id: response.Response.DeviceId,
+          name: response.Response.DisplayName,
+        },
+      });
+    }
+
     guiderState.set({
       isConnected: response.Response.Connected,
       isGuiding: response.Response.State === 'Guiding',
       pixelScale: response.Response.PixelScale,
-      currentDevice: {
-        id: response.Response.DeviceId,
-        name: response.Response.DisplayName,
-      },
       error: {
         RA: {
           pixels: response.Response.RMSError.RA.Pixel,
@@ -94,7 +99,11 @@ export const rescanGuiderDevices = async () => {
 export const connectGuider = async (id: string) => {
   try {
     console.log('Connecting to', id);
-    await Axios.get(`${await getApiUrl()}/${API_GUIDER_CONNECT}?to=${id}`);
+    await Axios.get(`${await getApiUrl()}/${API_GUIDER_CONNECT}`, {
+      params: {
+        to: id,
+      },
+    });
     await getGuiderInfo();
   } catch (e) {
     console.log('Error getting guider', e);

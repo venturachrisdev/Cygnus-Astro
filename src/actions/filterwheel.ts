@@ -21,6 +21,16 @@ export const getFilterWheelInfo = async () => {
     const response = (
       await Axios.get(`${await getApiUrl()}/${API_FILTERWHEEL_INFO}`)
     ).data;
+
+    if (response.Response?.DeviceId) {
+      filterWheelState.set({
+        currentDevice: {
+          id: response.Response.DeviceId,
+          name: response.Response.DisplayName,
+        },
+      });
+    }
+
     filterWheelState.set({
       isConnected: response.Response.Connected,
       isMoving: response.Response.IsMoving,
@@ -31,10 +41,6 @@ export const getFilterWheelInfo = async () => {
           name: filter.Name,
         }),
       ),
-      currentDevice: {
-        id: response.Response.DeviceId,
-        name: response.Response.DisplayName,
-      },
     });
   } catch (e) {
     console.log('Error getting filter wheel', e);
@@ -103,7 +109,11 @@ export const rescanFilterWheelDevices = async () => {
 export const connectFilterWheel = async (id: string) => {
   try {
     console.log('Connecting to', id);
-    await Axios.get(`${await getApiUrl()}/${API_FILTERWHEEL_CONNECT}?to=${id}`);
+    await Axios.get(`${await getApiUrl()}/${API_FILTERWHEEL_CONNECT}`, {
+      params: {
+        to: id,
+      },
+    });
     await getFilterWheelInfo();
   } catch (e) {
     console.log('Error getting filter wheel', e);

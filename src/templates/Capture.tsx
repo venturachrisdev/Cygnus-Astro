@@ -6,6 +6,7 @@ import {
   abortCaptureImage,
   captureImage,
   getCameraInfo,
+  getCapturedImageWithRetries,
 } from '@/actions/camera';
 import { changeFilter, getFilterWheelInfo } from '@/actions/filterwheel';
 import {
@@ -119,11 +120,11 @@ const Capture = () => {
     }
   }, [sequenceState.images]);
 
-  // useEffect(() => {
-  //   if (cameraState.countdown === 1 && !cameraState.isCapturing) {
-  //     getCapturedImageWithRetries();
-  //   }
-  // }, [cameraState.countdown]);
+  useEffect(() => {
+    if (cameraState.countdown === 1) {
+      getCapturedImageWithRetries();
+    }
+  }, [cameraState.countdown]);
 
   const currentFilterText = filterWheelState.availableFilters.find(
     (f) => f.id === filterWheelState.currentFilter,
@@ -180,7 +181,6 @@ const Capture = () => {
             height={Dimensions.get('window').height - 75}
             width={Dimensions.get('window').width - 300}
             resizeMode="contain"
-            defaultText="Cygnus"
             isLoading={cameraState.isLoading}
           />
 
@@ -252,7 +252,10 @@ const Capture = () => {
         </CameraDropDown>
       )}
 
-      <View className="flex h-full w-24 items-center justify-center bg-neutral-900">
+      <View
+        className="flex h-full w-24 items-center justify-center bg-neutral-900"
+        style={{ zIndex: 99 }}
+      >
         <CameraControl
           label={`${cameraState.duration}s`}
           onPress={() => setShowDurationView(!showDurationView)}
@@ -279,7 +282,8 @@ const Capture = () => {
             !cameraState.isConnected ||
             cameraState.isLoading ||
             !cameraState.canCapture ||
-            sequenceState.isRunning
+            sequenceState.isRunning ||
+            filterWheelState.isMoving
           }
           onCancel={abortCapture}
           onCapture={captureImage}

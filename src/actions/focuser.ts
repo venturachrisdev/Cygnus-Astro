@@ -21,16 +21,21 @@ export const getFocuserInfo = async () => {
       await Axios.get(`${await getApiUrl()}/${API_FOCUSER_INFO}`)
     ).data;
 
+    if (response.Response?.DeviceId) {
+      focuserState.set({
+        currentDevice: {
+          id: response.Response.DeviceId,
+          name: response.Response.DisplayName,
+        },
+      });
+    }
+
     focuserState.set({
       isConnected: response.Response.Connected,
       isMoving: response.Response.IsMoving,
       temperature: response.Response.Temperature,
       position: response.Response.Position,
       stepSize: response.Response.StepSize || 100,
-      currentDevice: {
-        id: response.Response.DeviceId,
-        name: response.Response.DisplayName,
-      },
     });
 
     return response.Response;
@@ -130,7 +135,11 @@ export const rescanFocuserDevices = async () => {
 export const connectFocuser = async (id: string) => {
   try {
     console.log('Connecting to', id);
-    await Axios.get(`${await getApiUrl()}/${API_FOCUSER_CONNECT}?to=${id}`);
+    await Axios.get(`${await getApiUrl()}/${API_FOCUSER_CONNECT}`, {
+      params: {
+        to: id,
+      },
+    });
     await getFocuserInfo();
   } catch (e) {
     console.log('Error getting focuser', e);

@@ -34,7 +34,7 @@ export const CustomButton = ({
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
     >
-      {label && (
+      {!!label && (
         <Text
           className={`font-medium text-white ${
             textSize === 'large' ? 'text-lg' : 'text-sm'

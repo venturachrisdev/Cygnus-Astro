@@ -180,8 +180,8 @@ export const TPPA = () => {
               <Icon
                 name={
                   isErrorPositive(azimuthError || 0)
-                    ? 'arrow-right'
-                    : 'arrow-left'
+                    ? 'arrow-left'
+                    : 'arrow-right'
                 }
                 color={
                   isErrorInGoodRange(azimuthError || 0) ? '#0d730d' : '#a71914'

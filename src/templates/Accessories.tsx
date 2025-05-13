@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Switch, Text, View } from 'react-native';
 
 import type { Device } from '@/actions/constants';
 import {
@@ -11,15 +11,26 @@ import {
   rescanFilterWheelDevices,
 } from '@/actions/filterwheel';
 import { getCurrentProfile } from '@/actions/hosts';
+import {
+  connectSwitches,
+  disconnectSwitches,
+  getSwitchesInfo,
+  listSwitchesDevices,
+  rescanSwitchesDevices,
+  setSwitchValue,
+} from '@/actions/switches';
 import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
 import { DropDown } from '@/components/DropDown';
 import { StatusChip } from '@/components/StatusChip';
+import { TextInputLabel } from '@/components/TextInputLabel';
 import { useConfigStore } from '@/stores/config.store';
 import { useFilterWheelStore } from '@/stores/filterwheel.store';
+import { useSwitchesStore } from '@/stores/switches.stores';
 
 export const Accessories = () => {
   const filterWheelState = useFilterWheelStore();
+  const switchesState = useSwitchesStore();
   const configState = useConfigStore();
 
   const [showFilterDevicesList, setShowFilterDevicesList] = useState(false);
@@ -28,10 +39,20 @@ export const Accessories = () => {
     filterWheelState.currentFilter,
   );
 
+  const [showSwitchDevicesList, setShowSwitchesDevicesList] = useState(false);
+
   const connectToFilterWheel = () => {
     connectFilterWheel(
       filterWheelState.currentDevice?.id ||
         useFilterWheelStore.getState().currentDevice?.id ||
+        '',
+    );
+  };
+
+  const connectToSwitches = () => {
+    connectSwitches(
+      switchesState.currentDevice?.id ||
+        useSwitchesStore.getState().currentDevice?.id ||
         '',
     );
   };
@@ -43,11 +64,14 @@ export const Accessories = () => {
 
   useEffect(() => {
     listFilterWheelDevices();
+    listSwitchesDevices();
     getCurrentProfile();
     getFilterWheelInfo();
+    getSwitchesInfo();
 
     const interval = setInterval((_) => {
       getFilterWheelInfo();
+      getSwitchesInfo();
     }, 1000);
 
     return () => clearInterval(interval);
@@ -117,13 +141,74 @@ export const Accessories = () => {
               !configState.isConnected
             }
             onPress={() => {
-              if (selectedFilter) {
+              if (selectedFilter !== null) {
                 changeFilter(selectedFilter);
               }
             }}
             label="Change"
           />
         </View>
+      </View>
+
+      <View className="my-10 border-[0.5px] border-neutral-800" />
+
+      <Text className="mb-4 text-lg font-semibold text-white">Switch</Text>
+      <DeviceConnection
+        isAPIConnected={configState.isConnected}
+        onListExpand={() => setShowSwitchesDevicesList(!showSwitchDevicesList)}
+        currentDevice={switchesState.currentDevice}
+        isConnected={switchesState.isConnected}
+        devices={switchesState.devices}
+        isListExpanded={showSwitchDevicesList}
+        onConnect={() => connectToSwitches()}
+        onDisconnect={() => disconnectSwitches()}
+        onRescan={() => rescanSwitchesDevices()}
+        onDeviceSelected={(device) => {
+          setShowSwitchesDevicesList(false);
+          switchesState.set({ currentDevice: device });
+        }}
+      />
+
+      <View className="mt-10 flex flex-row items-center">
+        {switchesState.readSwitches?.map((sw) => (
+          <View className="mr-12">
+            <Text className="text-gray-300">{sw.name}</Text>
+            <Text className="text-3xl font-medium text-white">{sw.value}</Text>
+          </View>
+        ))}
+      </View>
+
+      <View className="mt-10 flex flex-row items-center">
+        {switchesState.writeSwitches?.map((sw, index) => (
+          <View className="mr-12">
+            <Text className="mb-4 text-gray-300">
+              {sw.name}{' '}
+              {sw.maxValue - sw.minValue !== 1
+                ? `(${sw.minValue} - ${sw.maxValue})`
+                : ''}
+            </Text>
+
+            {sw.maxValue - sw.minValue === 1 && (
+              <Switch
+                value={sw.value === sw.maxValue}
+                onChange={() =>
+                  setSwitchValue(
+                    index,
+                    sw.value === sw.maxValue ? sw.minValue : sw.maxValue,
+                  )
+                }
+              />
+            )}
+            {sw.maxValue - sw.minValue !== 1 && (
+              <TextInputLabel
+                disabled
+                placeholder=""
+                onChange={() => {}}
+                value={String(sw.value)}
+              />
+            )}
+          </View>
+        ))}
       </View>
 
       <View className="h-64" />

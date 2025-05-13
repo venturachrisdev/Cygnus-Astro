@@ -1,12 +1,13 @@
 import type React from 'react';
 import type { ImageResizeMode } from 'react-native';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, View } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
+
+const CaptureBackgroundImage = require('../../../assets/capture3.png');
 
 interface CameraImageProps {
   image: string | null;
   isLoading: boolean;
-  defaultText: string;
   resizeMode?: ImageResizeMode;
   children?: React.ReactNode;
   cropHeight?: number | null;
@@ -20,7 +21,6 @@ interface CameraImageProps {
 export const ZoomableCameraImage = ({
   image,
   isLoading,
-  defaultText,
   children,
   cropHeight = 345,
   cropWidth = 345,
@@ -28,13 +28,23 @@ export const ZoomableCameraImage = ({
   width,
   resizeMode = 'center',
 }: CameraImageProps) => (
-  <View className="flex items-center justify-center overflow-hidden">
+  <View className="flex h-full w-full items-center justify-center overflow-hidden">
+    {!image && !isLoading && (
+      <View>
+        <Image
+          className="opacity-70"
+          resizeMode="contain"
+          style={{ flex: 1 }}
+          source={CaptureBackgroundImage}
+        />
+      </View>
+    )}
     {!!image && (
       <ImageZoom
         cropWidth={cropWidth}
         cropHeight={cropHeight}
-        imageHeight={width}
-        imageWidth={height}
+        imageHeight={height}
+        imageWidth={width}
         minScale={1.0}
       >
         <Image
@@ -43,9 +53,6 @@ export const ZoomableCameraImage = ({
           source={{ uri: `data:image/jpeg;base64,${image}` }}
         />
       </ImageZoom>
-    )}
-    {!image && !isLoading && (
-      <Text className="text-3xl font-bold text-gray-800">{defaultText}</Text>
     )}
     {isLoading && <ActivityIndicator size="large" className="absolute" />}
     {children}

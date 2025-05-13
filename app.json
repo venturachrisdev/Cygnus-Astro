@@ -1,20 +1,18 @@
 {
   "expo": {
-    "name": "Cygnus",
+    "name": "Cygnus Astro",
     "slug": "cygnus",
     "version": "1.0.0",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "scheme": "myapp",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ioflat.app.cygnus",
@@ -38,10 +36,7 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": [
-      "@config-plugins/detox",
-      "expo-router"
-    ],
+    "plugins": ["@config-plugins/detox", "expo-router"],
     "extra": {
       "router": {
         "origin": false

@@ -21,6 +21,16 @@ export const getCameraInfo = async () => {
     const response = (
       await Axios.get(`${await getApiUrl()}/${API_CAMERA_INFO}`)
     ).data;
+
+    if (response.Response?.DeviceId) {
+      cameraState.set({
+        currentDevice: {
+          id: response.Response.DeviceId,
+          name: response.Response.DisplayName,
+        },
+      });
+    }
+
     cameraState.set({
       temperature: response.Response.Temperature,
       exposureEndTime: response.Response.ExposureEndTime,
@@ -33,10 +43,6 @@ export const getCameraInfo = async () => {
       isExposing: response.Response.IsExposing,
       readoutModes: response.Response.ReadoutModes,
       readoutMode: response.Response.ReadoutMode,
-      currentDevice: {
-        id: response.Response.DeviceId,
-        name: response.Response.DisplayName,
-      },
     });
 
     if (cameraState.exposureEndTime) {
@@ -109,7 +115,11 @@ export const rescanCameraDevices = async () => {
 export const connectCamera = async (id: string) => {
   try {
     console.log('Connecting to', id);
-    await Axios.get(`${await getApiUrl()}/${API_CAMERA_CONNECT}?to=${id}`);
+    await Axios.get(`${await getApiUrl()}/${API_CAMERA_CONNECT}`, {
+      params: {
+        to: id,
+      },
+    });
     await getCameraInfo();
   } catch (e) {
     console.log('Error getting camera', e);
@@ -186,9 +196,17 @@ export const getCapturedImageWithRetries = async () => {
     await sleep(250);
   }
 
-  cameraState.set({ isLoading: false });
-  cameraState.set({ countdown: 0 });
-  cameraState.set({ image: response.Image });
+  cameraState.set({
+    isLoading: false,
+    countdown: 0,
+    image: response.Image ?? null,
+  });
+
+  if (cameraState.isCapturing && cameraState.loop) {
+    captureImage();
+  } else {
+    cameraState.set({ isCapturing: false });
+  }
 };
 
 export const captureImage = async () => {
@@ -197,25 +215,25 @@ export const captureImage = async () => {
   useCameraStore.getState().set({ isCapturing: true });
 
   try {
-    do {
-      console.log(
-        'Current Duration',
-        cameraState.duration,
-        cameraState.platesolve,
-      );
-      await sendCapture(cameraState.duration, cameraState.platesolve);
-
-      await runCountdown();
-
-      if (useCameraStore.getState().isCapturing) {
-        await getCapturedImageWithRetries();
-      }
-    } while (
-      useCameraStore.getState().loop &&
-      useCameraStore.getState().isCapturing
+    // do {
+    console.log(
+      'Current Duration',
+      cameraState.duration,
+      cameraState.platesolve,
     );
+    await sendCapture(cameraState.duration, cameraState.platesolve);
 
-    cameraState.set({ isCapturing: false });
+    //   await runCountdown();
+
+    //   if (useCameraStore.getState().isCapturing) {
+    //     await getCapturedImageWithRetries();
+    //   }
+    // } while (
+    //   useCameraStore.getState().loop &&
+    //   useCameraStore.getState().isCapturing
+    // );
+
+    // cameraState.set({ isCapturing: false });
   } catch (e) {
     console.log('Error capturing image', e);
     cameraState.set({

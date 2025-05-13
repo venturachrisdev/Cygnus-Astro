@@ -34,23 +34,6 @@ export const getMountInfo = async () => {
 
     if (response.Response?.DeviceId) {
       mountState.set({
-        isParked: response.Response.AtPark,
-        isSlewing: response.Response.Slewing,
-        isConnected: response.Response.Connected,
-        isHome: response.Response.AtHome,
-        isTracking: response.Response.TrackingEnabled,
-        latitude: response.Response.SiteLatitude,
-        longitude: response.Response.SiteLongitude,
-        elevation: response.Response.SiteElevation,
-        sideOfPier: response.Response.SideOfPier.replace(/pier/g, ''),
-        ra: response.Response.Coordinates.RAString,
-        dec: response.Response.Coordinates.DecString,
-        timeToMeridianFlip: response.Response.TimeToMeridianFlipString,
-        epoch: response.Response.Coordinates.Epoch,
-        siderealTime: response.Response.SiderealTimeString,
-      });
-
-      mountState.set({
         currentDevice: {
           id: response.Response.DeviceId,
           name: response.Response.DisplayName,
@@ -58,6 +41,22 @@ export const getMountInfo = async () => {
       });
     }
 
+    mountState.set({
+      isParked: response.Response.AtPark,
+      isSlewing: response.Response.Slewing,
+      isConnected: response.Response.Connected,
+      isHome: response.Response.AtHome,
+      isTracking: response.Response.TrackingEnabled,
+      latitude: response.Response.SiteLatitude,
+      longitude: response.Response.SiteLongitude,
+      elevation: response.Response.SiteElevation,
+      sideOfPier: response.Response.SideOfPier.replace(/pier/g, ''),
+      ra: response.Response.Coordinates.RAString,
+      dec: response.Response.Coordinates.DecString,
+      timeToMeridianFlip: response.Response.TimeToMeridianFlipString,
+      epoch: response.Response.Coordinates.Epoch,
+      siderealTime: response.Response.SiderealTimeString,
+    });
     return response.Response;
   } catch (e) {
     console.log('Error getting mount', e);
@@ -107,7 +106,11 @@ export const rescanMountDevices = async () => {
 export const connectMount = async (id: string) => {
   try {
     console.log('Connecting to', id);
-    await Axios.get(`${await getApiUrl()}/${API_MOUNT_CONNECT}?to=${id}`);
+    await Axios.get(`${await getApiUrl()}/${API_MOUNT_CONNECT}`, {
+      params: {
+        to: id,
+      },
+    });
     await getMountInfo();
   } catch (e) {
     console.log('Error getting mount', e);
