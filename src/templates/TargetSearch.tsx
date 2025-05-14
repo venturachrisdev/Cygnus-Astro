@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
+import { abortCaptureImage, getCameraInfo } from '@/actions/camera';
 import {
   framingSlew,
   setFramingCoordinates,
@@ -21,6 +22,8 @@ import {
   convertDMStoDegrees,
   convertHMStoDegrees,
   getAltitude,
+  getMountInfo,
+  stopSlewMount,
 } from '@/actions/mount';
 import { getNGCTypeText, searchNGC } from '@/actions/ngc';
 import { setSequenceTarget } from '@/actions/sequence';
@@ -80,7 +83,7 @@ export const TargetSearch = () => {
 
       const slewingT = setTimeout(() => {
         setIsModalVisible(false);
-      }, 5000);
+      }, 10000);
 
       setSlewingTimeout(slewingT);
     } else if (mountState.isSlewing || cameraState.isExposing) {
@@ -89,7 +92,13 @@ export const TargetSearch = () => {
   }, [mountState.isSlewing, cameraState.isExposing]);
 
   useEffect(() => {
+    const interval = setInterval((_) => {
+      getMountInfo();
+      getCameraInfo();
+    }, 1000);
+
     return () => {
+      clearInterval(interval);
       if (slewingTimeout) {
         clearTimeout(slewingTimeout);
       }
@@ -166,8 +175,8 @@ export const TargetSearch = () => {
       <Modal
         visible={
           isModalVisible &&
-          (mountState.isSlewing ||
-            cameraState.isExposing ||
+          (cameraState.isExposing ||
+            mountState.isSlewing ||
             didPlatesolveFailed)
         }
         transparent
@@ -175,47 +184,62 @@ export const TargetSearch = () => {
       >
         <View className="absolute h-full w-full bg-black opacity-50" />
         <View className="flex flex-1 items-center justify-center">
-          <View className="flex flex-row rounded-lg bg-neutral-900 p-5">
-            <View className="mr-10 flex gap-y-6">
-              {mountState.isSlewing && (
-                <View className="flex flex-row items-center">
-                  <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                    <Icon name="loading" size={16} color="white" />
-                  </Animated.View>
-                  <Text className="ml-3 text-xl text-white">
-                    Slewing to target...
-                  </Text>
-                </View>
-              )}
-              {cameraState.isExposing && (
-                <View className="flex flex-row items-center">
-                  <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                    <Icon name="loading" size={16} color="white" />
-                  </Animated.View>
-                  <Text className="ml-3 text-xl text-white">Exposing...</Text>
-                </View>
-              )}
-              {didPlatesolveFailed && (
-                <View className="flex flex-row items-center">
-                  <View>
-                    <Icon
-                      name="information-outline"
-                      size={18}
-                      color="#a71914"
-                    />
+          <View className="flex w-96 rounded-lg bg-neutral-900 p-5">
+            <View className="flex flex-row">
+              <View className="mr-10 flex gap-y-6">
+                {mountState.isSlewing && (
+                  <View className="flex flex-row items-center">
+                    <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                      <Icon name="loading" size={16} color="white" />
+                    </Animated.View>
+                    <Text className="ml-3 text-xl text-white">
+                      Slewing to target...
+                    </Text>
                   </View>
-                  <Text className="ml-1 text-xl text-red-600">
-                    Platesolve failed. Retrying...
-                  </Text>
-                </View>
-              )}
+                )}
+                {cameraState.isExposing && (
+                  <View className="flex flex-row items-center">
+                    <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                      <Icon name="loading" size={16} color="white" />
+                    </Animated.View>
+                    <Text className="ml-3 text-xl text-white">Exposing...</Text>
+                  </View>
+                )}
+                {didPlatesolveFailed && (
+                  <View className="flex flex-row items-center">
+                    <View>
+                      <Icon
+                        name="information-outline"
+                        size={18}
+                        color="#a71914"
+                      />
+                    </View>
+                    <Text className="ml-1 text-xl text-red-600">
+                      Platesolve failed. Retrying...
+                    </Text>
+                  </View>
+                )}
+              </View>
             </View>
-            <CircleButton
-              disabled={mountState.isSlewing || cameraState.isExposing}
-              onPress={() => setIsModalVisible(false)}
-              color="transparent"
-              icon="close"
-            />
+            <View className="mt-10 flex w-full flex-row">
+              <View className="mr-2 h-12 flex-1">
+                <CustomButton
+                  label="Stop"
+                  color="red"
+                  onPress={() => {
+                    stopSlewMount();
+                    abortCaptureImage();
+                  }}
+                />
+              </View>
+              <View className="h-12 flex-1">
+                <CustomButton
+                  label="Close"
+                  color="transparent"
+                  onPress={() => setIsModalVisible(false)}
+                />
+              </View>
+            </View>
           </View>
         </View>
       </Modal>

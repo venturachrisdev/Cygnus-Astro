@@ -57,12 +57,6 @@ export const Focuser = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (focuserState.lastAutoFocusRun?.date) {
-      focuserState.set({ isAutofocusing: false });
-    }
-  }, [focuserState.lastAutoFocusRun?.date]);
-
   const FocusErrorLine = (props: { height?: number }) => (
     <View
       style={{ height: props.height || 20 }}
@@ -205,7 +199,7 @@ export const Focuser = () => {
         </View>
       </View>
 
-      <View className="my-8">
+      <View className="my-8 h-12">
         {!focuserState.isAutofocusing && (
           <CustomButton
             disabled={

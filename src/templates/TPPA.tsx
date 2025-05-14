@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { Animated, Easing, ScrollView, Text, View } from 'react-native';
 
 import { getCameraInfo } from '@/actions/camera';
-import { convertDegreesToDMS, getMountInfo } from '@/actions/mount';
+import {
+  convertDegreesToDMS,
+  getMountInfo,
+  stopSlewMount,
+} from '@/actions/mount';
 import {
   initializeEventsSocket,
   initializeTPPASocket,
@@ -278,7 +282,10 @@ export const TPPA = () => {
         {isRunning && (
           <CircleButton
             disabled={!allComponentsConnected}
-            onPress={() => stopTPPAAlignment()}
+            onPress={() => {
+              stopTPPAAlignment();
+              stopSlewMount();
+            }}
             color="red"
             icon="stop"
           />

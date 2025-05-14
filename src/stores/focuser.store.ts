@@ -1,4 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { Device } from '@/actions/constants';
 
@@ -40,16 +42,28 @@ interface FocuserStore {
   set: (options: Partial<FocuserStore>) => void;
 }
 
-export const useFocuserStore = create<FocuserStore>((set) => ({
-  isConnected: false,
-  isMoving: false,
-  position: 0,
-  stepSize: 0,
-  temperature: 0,
-  currentDevice: null,
-  devices: [],
-  isAutofocusing: false,
-  lastAutoFocusRun: null,
+export const useFocuserStore = create<FocuserStore>()(
+  persist(
+    (set) => ({
+      isConnected: false,
+      isMoving: false,
+      position: 0,
+      stepSize: 0,
+      temperature: 0,
+      currentDevice: null,
+      devices: [],
+      isAutofocusing: false,
+      lastAutoFocusRun: null,
 
-  set: (options) => set({ ...options }),
-}));
+      set: (options) => set({ ...options }),
+    }),
+    {
+      name: 'Cygnus__Focuser',
+      partialize: (state) => ({
+        isAutofocusing: state.isAutofocusing,
+        lastAutoFocusRun: state.lastAutoFocusRun,
+      }),
+      storage: createJSONStorage(() => AsyncStorage),
+    },
+  ),
+);

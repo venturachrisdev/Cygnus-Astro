@@ -223,17 +223,9 @@ export const captureImage = async () => {
     );
     await sendCapture(cameraState.duration, cameraState.platesolve);
 
-    //   await runCountdown();
-
-    //   if (useCameraStore.getState().isCapturing) {
-    //     await getCapturedImageWithRetries();
-    //   }
-    // } while (
-    //   useCameraStore.getState().loop &&
-    //   useCameraStore.getState().isCapturing
-    // );
-
-    // cameraState.set({ isCapturing: false });
+    if (cameraState.duration <= 1) {
+      await getCapturedImageWithRetries();
+    }
   } catch (e) {
     console.log('Error capturing image', e);
     cameraState.set({

@@ -51,8 +51,12 @@ export const getLastAutoFocus = async () => {
       await Axios.get(`${await getApiUrl()}/equipment/focuser/last-af`)
     ).data;
 
-    if (response.Response) {
+    if (
+      response.Response &&
+      focuserState.lastAutoFocusRun?.date !== response.Response.Timestamp
+    ) {
       focuserState.set({
+        isAutofocusing: false,
         lastAutoFocusRun: {
           filter: response.Response.Filter,
           duration: response.Response.Duration,
