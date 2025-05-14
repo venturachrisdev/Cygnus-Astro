@@ -338,7 +338,7 @@ export const Focuser = () => {
           secondaryData={getSecondaryData()}
         />
       )}
-      <View className="mb-10" />
+      <View className="mb-16" />
     </ScrollView>
   );
 };

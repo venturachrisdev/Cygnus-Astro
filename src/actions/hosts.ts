@@ -21,8 +21,8 @@ export const scanHosts = async (autoConnect?: boolean) => {
   const config: LSScanConfig = {
     networkInfo,
     ports: [1888],
-    timeout: 1000,
-    threads: 150,
+    timeout: 3000,
+    threads: 200,
   };
 
   try {

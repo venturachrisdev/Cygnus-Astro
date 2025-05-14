@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import { orderBy } from 'lodash';
 
 import { useAlertsStore } from '@/stores/alerts.store';
 import { useSequenceStore } from '@/stores/sequence.store';
@@ -192,10 +191,6 @@ export const getImageHistory = async (queryThumbnails: boolean = true) => {
         await Promise.all(promises);
       }
 
-      if (sequenceState.images !== currentSet) {
-        sequenceState.set({ images: orderBy(currentSet, ['index'], ['desc']) });
-      }
-
       if (queryThumbnails) {
         sequenceState.set({ isLoadingImages: false });
       }
@@ -206,4 +201,22 @@ export const getImageHistory = async (queryThumbnails: boolean = true) => {
     console.log('Error getting sequence', e);
     sequenceState.set({ isLoadingImages: false });
   }
+};
+
+export const convertTimespanToHMS = (timeSpan: number) => {
+  if (timeSpan === 24) {
+    return '00:00:00';
+  }
+
+  // Calculate duration in milliseconds
+  const durationMs = timeSpan * 60 * 60 * 1000;
+
+  // Get the hours, minutes, and seconds
+  const hours = Math.floor(durationMs / (60 * 60 * 1000));
+  const minutes = Math.floor((durationMs % (60 * 60 * 1000)) / (60 * 1000));
+  const seconds = Math.floor((durationMs % (60 * 1000)) / 1000);
+
+  return `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}s`;
 };

@@ -6,12 +6,12 @@ import { Animated, Easing, ScrollView, Text, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
 import {
-  convertDegreesToHMS,
   convertDMStoDegrees,
   convertHMStoDegrees,
   getAltitude,
 } from '@/actions/mount';
 import {
+  convertTimespanToHMS,
   getSequenceState,
   resetSequence,
   startSequence,
@@ -126,7 +126,7 @@ export const Sequence = () => {
     }
 
     if (item.Name.includes('Meridian Flip')) {
-      return `Time to flip: ${convertDegreesToHMS(item.TimeToMeridianFlip)}`;
+      return `Time to flip: ${convertTimespanToHMS(item.TimeToMeridianFlip)}`;
     }
 
     if (item.Name.includes('Switch Filter')) {

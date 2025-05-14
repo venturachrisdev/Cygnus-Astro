@@ -9,7 +9,7 @@ interface GuidingBarProps {
 }
 
 export const CameraGuidingBar = ({ graph, error }: GuidingBarProps) => (
-  <View className="absolute inset-x-0 bottom-6 h-36 w-full px-5 opacity-70">
+  <View className="absolute inset-x-0 bottom-6 h-36 w-full max-w-[580px] px-5 opacity-70">
     <View className="flex w-full flex-1 rounded-2xl bg-neutral-900 p-2">
       <View className="mb-2 flex flex-row gap-x-4">
         <Text className="ml-2 text-xs text-white">
@@ -34,14 +34,13 @@ export const CameraGuidingBar = ({ graph, error }: GuidingBarProps) => (
           </Text>
         </Text>
       </View>
-      <View className="flex h-full w-full flex-1 rounded-xl border-[0.5px] border-gray-500 py-2">
+      <View className="flex h-full w-full flex-1 rounded-xl border-[0.5px] border-gray-500 py-3">
         <LineChart
           disableScroll
           width={455}
           height={37}
           adjustToWidth
           formatYLabel={(l) => String(Math.ceil(Number(l)))}
-          // hideYAxisText
           yAxisTextStyle={{
             color: '#ddd',
             fontSize: 12,

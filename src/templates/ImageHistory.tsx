@@ -1,6 +1,6 @@
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
-import { chunk } from 'lodash';
+import { chunk, orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -43,7 +43,7 @@ export const ImageHistory = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  });
 
   useEffect(() => {
     const action = async () => {
@@ -62,7 +62,8 @@ export const ImageHistory = () => {
 
   const { width } = Dimensions.get('window');
   const images = sequenceState.images.filter((img) => img.image);
-  const gridItems = chunk(images, width >= 1180 ? 5 : 3);
+  const sortedImages = orderBy(images, ['index'], ['desc']);
+  const gridItems = chunk(sortedImages, width >= 1180 ? 5 : 3);
 
   return (
     <>

@@ -49,7 +49,6 @@ export const TargetSearch = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [debounceID, setDebounceID] = useState<NodeJS.Timer>();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [slewingTimeout, setSlewingTimeout] = useState<NodeJS.Timer>();
   const [didPlatesolveFailed, setDidPlatesolveFailed] =
     useState<boolean>(false);
 
@@ -76,17 +75,7 @@ export const TargetSearch = () => {
   });
 
   useEffect(() => {
-    if (isModalVisible && !mountState.isSlewing && !cameraState.isExposing) {
-      if (slewingTimeout) {
-        clearTimeout(slewingTimeout);
-      }
-
-      const slewingT = setTimeout(() => {
-        setIsModalVisible(false);
-      }, 10000);
-
-      setSlewingTimeout(slewingT);
-    } else if (mountState.isSlewing || cameraState.isExposing) {
+    if (mountState.isSlewing || cameraState.isExposing) {
       setDidPlatesolveFailed(false);
     }
   }, [mountState.isSlewing, cameraState.isExposing]);
@@ -99,9 +88,6 @@ export const TargetSearch = () => {
 
     return () => {
       clearInterval(interval);
-      if (slewingTimeout) {
-        clearTimeout(slewingTimeout);
-      }
     };
   });
 
@@ -119,7 +105,7 @@ export const TargetSearch = () => {
 
       await setFramingSource();
       await setFramingCoordinates(raInDegrees, decInDegrees);
-      await framingSlew(center);
+      await framingSlew(center, true);
       setIsModalVisible(true);
     }
   };
@@ -173,12 +159,7 @@ export const TargetSearch = () => {
   return (
     <>
       <Modal
-        visible={
-          isModalVisible &&
-          (cameraState.isExposing ||
-            mountState.isSlewing ||
-            didPlatesolveFailed)
-        }
+        visible={isModalVisible && ngcState.isRunning}
         transparent
         supportedOrientations={['landscape']}
       >

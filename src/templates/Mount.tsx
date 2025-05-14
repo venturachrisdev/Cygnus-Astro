@@ -33,6 +33,7 @@ import { DropDown } from '@/components/DropDown';
 import { StatusChip } from '@/components/StatusChip';
 import { useConfigStore } from '@/stores/config.store';
 import { useMountStore } from '@/stores/mount.store';
+import { useNGCStore } from '@/stores/ngc.store';
 import VisibleStars from '@/stores/visible_stars.json';
 
 const trackingModes: Device[] = [
@@ -56,6 +57,7 @@ const slewRates: Device[] = [
 export const Mount = () => {
   const mountState = useMountStore();
   const configState = useConfigStore();
+  const ngcState = useNGCStore();
 
   const [showDevicesList, setShowDevicesList] = useState(false);
   const [showStarsList, setShowStarsList] = useState(false);
@@ -328,10 +330,11 @@ export const Mount = () => {
                 !mountState.isConnected ||
                 mountState.isSlewing ||
                 mountState.isParked ||
+                ngcState.isRunning ||
                 !configState.isConnected
               }
-              onPress={() => framingSlew(true)}
-              label="Slew"
+              onPress={() => framingSlew(true, true)}
+              label={ngcState.isRunning ? 'Framing...' : 'Slew'}
             />
           </View>
         </View>

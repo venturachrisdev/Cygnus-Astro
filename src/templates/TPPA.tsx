@@ -30,8 +30,8 @@ export const TPPA = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [didPlatesolveFailed, setDidPlatesolveFailed] = useState(false);
-  const [altitudeError, setAltitudeError] = useState<number>();
-  const [azimuthError, setAzimuthError] = useState<number>();
+  const [altitudeError, setAltitudeError] = useState<number>(0);
+  const [azimuthError, setAzimuthError] = useState<number>(0);
   const [totalError, setTotalError] = useState<number>();
 
   useEffect(() => {
@@ -121,7 +121,10 @@ export const TPPA = () => {
           Three Point Polar Alignment
         </Text>
         <View className="mr-10 mt-8 flex flex-row justify-between">
-          <View className="flex flex-1 items-center justify-center">
+          <View
+            className="flex items-center justify-center"
+            style={{ width: 250 }}
+          >
             <View
               style={{ borderWidth: 8 }}
               className="items-center justify-center rounded-full border-neutral-500 p-2"
@@ -130,8 +133,8 @@ export const TPPA = () => {
               <View
                 className="absolute"
                 style={{
-                  top: 63,
-                  left: 63,
+                  top: 63 + altitudeError * 10,
+                  left: 63 + azimuthError * 10,
                 }}
               >
                 <View className="h-[10px] w-[10px] rounded-full bg-yellow-400" />
