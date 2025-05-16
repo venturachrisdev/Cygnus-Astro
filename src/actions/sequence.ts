@@ -218,5 +218,5 @@ export const convertTimespanToHMS = (timeSpan: number) => {
 
   return `${hours.toString().padStart(2, '0')}:${minutes
     .toString()
-    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}s`;
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 };

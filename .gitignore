@@ -15,6 +15,7 @@ index.js
 # production
 dist/
 web-build/
+*.ipa
 
 # debug
 npm-debug.log*

@@ -110,7 +110,7 @@ export default function Layout() {
             <MenuItem
               direction="vertical"
               size={28}
-              icon="ferris-wheel"
+              icon="usb"
               onPress={() => {
                 setCurrentTab('accessories');
               }}

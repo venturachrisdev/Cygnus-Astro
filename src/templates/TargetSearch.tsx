@@ -49,8 +49,7 @@ export const TargetSearch = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [debounceID, setDebounceID] = useState<NodeJS.Timer>();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [didPlatesolveFailed, setDidPlatesolveFailed] =
-    useState<boolean>(false);
+  const [didPlatesolveFail, setDidPlatesolveFail] = useState<boolean>(false);
 
   const onValueChange = (value: string) => {
     setSearchValue(value);
@@ -76,7 +75,7 @@ export const TargetSearch = () => {
 
   useEffect(() => {
     if (mountState.isSlewing || cameraState.isExposing) {
-      setDidPlatesolveFailed(false);
+      setDidPlatesolveFail(false);
     }
   }, [mountState.isSlewing, cameraState.isExposing]);
 
@@ -159,7 +158,11 @@ export const TargetSearch = () => {
   return (
     <>
       <Modal
-        visible={isModalVisible && ngcState.isRunning}
+        visible={
+          isModalVisible &&
+          ngcState.isRunning &&
+          (mountState.isSlewing || cameraState.isExposing || didPlatesolveFail)
+        }
         transparent
         supportedOrientations={['landscape']}
       >
@@ -186,7 +189,7 @@ export const TargetSearch = () => {
                     <Text className="ml-3 text-xl text-white">Exposing...</Text>
                   </View>
                 )}
-                {didPlatesolveFailed && (
+                {didPlatesolveFail && (
                   <View className="flex flex-row items-center">
                     <View>
                       <Icon
