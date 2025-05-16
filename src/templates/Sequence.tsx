@@ -30,6 +30,8 @@ const trackingMode: Record<String, String> = {
   '2': 'Solar',
 };
 
+const altitudeComparator = ['', '<', '<=', '>', '>='];
+
 export const Sequence = () => {
   const sequenceState = useSequenceStore();
   const configState = useConfigStore();
@@ -89,24 +91,72 @@ export const Sequence = () => {
     return altitude.altDeg;
   };
 
-  const getParsedContainerName = (name: string) => {
+  const getParsedContainerName = (name: string): string => {
+    if (!name) {
+      return '';
+    }
+
     return name
       .replace('_Container', '')
       .replace('_Trigger', '')
       .replace('_Condition', '');
   };
 
-  const getTextForStep = (item: any) => {
-    if (item.Name.includes('Take Many Exposures')) {
+  const getTextForStep = (item: any): string => {
+    if (!item.Name) {
+      return '';
+    }
+
+    if (
+      item.Name.includes('Take Many Exposures') ||
+      item.Name.includes('Smart Exposure')
+    ) {
       const count =
-        item.Conditions[0].Iterations || item.Items[0].ExposureCount;
-      const exposureTime = item.Items[0].ExposureTime;
-      const imageType = item.Items[0].ImageType;
+        item.Conditions[0]?.Iterations ||
+        item.Items[0]?.ExposureCount ||
+        item.Conditions[1]?.Iterations ||
+        item.Items[1]?.ExposureCount ||
+        0;
+      const exposureTime =
+        item.Items[0]?.ExposureTime || item.Items[1]?.ExposureTime || 0;
+      const imageType =
+        item.Items[0]?.ImageType || item.Items[1]?.ImageType || '';
       return `Count: ${count},  Duration: ${exposureTime}s,  Type: ${imageType}`;
     }
 
-    if (item.Name.includes('Wait for Time')) {
-      return `${item.Hours}:${item.Minutes}:${item.Seconds}`;
+    if (
+      item.Name.includes('Take Exposure') ||
+      item.Name.includes('Take Subframe Exposure')
+    ) {
+      const exposureTime = item.ExposureTime || 0;
+      const imageType = item.ImageType || '';
+      return `Duration: ${exposureTime}s,  Type: ${imageType}`;
+    }
+
+    if (item.Name.includes('Set USB Limit')) {
+      return `Limit: ${item.USBLimit || 0}`;
+    }
+
+    if (item.Name.includes('Dew Heater')) {
+      return `${item.OnOff ? 'On' : 'Off'}`;
+    }
+
+    if (item.Name.includes('Set Readout Mode')) {
+      return `Mode: ${item.Mode || 0}`;
+    }
+
+    if (item.Name.includes('Wait for Time Span')) {
+      return `Delay: ${item.Time}s`;
+    }
+
+    if (
+      item.Name.includes('Wait for Time') ||
+      item.Name.includes('Loop Until Time') ||
+      item.Name.includes('Loop for Time Span')
+    ) {
+      return `${String(item.Hours).padStart(2, '0')}:${String(
+        item.Minutes,
+      ).padStart(2, '0')}:${String(item.Seconds).padStart(2, '0')}`;
     }
 
     if (item.Name.includes('Cool Camera')) {
@@ -130,7 +180,7 @@ export const Sequence = () => {
     }
 
     if (item.Name.includes('Switch Filter')) {
-      return `Filter: ${item.Filter._name}`;
+      return `Filter: ${item.Filter?._name || ''}`;
     }
 
     if (item.Name.includes('Start Guiding')) {
@@ -139,6 +189,65 @@ export const Sequence = () => {
 
     if (item.Name.includes('AF After HFR Increase')) {
       return `Amount: ${item.Amount}%,   Sample size: ${item.SampleSize}`;
+    }
+
+    if (item.Name.includes('AF After # Exposures')) {
+      return `After: ${item.AfterExposures}`;
+    }
+    if (item.Name.includes('AF After Temperature Change')) {
+      return `Temperature: ${item.Amount}°`;
+    }
+    if (item.Name.includes('AF After Time')) {
+      return `After: ${item.Amount} min`;
+    }
+
+    if (item.Name.includes('Send WebSocket Event')) {
+      return `Message: ${item.Message}`;
+    }
+
+    if (
+      item.Name.includes('Connect Equipment') ||
+      item.Name.includes('Disconnect Equipment')
+    ) {
+      return `Device: ${item.SelectedDevice}`;
+    }
+
+    if (item.Name.includes('Filter Offset Calculator')) {
+      return `Iterations: ${item.Loops}`;
+    }
+
+    if (item.Name.includes('Dither after Exposures')) {
+      return `After ${item.AfterExposures}`;
+    }
+
+    if (item.Name.includes('Set Switch Value')) {
+      return `Switch: ${item.SelectedSwitch?.Name}, Value: ${item.Value}`;
+    }
+
+    if (item.Name.includes('Annotation') || item.Name.includes('Message Box')) {
+      return `Note: ${item.Text || item.Message || ''}`;
+    }
+
+    if (item.Name.includes('Moon illumination')) {
+      return `Loop until illumination ${altitudeComparator[item.Comparator]} ${
+        item.UserMoonIllumination
+      }%    (Current: ${Math.ceil(item.CurrentMoonIllumination)}%)`;
+    }
+
+    if (
+      ((item.Name.includes('Wait') || item.Name.includes('Loop')) &&
+        item.Name.includes('Altitude')) ||
+      item.Name.includes('Above horizon')
+    ) {
+      if (item.Data) {
+        return `Altitude ${altitudeComparator[item.Data?.Comparator]} ${item
+          .Data?.Offset}°`;
+      }
+      return `Altitude: ${item.Data?.Offset}°`;
+    }
+
+    if (item.Name.includes('Loop For Iterations')) {
+      return `Iterations: ${item.CompletedIterations}/${item.Iterations}`;
     }
 
     if (item.Name.includes('Loop while Altitude Above Horizon')) {
@@ -155,7 +264,11 @@ export const Sequence = () => {
     return '';
   };
 
-  const getIconNameForStep = (name: string) => {
+  const getIconNameForStep = (name: string): string => {
+    if (!name) {
+      return '';
+    }
+
     const parsedName = name.trim().toLocaleLowerCase();
 
     if (parsedName.includes('home')) {
@@ -176,8 +289,17 @@ export const Sequence = () => {
     if (parsedName.includes('tracking')) {
       return 'speedometer';
     }
-    if (parsedName.includes('camera')) {
+    if (parsedName.includes('camera') || parsedName.includes('readout')) {
       return 'camera';
+    }
+    if (parsedName.includes('loop')) {
+      return 'rotate-right';
+    }
+    if (parsedName.includes('dither')) {
+      return 'magic-staff';
+    }
+    if (parsedName.includes('focus') || parsedName.includes('af')) {
+      return 'focus-auto';
     }
     if (parsedName.includes('exposure')) {
       return 'camera-iris';
@@ -185,14 +307,8 @@ export const Sequence = () => {
     if (parsedName.includes('guiding')) {
       return 'target';
     }
-    if (parsedName.includes('dither')) {
-      return 'magic-staff';
-    }
     if (parsedName.includes('park')) {
       return 'parking';
-    }
-    if (parsedName.includes('focus') || parsedName.includes('af')) {
-      return 'focus-auto';
     }
     if (parsedName.includes('filter')) {
       return 'ferris-wheel';
@@ -200,8 +316,35 @@ export const Sequence = () => {
     if (parsedName.includes('scope') || parsedName.includes('slew')) {
       return 'telescope';
     }
-    if (parsedName.includes('loop')) {
-      return 'rotate-right';
+    if (parsedName.includes('rotate')) {
+      return 'rotate-left';
+    }
+    if (parsedName.includes('heater')) {
+      return 'air-humidifier';
+    }
+    if (parsedName.includes('usb')) {
+      return 'usb';
+    }
+    if (parsedName.includes('websocket') || parsedName.includes('script')) {
+      return 'code-braces';
+    }
+    if (parsedName.includes('disconnect') || parsedName.includes('connect')) {
+      return 'connection';
+    }
+    if (parsedName.includes('switch')) {
+      return 'toggle-switch-outline';
+    }
+    if (parsedName.includes('solve')) {
+      return 'target';
+    }
+    if (parsedName.includes('annotation') || parsedName.includes('message')) {
+      return 'pencil';
+    }
+    if (parsedName.includes('save')) {
+      return 'content-save';
+    }
+    if (parsedName.includes('moon')) {
+      return 'moon-waning-crescent';
     }
 
     return 'debug-step-into';
@@ -254,143 +397,160 @@ export const Sequence = () => {
     );
   };
 
+  const filterOutEmptyStep = (container: any): boolean => {
+    if (
+      container.Name === '_Container' ||
+      container.Name === '_Condition' ||
+      container.Name === '_Trigger'
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
   const renderContainer = (container: any, index: number) => {
     const hasChildren =
       container.Triggers || container.Conditions || container.Items;
 
     return (
       <>
-        {(!hasChildren || container.Name === 'Take Many Exposures_Container') &&
+        {((!hasChildren && container.Name) ||
+          container.Name === 'Take Many Exposures_Container' ||
+          container.Name === 'Smart Exposure_Container') &&
           renderStep(container, index)}
-        {hasChildren && container.Name !== 'Take Many Exposures_Container' && (
-          <View key={index} className="my-1 rounded-lg">
-            {!!container.Target && (
-              <View className="flex flex-row justify-between rounded-xl border-[0.5px] border-gray-800 px-2 py-4">
-                <View>
-                  <View className="mb-4 flex flex-row items-center px-1">
-                    <Icon name="target" size={20} color="white" />
-                    <Text className="ml-3 text-xl font-medium text-white">
-                      {container.Target.TargetName || 'Target'}
-                    </Text>
-                  </View>
-                  <View className="ml-2">
-                    <Text className="text-lg text-gray-500">
-                      RA:{'     '}
-                      <Text className="text-white">
-                        {container.Target.InputCoordinates.RAHours}h{' '}
-                        {container.Target.InputCoordinates.RAMinutes}m{' '}
-                        {Math.floor(
-                          container.Target.InputCoordinates.RASeconds,
-                        )}
-                        s
+        {hasChildren &&
+          container.Name &&
+          container.Name !== 'Take Many Exposures_Container' &&
+          container.Name !== 'Smart Exposure_Container' && (
+            <View key={index} className="my-1 rounded-lg">
+              {!!container.Target && (
+                <View className="flex flex-row justify-between rounded-xl border-[0.5px] border-gray-800 px-2 py-4">
+                  <View>
+                    <View className="mb-4 flex flex-row items-center px-1">
+                      <Icon name="target" size={20} color="white" />
+                      <Text className="ml-3 text-xl font-medium text-white">
+                        {container.Target.TargetName || 'Target'}
                       </Text>
-                    </Text>
-                    <Text className="text-lg text-gray-500">
-                      Dec:{'   '}
-                      <Text className="text-white">
-                        {container.Target.InputCoordinates.DecDegrees}°{' '}
-                        {String(
-                          container.Target.InputCoordinates.DecMinutes,
-                        ).padStart(2, '0')}
-                        m{' '}
-                        {Math.floor(
-                          container.Target.InputCoordinates.DecSeconds,
-                        )}
-                        s
+                    </View>
+                    <View className="ml-2">
+                      <Text className="text-lg text-gray-500">
+                        RA:{'     '}
+                        <Text className="text-white">
+                          {container.Target.InputCoordinates.RAHours}h{' '}
+                          {container.Target.InputCoordinates.RAMinutes}m{' '}
+                          {Math.floor(
+                            container.Target.InputCoordinates.RASeconds,
+                          )}
+                          s
+                        </Text>
                       </Text>
-                    </Text>
+                      <Text className="text-lg text-gray-500">
+                        Dec:{'   '}
+                        <Text className="text-white">
+                          {container.Target.InputCoordinates.DecDegrees}°{' '}
+                          {String(
+                            container.Target.InputCoordinates.DecMinutes,
+                          ).padStart(2, '0')}
+                          m{' '}
+                          {Math.floor(
+                            container.Target.InputCoordinates.DecSeconds,
+                          )}
+                          s
+                        </Text>
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="mr-6">
+                    <LineChart
+                      curved
+                      width={250}
+                      height={70}
+                      adjustToWidth
+                      maxValue={90}
+                      hideYAxisText
+                      hideAxesAndRules
+                      showVerticalLines
+                      noOfVerticalLines={1}
+                      verticalLinesSpacing={70}
+                      verticalLinesThickness={1}
+                      verticalLinesShift={68}
+                      verticalLinesStrokeDashArray={[6]}
+                      verticalLinesColor="#88ad75"
+                      yAxisThickness={0}
+                      showReferenceLine1
+                      stepValue={1}
+                      referenceLine1Position={-65}
+                      referenceLine1Config={{
+                        thickness: 1,
+                        width: 250,
+                        dashWidth: 5,
+                        dashGap: 0,
+                        color: 'gray',
+                      }}
+                      xAxisColor="white"
+                      yAxisColor="white"
+                      dataPointsRadius1={0}
+                      mostNegativeValue={0}
+                      color1="#e77"
+                      dataPointsColor1="white"
+                      data={getAltitudePoints({
+                        ra: `${container.Target.InputCoordinates.RAHours}:${container.Target.InputCoordinates.RAMinutes}:${container.Target.InputCoordinates.RASeconds}`,
+                        dec: `${container.Target.InputCoordinates.DecDegrees}:${container.Target.InputCoordinates.DecMinutes}:${container.Target.InputCoordinates.DecSeconds}`,
+                      }).map((i) => ({ value: i }))}
+                    />
                   </View>
                 </View>
-                <View className="mr-6">
-                  <LineChart
-                    curved
-                    width={250}
-                    height={70}
-                    adjustToWidth
-                    maxValue={90}
-                    hideYAxisText
-                    hideAxesAndRules
-                    showVerticalLines
-                    noOfVerticalLines={1}
-                    verticalLinesSpacing={70}
-                    verticalLinesThickness={1}
-                    verticalLinesShift={68}
-                    verticalLinesStrokeDashArray={[6]}
-                    verticalLinesColor="#88ad75"
-                    yAxisThickness={0}
-                    showReferenceLine1
-                    stepValue={1}
-                    referenceLine1Position={-65}
-                    referenceLine1Config={{
-                      thickness: 1,
-                      width: 250,
-                      dashWidth: 5,
-                      dashGap: 0,
-                      color: 'gray',
-                    }}
-                    xAxisColor="white"
-                    yAxisColor="white"
-                    dataPointsRadius1={0}
-                    mostNegativeValue={0}
-                    color1="#e77"
-                    dataPointsColor1="white"
-                    data={getAltitudePoints({
-                      ra: `${container.Target.InputCoordinates.RAHours}:${container.Target.InputCoordinates.RAMinutes}:${container.Target.InputCoordinates.RASeconds}`,
-                      dec: `${container.Target.InputCoordinates.DecDegrees}:${container.Target.InputCoordinates.DecMinutes}:${container.Target.InputCoordinates.DecSeconds}`,
-                    }).map((i) => ({ value: i }))}
-                  />
-                </View>
-              </View>
-            )}
-            {container.Triggers?.length > 0 && (
-              <View className="p-2">
-                <View className="flex flex-row items-center px-2 py-3">
-                  <Icon name="weather-lightning" size={20} color="white" />
-                  <Text className="ml-3 text-lg font-medium text-white">
-                    Triggers
-                  </Text>
-                </View>
-                <View className="ml-2">
-                  {container.Triggers?.map((item: any, idx: number) =>
-                    renderContainer(item, idx),
-                  )}
-                </View>
-              </View>
-            )}
-            {container.Conditions?.length > 0 &&
-              container.Name !== 'Take Many Exposures_Container' && (
+              )}
+              {container.Triggers?.filter(filterOutEmptyStep).length > 0 && (
                 <View className="p-2">
                   <View className="flex flex-row items-center px-2 py-3">
-                    <Icon name="rotate-right" size={20} color="white" />
+                    <Icon name="weather-lightning" size={20} color="white" />
                     <Text className="ml-3 text-lg font-medium text-white">
-                      Loop Conditions
+                      Triggers
                     </Text>
                   </View>
                   <View className="ml-2">
-                    {container.Conditions?.map((item: any, idx: number) =>
-                      renderContainer(item, idx),
+                    {container.Triggers?.filter(filterOutEmptyStep).map(
+                      (item: any, idx: number) => renderContainer(item, idx),
                     )}
                   </View>
                 </View>
               )}
-            {container.Items?.length > 0 &&
-              container.Name !== 'Take Many Exposures_Container' && (
-                <View className="p-2">
-                  <View className="flex flex-row items-center px-1 py-2">
-                    <Icon name="chevron-right" size={20} color="white" />
-                    <Text className="ml-3 text-lg font-medium text-white">
-                      {getParsedContainerName(container.Name)}
-                    </Text>
+              {container.Conditions?.filter(filterOutEmptyStep)?.length > 0 &&
+                container.Name !== 'Take Many Exposures_Container' && (
+                  <View className="p-2">
+                    <View className="flex flex-row items-center px-2 py-3">
+                      <Icon name="rotate-right" size={20} color="white" />
+                      <Text className="ml-3 text-lg font-medium text-white">
+                        Loop Conditions
+                      </Text>
+                    </View>
+                    <View className="ml-2">
+                      {container.Conditions?.filter(filterOutEmptyStep).map(
+                        (item: any, idx: number) => renderContainer(item, idx),
+                      )}
+                    </View>
                   </View>
-                  <View className="ml-2">
-                    {container.Items?.map((item: any, idx: number) =>
-                      renderContainer(item, idx),
-                    )}
+                )}
+              {container.Items?.length > 0 &&
+                container.Name !== 'Take Many Exposures_Container' && (
+                  <View className="p-2">
+                    <View className="flex flex-row items-center px-1 py-2">
+                      <Icon name="chevron-right" size={20} color="white" />
+                      <Text className="ml-3 text-lg font-medium text-white">
+                        {getParsedContainerName(container.Name)}
+                      </Text>
+                    </View>
+                    <View className="ml-2">
+                      {container.Items?.filter(filterOutEmptyStep).map(
+                        (item: any, idx: number) => renderContainer(item, idx),
+                      )}
+                    </View>
                   </View>
-                </View>
-              )}
-          </View>
-        )}
+                )}
+            </View>
+          )}
       </>
     );
   };
