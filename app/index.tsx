@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { Image, Text } from 'react-native';
 
-import { scanHosts } from '@/actions/hosts';
+import { getApplicationVersion, scanHosts } from '@/actions/hosts';
 import { ConnectionStatus, useConfigStore } from '@/stores/config.store';
 
 export default function Layout() {
@@ -11,7 +11,11 @@ export default function Layout() {
   const configState = useConfigStore();
 
   useEffect(() => {
-    scanHosts(true);
+    if (configState.currentDevice !== null) {
+      getApplicationVersion(true);
+    } else {
+      scanHosts(true);
+    }
 
     const connectionTimeout = setTimeout(() => {
       configState.set({ connectionStatus: ConnectionStatus.FAILED });
@@ -29,12 +33,6 @@ export default function Layout() {
     ) {
       router.replace('/main');
     }
-    console.log(
-      'isConnected',
-      configState.isConnected,
-      'idle',
-      configState.connectionStatus,
-    );
   }, [configState.isConnected, configState.connectionStatus]);
 
   return (

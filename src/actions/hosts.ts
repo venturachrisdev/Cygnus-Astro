@@ -54,7 +54,6 @@ export const scanHosts = async (autoConnect?: boolean) => {
           });
           configState.set({
             isConnected: false,
-            currentDevice: null,
             connectionStatus: ConnectionStatus.FAILED,
           });
         }
@@ -68,7 +67,6 @@ export const scanHosts = async (autoConnect?: boolean) => {
     });
     configState.set({
       isConnected: false,
-      currentDevice: null,
       connectionStatus: ConnectionStatus.FAILED,
     });
   }
@@ -243,7 +241,16 @@ export const getApplicationVersion = async (alertOnError?: boolean) => {
     }
   } catch (e) {
     console.log('Error getting application version', e);
-    configState.set({ isLoading: false });
+    configState.set({
+      isLoading: false,
+    });
+
+    if (alertOnError) {
+      configState.set({
+        connectionStatus: ConnectionStatus.FAILED,
+      });
+    }
+
     if (configState.currentDevice?.name || alertOnError) {
       alertState.set({
         message: `Unable to connect to ${configState.currentDevice?.name}`,

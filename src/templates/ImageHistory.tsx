@@ -43,7 +43,7 @@ export const ImageHistory = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  });
+  }, []);
 
   useEffect(() => {
     const action = async () => {

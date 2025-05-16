@@ -88,7 +88,7 @@ export const TargetSearch = () => {
     return () => {
       clearInterval(interval);
     };
-  });
+  }, []);
 
   const onGoto = async (center: boolean) => {
     if (

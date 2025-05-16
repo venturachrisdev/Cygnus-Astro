@@ -47,7 +47,10 @@ export const Config = () => {
   };
 
   useEffect(() => {
-    scanHosts();
+    if (configState.currentDevice === null) {
+      scanHosts();
+    }
+
     getProfiles();
     getCurrentProfile();
   }, []);

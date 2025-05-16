@@ -50,7 +50,7 @@ export const getCameraInfo = async () => {
       const endTime = new Date(cameraState.exposureEndTime);
 
       if (endTime - now > 0) {
-        const countdown = Math.ceil((endTime - now) / 1000);
+        const countdown = Math.floor((endTime - now) / 1000);
         cameraState.set({ countdown });
       } else {
         cameraState.set({ countdown: -1 });
@@ -132,19 +132,6 @@ export const disconnectCamera = async () => {
     await getCameraInfo();
   } catch (e) {
     console.log('Error getting camera', e);
-  }
-};
-
-export const runCountdown = async () => {
-  const cameraState = useCameraStore.getState();
-
-  if (cameraState.duration >= 1) {
-    for (let i = cameraState.duration; i >= 0; i -= 1) {
-      if (!cameraState.isCapturing) {
-        return;
-      }
-      await sleep(1000);
-    }
   }
 };
 
