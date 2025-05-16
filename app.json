@@ -16,6 +16,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ioflat.app.cygnus",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
         "NSExceptionDomains": {
           "localhost": {

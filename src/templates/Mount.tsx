@@ -421,25 +421,25 @@ export const Mount = () => {
             onMoveLeft={() =>
               sendMountEvent({
                 direction: 'west',
-                rate: Number(currentSlewRate.id) || 2.0,
+                rate: Number(currentSlewRate.id) || 4.0,
               })
             }
             onMoveRight={() =>
               sendMountEvent({
                 direction: 'east',
-                rate: Number(currentSlewRate.id) || 2.0,
+                rate: Number(currentSlewRate.id) || 4.0,
               })
             }
             onMoveUp={() =>
               sendMountEvent({
                 direction: 'north',
-                rate: Number(currentSlewRate.id) || 2.0,
+                rate: Number(currentSlewRate.id) || 4.0,
               })
             }
             onMoveDown={() =>
               sendMountEvent({
                 direction: 'south',
-                rate: Number(currentSlewRate.id) || 2.0,
+                rate: Number(currentSlewRate.id) || 4.0,
               })
             }
             onMoveStop={() => stopSlewMount()}

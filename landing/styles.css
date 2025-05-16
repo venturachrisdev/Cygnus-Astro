@@ -1,0 +1,27 @@
+html {
+  font-family: -apple-system, BlinkMacSystemFont, helvetica neue, helvetica, sans-serif;
+  /* background: url("../img/bg.png") no-repeat center; */
+  background-color: #250e13;
+  background: linear-gradient(135deg, rgb(32 32 36) 0%, rgb(0 0 0) 100%) no-repeat center;
+  background-size: cover;
+  color: #fff;
+  height: 100%;
+  margin: 0;
+}
+
+img.logo-main {
+  width: 130px;
+}
+
+
+img.logo-menu {
+  width: 70px;
+}
+
+img.download {
+  width: 150px;
+}
+
+img.social {
+  width: 20px;
+}

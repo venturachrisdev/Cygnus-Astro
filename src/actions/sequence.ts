@@ -24,6 +24,11 @@ export const getSequenceState = async () => {
         ),
         sequence: response.Response,
       });
+    } else {
+      sequenceState.set({
+        isRunning: false,
+        sequence: [],
+      });
     }
 
     return response.Response;

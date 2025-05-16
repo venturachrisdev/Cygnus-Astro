@@ -28,6 +28,15 @@ export const Config = () => {
     setShowHostsList(false);
   };
 
+  const onInputTextChange = (text: string) => {
+    configState.set({
+      currentDevice: {
+        name: text,
+        id: text,
+      },
+    });
+  };
+
   const onProfileSelected = (profile: Device) => {
     switchProfile(profile.id);
     setShowProfilesList(false);
@@ -54,12 +63,15 @@ export const Config = () => {
         </Text>
         <DeviceConnection
           isAPIConnected
+          useInputText={!configState.isConnected}
+          onInputTextChange={onInputTextChange}
+          inputTextValue={configState.currentDevice?.name}
           onListExpand={() => setShowHostsList(!showHostsList)}
           currentDevice={configState.currentDevice}
           isConnected={configState.isConnected}
           devices={configState.devices}
           isListExpanded={showHostsList}
-          onConnect={() => getApplicationVersion()}
+          onConnect={() => getApplicationVersion(true)}
           onDisconnect={onDisconnect}
           onRescan={() => scanHosts()}
           onDeviceSelected={onHostSelected}

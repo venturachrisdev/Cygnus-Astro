@@ -208,7 +208,7 @@ export const getCurrentApplicationTab = async (): Promise<ApplicationTab> => {
   return ApplicationTab.EQUIPMENT;
 };
 
-export const getApplicationVersion = async () => {
+export const getApplicationVersion = async (alertOnError?: boolean) => {
   const configState = useConfigStore.getState();
   const alertState = useAlertsStore.getState();
 
@@ -244,7 +244,7 @@ export const getApplicationVersion = async () => {
   } catch (e) {
     console.log('Error getting application version', e);
     configState.set({ isLoading: false });
-    if (configState.currentDevice?.name) {
+    if (configState.currentDevice?.name || alertOnError) {
       alertState.set({
         message: `Unable to connect to ${configState.currentDevice?.name}`,
         type: 'error',

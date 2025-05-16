@@ -11,6 +11,8 @@ import {
 
 import type { Device } from '@/actions/constants';
 
+import { TextInputLabel } from './TextInputLabel';
+
 interface DropDownProps {
   onListExpand: () => void;
   isListExpanded: boolean;
@@ -19,6 +21,11 @@ interface DropDownProps {
   onItemSelected: (item: Device) => void;
   width?: number;
   defaultText: string;
+
+  useInputText?: boolean;
+  inputTextValue?: string;
+  inputTextPlaceholder?: string;
+  onInputTextChange?: (text: string) => void;
 }
 
 export const DropDown = ({
@@ -29,10 +36,13 @@ export const DropDown = ({
   items,
   currentItem,
   defaultText,
+  useInputText,
+  inputTextValue,
+  onInputTextChange,
+  inputTextPlaceholder,
 }: DropDownProps) => {
   const triggerRef = useRef<View>(null);
   const [position, setPosition] = useState({ x: 0, y: 0, width: 0 });
-
   useEffect(() => {
     if (triggerRef.current && isListExpanded) {
       triggerRef.current.measure((_fx, _fy, _width, height, px, py) => {
@@ -47,25 +57,48 @@ export const DropDown = ({
 
   return (
     <View className="flex-1 justify-center rounded-lg bg-black">
-      <Pressable
-        ref={triggerRef}
-        onPress={() => {
-          if (items.length > 0) onListExpand();
-        }}
-        className="flex h-12 w-full flex-row items-center justify-between px-3"
-      >
-        <Text
-          className="ml-3 font-medium text-white"
-          style={{ opacity: items.length > 0 ? 1.0 : 0.4 }}
+      {useInputText && (
+        <View className="flex flex-row" ref={triggerRef}>
+          <TextInputLabel
+            placeholder={inputTextPlaceholder!}
+            onChange={onInputTextChange!}
+            value={inputTextValue!}
+          />
+          <Pressable
+            className="mr-3 flex items-center justify-center"
+            onPress={() => {
+              if (items.length > 0) onListExpand();
+            }}
+          >
+            <Icon
+              size={20}
+              color={items.length > 0 ? 'white' : 'gray'}
+              name={isListExpanded ? 'chevron-up' : 'chevron-down'}
+            />
+          </Pressable>
+        </View>
+      )}
+      {!useInputText && (
+        <Pressable
+          ref={triggerRef}
+          onPress={() => {
+            if (items.length > 0) onListExpand();
+          }}
+          className="flex h-12 w-full flex-row items-center justify-between px-3"
         >
-          {currentItem?.name || defaultText}
-        </Text>
-        <Icon
-          size={20}
-          color={items.length > 0 ? 'white' : 'gray'}
-          name={isListExpanded ? 'chevron-up' : 'chevron-down'}
-        />
-      </Pressable>
+          <Text
+            className="ml-3 font-medium text-white"
+            style={{ opacity: items.length > 0 ? 1.0 : 0.4 }}
+          >
+            {currentItem?.name || defaultText}
+          </Text>
+          <Icon
+            size={20}
+            color={items.length > 0 ? 'white' : 'gray'}
+            name={isListExpanded ? 'chevron-up' : 'chevron-down'}
+          />
+        </Pressable>
+      )}
       <Modal
         supportedOrientations={['landscape']}
         visible={isListExpanded && items.length > 0}
