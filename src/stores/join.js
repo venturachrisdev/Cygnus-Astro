@@ -12,6 +12,7 @@ function main() {
   const newNGC = [];
 
   for (const ngc of ngcCatalog) {
+    let found = false;
     for (const mes of Object.values(messierCatalog.data)) {
       const { NGC, name, rightAscension } = mes;
       if (
@@ -29,7 +30,12 @@ function main() {
           ...ngc,
           'Common names': names,
         });
+        found = true;
       }
+    }
+
+    if (!found) {
+      newNGC.push(ngc);
     }
   }
 
