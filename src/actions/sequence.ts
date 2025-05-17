@@ -148,7 +148,6 @@ export const getImageByIndex = async (index: number) => {
 
 export const getImageHistory = async (queryThumbnails: boolean = true) => {
   const sequenceState = useSequenceStore.getState();
-
   if (queryThumbnails) {
     sequenceState.set({ isLoadingImages: true });
   }
@@ -174,7 +173,6 @@ export const getImageHistory = async (queryThumbnails: boolean = true) => {
             date: item.Date,
             image: null,
           });
-          console.log('OVERRIDING INDEX', index);
         }
       });
 
@@ -199,6 +197,10 @@ export const getImageHistory = async (queryThumbnails: boolean = true) => {
       if (queryThumbnails) {
         sequenceState.set({ isLoadingImages: false });
       }
+
+      sequenceState.set({
+        images: currentSet,
+      });
     }
 
     return response.Response;
