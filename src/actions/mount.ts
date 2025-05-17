@@ -174,6 +174,29 @@ export const stopSlewMount = async () => {
   }
 };
 
+export const slewMount = async (ra: number, dec: number) => {
+  try {
+    await Axios.get(`${await getApiUrl()}/equipment/mount/slew`, {
+      params: {
+        ra,
+        dec,
+      },
+    });
+    await getMountInfo();
+  } catch (e) {
+    console.log('Error getting mount', e);
+  }
+};
+
+export const setMountPark = async () => {
+  try {
+    await Axios.get(`${await getApiUrl()}/equipment/mount/set-park-position`);
+    await getMountInfo();
+  } catch (e) {
+    console.log('Error getting mount', e);
+  }
+};
+
 /// //////
 
 export const convertHMStoDegrees = (ra: string, useColon: boolean = false) => {
@@ -348,6 +371,68 @@ export const getAltitude = (args: {
     altDeg,
     sinAlt: sinAltClamped,
     cosAlt: Math.cos(Math.asin(sinAltClamped)), // sometimes handy
+  };
+};
+
+// Required helper functions
+function toRadians(degrees: number): number {
+  return degrees * (Math.PI / 180);
+}
+
+function toDegrees(radians: number): number {
+  return radians * (180 / Math.PI);
+}
+
+/**
+ * Converts Alt-Az coordinates to RA-Dec in degrees.
+ * @param alt Altitude in degrees
+ * @param az Azimuth in degrees (measured from North, clockwise)
+ * @param lat Observer's latitude in degrees
+ * @param lon Observer's longitude in degrees
+ * @param datetime JavaScript Date object in UTC
+ * @returns Object with RA and Dec in degrees
+ */
+export const convertAltAzToRaDec = (
+  alt: number,
+  az: number,
+  lat: number,
+  lon: number,
+  datetime: Date,
+): { ra: number; dec: number } => {
+  // Convert inputs to radians
+  const altRad = toRadians(alt);
+  const azRad = toRadians(az);
+  const latRad = toRadians(lat);
+
+  // Declination calculation
+  const sinDec =
+    Math.sin(altRad) * Math.sin(latRad) +
+    Math.cos(altRad) * Math.cos(latRad) * Math.cos(azRad);
+  const dec = Math.asin(sinDec);
+
+  // Hour angle calculation
+  const cosH =
+    (Math.sin(altRad) - Math.sin(latRad) * sinDec) /
+    (Math.cos(latRad) * Math.cos(dec));
+  let H = Math.acos(cosH);
+
+  // Adjust hour angle for azimuth direction
+  if (Math.sin(azRad) > 0) {
+    H = 2 * Math.PI - H;
+  }
+
+  // Local Sidereal Time (LST) in degrees
+  const JD = datetime.getTime() / 86400000 + 2440587.5; // Julian Date
+  const D = JD - 2451545.0; // Days since J2000
+  const GMST = (280.46061837 + 360.98564736629 * D) % 360;
+  const LST = (GMST + lon + 360) % 360; // Ensure positive
+
+  // Right Ascension in degrees
+  const ra = (LST - toDegrees(H) + 360) % 360;
+
+  return {
+    ra,
+    dec: toDegrees(dec),
   };
 };
 

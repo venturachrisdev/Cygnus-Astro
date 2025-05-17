@@ -10,6 +10,7 @@ import {
 } from '@/actions/framing';
 import {
   connectMount,
+  convertAltAzToRaDec,
   convertDegreesToDMS,
   convertDMStoDegrees,
   convertHMStoDegrees,
@@ -22,7 +23,9 @@ import {
   parkMount,
   rescanMountDevices,
   sendMountEvent,
+  setMountPark,
   setMountTrackingMode,
+  slewMount,
   stopSlewMount,
   unParkMount,
 } from '@/actions/mount';
@@ -149,6 +152,19 @@ export const Mount = () => {
         selectedStar.decInDegrees,
       );
     }
+  };
+
+  const slewToZenith = async () => {
+    const { latitude, longitude } = configState.config.astrometry;
+    const { ra, dec } = convertAltAzToRaDec(
+      90,
+      90,
+      latitude,
+      longitude,
+      new Date(),
+    );
+
+    await slewMount(ra, dec);
   };
 
   return (
@@ -288,7 +304,11 @@ export const Mount = () => {
 
           {!mountState.isParked && (
             <CustomButton
-              disabled={!mountState.isConnected || !configState.isConnected}
+              disabled={
+                !mountState.isConnected ||
+                !configState.isConnected ||
+                mountState.isSlewing
+              }
               onPress={parkMount}
               label="Park"
             />
@@ -302,7 +322,7 @@ export const Mount = () => {
               mountState.isParked ||
               !configState.isConnected
             }
-            onPress={homeMount}
+            onPress={setMountPark}
             label="Set as Park"
           />
         </View>
@@ -349,6 +369,8 @@ export const Mount = () => {
           </Text>
         )}
       </View>
+
+      <View className="mt-8 w-full" />
 
       <Text className="mt-12 text-lg font-medium text-white">
         Mount Control
@@ -405,6 +427,19 @@ export const Mount = () => {
               onListExpand={() => setShowSlewRates(!showSlewRates)}
               width={340}
               isListExpanded={showSlewRates}
+            />
+          </View>
+
+          <View className="w-full flex-row items-center justify-center">
+            <CustomButton
+              disabled={
+                !mountState.isConnected ||
+                mountState.isParked ||
+                !configState.isConnected ||
+                mountState.isSlewing
+              }
+              onPress={slewToZenith}
+              label="Slew to Zenith"
             />
           </View>
         </View>
