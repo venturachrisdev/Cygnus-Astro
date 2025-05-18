@@ -146,7 +146,10 @@ export const getImageByIndex = async (index: number) => {
   }
 };
 
-export const getImageHistory = async (queryThumbnails: boolean = true) => {
+export const getImageHistory = async (
+  queryThumbnails: boolean = true,
+  autoSave: boolean = true,
+) => {
   const sequenceState = useSequenceStore.getState();
   if (queryThumbnails) {
     sequenceState.set({ isLoadingImages: true });
@@ -198,9 +201,11 @@ export const getImageHistory = async (queryThumbnails: boolean = true) => {
         sequenceState.set({ isLoadingImages: false });
       }
 
-      sequenceState.set({
-        images: currentSet,
-      });
+      if (autoSave) {
+        sequenceState.set({
+          images: currentSet,
+        });
+      }
     }
 
     return response.Response;

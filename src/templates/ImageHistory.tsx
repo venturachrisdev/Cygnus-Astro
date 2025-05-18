@@ -32,7 +32,7 @@ export const ImageHistory = () => {
     const interval = setInterval(() => {
       const fn = async () => {
         const oldImagesCount = sequenceState.images.length;
-        const newImages = await getImageHistory(false);
+        const newImages = await getImageHistory(false, false);
 
         if (newImages.length > oldImagesCount) {
           await getImageHistory();
