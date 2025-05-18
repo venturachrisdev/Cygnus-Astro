@@ -21,6 +21,7 @@ interface DropDownProps {
   onItemSelected: (item: Device) => void;
   width?: number;
   defaultText: string;
+  icon?: string;
 
   useInputText?: boolean;
   inputTextValue?: string;
@@ -40,6 +41,7 @@ export const DropDown = ({
   inputTextValue,
   onInputTextChange,
   inputTextPlaceholder,
+  icon,
 }: DropDownProps) => {
   const triggerRef = useRef<View>(null);
   const [position, setPosition] = useState({ x: 0, y: 0, width: 0 });
@@ -73,7 +75,7 @@ export const DropDown = ({
             <Icon
               size={20}
               color={items.length > 0 ? 'white' : 'gray'}
-              name={isListExpanded ? 'chevron-up' : 'chevron-down'}
+              name={icon ?? (isListExpanded ? 'chevron-up' : 'chevron-down')}
             />
           </Pressable>
         </View>

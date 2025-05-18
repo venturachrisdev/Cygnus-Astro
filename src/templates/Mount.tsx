@@ -1,6 +1,6 @@
 import { orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Switch, Text, View } from 'react-native';
 
 import type { Device } from '@/actions/constants';
 import {
@@ -70,6 +70,10 @@ export const Mount = () => {
   const [currentStar, setCurrentStar] = useState<Device>();
   const [currentTrackingMode, setCurrentTrackingMode] = useState<Device>();
   const [currentSlewRate, setCurrentSlewRate] = useState<Device>(slewRates[6]!);
+  const [slewAndcenter, setSlewAndCenter] = useState<boolean>(false);
+  const [filteredStarts, setFilteredStars] = useState<Device[]>([]);
+  const [starsInputText, setStarsInputText] = useState<string>();
+  const [starSearchDebounce, setStarSearchDebounce] = useState<NodeJS.Timer>();
 
   const setMountDevice = (device: Device) => {
     setShowDevicesList(false);
@@ -136,6 +140,34 @@ export const Mount = () => {
     name: `${star.name} (${star.magnitude})`,
   }));
 
+  if (!starsInputText && !filteredStarts.length) {
+    setFilteredStars(starsAsDevices);
+  }
+
+  const onStarInputChange = (value: string) => {
+    setStarsInputText(value);
+    if (value && value.length >= 3) {
+      const list = starsAsDevices.filter((star) =>
+        star.id.toLowerCase().includes(value.trim().toLowerCase()),
+      );
+      setFilteredStars(list);
+
+      if (starSearchDebounce) {
+        clearTimeout(starSearchDebounce);
+      }
+
+      if (list.length) {
+        const debounce = setTimeout(() => {
+          setShowStarsList(true);
+        }, 1500);
+
+        setStarSearchDebounce(debounce);
+      }
+    } else {
+      setFilteredStars(starsAsDevices);
+    }
+  };
+
   const selectedStarInfo = starsFormatted.find(
     (s) => s.name === currentStar?.id,
   );
@@ -143,6 +175,7 @@ export const Mount = () => {
   const onStarSelected = async (item: Device) => {
     setShowStarsList(false);
     setCurrentStar(item);
+    setStarsInputText(item.id);
     await setFramingSource();
 
     const selectedStar = starsFormatted.find((s) => s.name === item.id);
@@ -328,7 +361,7 @@ export const Mount = () => {
         </View>
       </View>
 
-      <Text className="my-6 text-lg font-medium text-white">
+      <Text className="my-8 text-lg font-medium text-white">
         Slew to Visible Star
       </Text>
       <View>
@@ -336,7 +369,12 @@ export const Mount = () => {
           <DropDown
             defaultText="Select Star"
             currentItem={currentStar || null}
-            items={starsAsDevices}
+            useInputText
+            icon={starsInputText ? 'text-search' : undefined}
+            inputTextValue={starsInputText}
+            inputTextPlaceholder="Search Star"
+            onInputTextChange={onStarInputChange}
+            items={filteredStarts}
             onItemSelected={onStarSelected}
             onListExpand={() => {
               setShowStarsList(!showStarsList);
@@ -358,23 +396,34 @@ export const Mount = () => {
             />
           </View>
         </View>
-        {selectedStarInfo?.name && (
-          <Text className="ml-6 mt-3 text-sm font-medium text-gray-500">
-            RA: <Text className="font-bold">{selectedStarInfo?.ra}</Text> | Dec:{' '}
-            <Text className="font-bold">{selectedStarInfo?.dec}</Text> |
-            Altitude:{' '}
-            <Text className="font-bold">
-              {selectedStarInfo?.altitude.toString().substr(0, 5)}
+        <View className="flex flex-row items-center justify-between">
+          {selectedStarInfo?.name && (
+            <Text className="ml-4 text-sm font-medium text-gray-500">
+              RA: <Text className="font-bold">{selectedStarInfo?.ra}</Text> |
+              Dec: <Text className="font-bold">{selectedStarInfo?.dec}</Text> |
+              Altitude:{' '}
+              <Text className="font-bold">
+                {selectedStarInfo?.altitude.toString().substr(0, 5)}
+              </Text>
             </Text>
-          </Text>
-        )}
+          )}
+          <View className="my-3 flex flex-row items-center justify-end gap-x-3">
+            <Text
+              style={{ opacity: mountState.isConnected ? 1.0 : 0.3 }}
+              className="text-lg font-medium text-white"
+            >
+              Slew & Center
+            </Text>
+            <Switch
+              disabled={!mountState.isConnected}
+              value={slewAndcenter}
+              onChange={() => setSlewAndCenter(!slewAndcenter)}
+            />
+          </View>
+        </View>
       </View>
 
-      <View className="mt-8 w-full" />
-
-      <Text className="mt-12 text-lg font-medium text-white">
-        Mount Control
-      </Text>
+      <Text className="my-8 text-lg font-medium text-white">Mount Control</Text>
 
       <View className="mb-10 flex w-full flex-row items-center justify-between">
         <View className="flex items-center justify-between gap-y-4">

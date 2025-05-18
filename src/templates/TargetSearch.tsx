@@ -48,7 +48,6 @@ export const TargetSearch = () => {
 
   const [searchValue, setSearchValue] = useState<string>('');
   const [debounceID, setDebounceID] = useState<NodeJS.Timer>();
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [didPlatesolveFail, setDidPlatesolveFail] = useState<boolean>(false);
 
   const onValueChange = (value: string) => {
@@ -105,7 +104,6 @@ export const TargetSearch = () => {
       await setFramingSource();
       await setFramingCoordinates(raInDegrees, decInDegrees);
       await framingSlew(center, true);
-      setIsModalVisible(true);
     }
   };
 
@@ -158,11 +156,7 @@ export const TargetSearch = () => {
   return (
     <>
       <Modal
-        visible={
-          isModalVisible &&
-          ngcState.isRunning &&
-          (mountState.isSlewing || cameraState.isExposing || didPlatesolveFail)
-        }
+        visible={ngcState.isRunning}
         transparent
         supportedOrientations={['landscape']}
       >
@@ -171,6 +165,18 @@ export const TargetSearch = () => {
           <View className="flex w-96 rounded-lg bg-neutral-900 p-5">
             <View className="flex flex-row">
               <View className="mr-10 flex gap-y-6">
+                {!mountState.isSlewing &&
+                  !cameraState.isExposing &&
+                  !didPlatesolveFail && (
+                    <View className="flex flex-row items-center">
+                      <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                        <Icon name="loading" size={16} color="white" />
+                      </Animated.View>
+                      <Text className="ml-3 text-xl text-white">
+                        Framing...
+                      </Text>
+                    </View>
+                  )}
                 {mountState.isSlewing && (
                   <View className="flex flex-row items-center">
                     <Animated.View style={{ transform: [{ rotate: spin }] }}>
