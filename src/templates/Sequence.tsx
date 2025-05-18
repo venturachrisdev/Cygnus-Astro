@@ -409,6 +409,12 @@ export const Sequence = () => {
     return true;
   };
 
+  const now = new Date();
+  let hours = now.getHours();
+  hours = hours < 12 ? hours + 12 : hours - 12;
+  const minutes = now.getMinutes();
+  const hourDate = hours + minutes / 60;
+
   const renderContainer = (container: any, index: number) => {
     const hasChildren =
       container.Triggers || container.Conditions || container.Items;
@@ -430,7 +436,11 @@ export const Sequence = () => {
                     <View className="mb-4 flex flex-row items-center px-1">
                       <Icon name="target" size={20} color="white" />
                       <Text className="ml-3 text-xl font-medium text-white">
-                        {container.Target.TargetName || 'Target'}
+                        {(container.Target.TargetName || 'Target').substr(
+                          0,
+                          15,
+                        )}
+                        {container.Target.TargetName?.length > 18 ? '...' : ''}
                       </Text>
                     </View>
                     <View className="ml-2">
@@ -464,7 +474,7 @@ export const Sequence = () => {
                   <View className="mr-6">
                     <LineChart
                       curved
-                      width={250}
+                      width={350}
                       height={70}
                       adjustToWidth
                       maxValue={90}
@@ -472,21 +482,56 @@ export const Sequence = () => {
                       hideAxesAndRules
                       showVerticalLines
                       noOfVerticalLines={1}
-                      verticalLinesSpacing={70}
+                      verticalLinesSpacing={0}
                       verticalLinesThickness={1}
-                      verticalLinesShift={68}
+                      verticalLinesShift={hourDate * 15}
                       verticalLinesStrokeDashArray={[6]}
                       verticalLinesColor="#88ad75"
                       yAxisThickness={0}
                       showReferenceLine1
                       stepValue={1}
+                      xAxisLabelTexts={[
+                        '12',
+                        '13',
+                        '14',
+                        '15',
+                        '16',
+                        '17',
+                        '18',
+                        '19',
+                        '20',
+                        '22',
+                        '23',
+                        '00',
+                        '01',
+                        '02',
+                        '03',
+                        '04',
+                        '05',
+                        '06',
+                        '07',
+                        '08',
+                        '09',
+                        '10',
+                        '11',
+                      ]}
+                      xAxisLabelTextStyle={{
+                        color: '#aaa',
+                        fontSize: 7,
+                      }}
                       referenceLine1Position={-65}
                       referenceLine1Config={{
                         thickness: 1,
-                        width: 250,
+                        width: 350,
                         dashWidth: 5,
                         dashGap: 0,
                         color: 'gray',
+                        labelText: '30°',
+                        labelTextStyle: {
+                          color: '#aaa',
+                          fontSize: 7,
+                          marginTop: -12,
+                        },
                       }}
                       xAxisColor="white"
                       yAxisColor="white"

@@ -153,6 +153,12 @@ export const TargetSearch = () => {
     outputRange: ['0deg', '360deg'],
   });
 
+  const now = new Date();
+  let hours = now.getHours();
+  hours = hours < 12 ? hours + 12 : hours - 12;
+  const minutes = now.getMinutes();
+  const hourDate = hours + minutes / 60;
+
   return (
     <>
       <Modal
@@ -278,7 +284,7 @@ export const TargetSearch = () => {
                   onPress={() => ngcState.set({ selectedObject: ngc })}
                 >
                   <View className="flex flex-row justify-between">
-                    <View className="flex w-52 flex-row">
+                    <View className="flex flex-row">
                       <View className="mr-3 h-24 w-1 rounded-lg bg-neutral-900" />
                       <View className="flex">
                         <Text className="text-xl font-semibold text-white">
@@ -295,20 +301,49 @@ export const TargetSearch = () => {
                         </Text>
                       </View>
                     </View>
-                    <View>
+                    <View className="mr-6">
                       <LineChart
                         curved
-                        width={360}
+                        width={420}
                         height={90}
                         adjustToWidth
                         maxValue={90}
                         hideYAxisText
+                        xAxisLabelTexts={[
+                          '12',
+                          '13',
+                          '14',
+                          '15',
+                          '16',
+                          '17',
+                          '18',
+                          '19',
+                          '20',
+                          '22',
+                          '23',
+                          '00',
+                          '01',
+                          '02',
+                          '03',
+                          '04',
+                          '05',
+                          '06',
+                          '07',
+                          '08',
+                          '09',
+                          '10',
+                          '11',
+                        ]}
+                        xAxisLabelTextStyle={{
+                          color: '#aaa',
+                          fontSize: 8,
+                        }}
                         hideAxesAndRules
                         showVerticalLines
                         noOfVerticalLines={1}
-                        verticalLinesSpacing={70}
+                        verticalLinesSpacing={0}
                         verticalLinesThickness={1}
-                        verticalLinesShift={125}
+                        verticalLinesShift={hourDate * 17}
                         verticalLinesStrokeDashArray={[6]}
                         verticalLinesColor="#88ad75"
                         yAxisThickness={0}
@@ -317,10 +352,16 @@ export const TargetSearch = () => {
                         referenceLine1Position={-65}
                         referenceLine1Config={{
                           thickness: 1,
-                          width: 360,
+                          width: 420,
                           dashWidth: 5,
                           dashGap: 0,
                           color: 'gray',
+                          labelText: '30°',
+                          labelTextStyle: {
+                            color: '#aaa',
+                            fontSize: 8,
+                            marginTop: -12,
+                          },
                         }}
                         xAxisColor="white"
                         yAxisColor="white"

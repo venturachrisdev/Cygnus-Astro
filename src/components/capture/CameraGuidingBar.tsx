@@ -15,22 +15,22 @@ export const CameraGuidingBar = ({ graph, error }: GuidingBarProps) => (
         <Text className="ml-2 text-xs text-white">
           RA:{' '}
           <Text className="font-medium">
-            {error?.RA.pixels.toPrecision(2)} (
-            {error?.RA.arcseconds.toPrecision(2)}'')
+            {error?.RA?.pixels?.toPrecision(2)} (
+            {error?.RA?.arcseconds?.toPrecision(2)}'')
           </Text>
         </Text>
         <Text className="text-xs text-white">
           Dec:{' '}
           <Text className="font-medium">
-            {error?.Dec.pixels.toPrecision(2)} (
-            {error?.Dec.arcseconds.toPrecision(2)}'')
+            {error?.Dec?.pixels?.toPrecision(2)} (
+            {error?.Dec?.arcseconds?.toPrecision(2)}'')
           </Text>
         </Text>
         <Text className="text-xs text-white">
           Total:{' '}
           <Text className="font-medium">
-            {error?.total.pixels.toPrecision(2)} (
-            {error?.total.arcseconds.toPrecision(2)}'')
+            {error?.total?.pixels?.toPrecision(2)} (
+            {error?.total?.arcseconds?.toPrecision(2)}'')
           </Text>
         </Text>
       </View>

@@ -35,16 +35,16 @@ export const getGuiderInfo = async () => {
       pixelScale: response.Response.PixelScale,
       error: {
         RA: {
-          pixels: response.Response.RMSError.RA.Pixel,
-          arcseconds: response.Response.RMSError.RA.Arcseconds,
+          pixels: response.Response.RMSError?.RA?.Pixel,
+          arcseconds: response.Response.RMSError?.RA?.Arcseconds,
         },
         Dec: {
-          pixels: response.Response.RMSError.Dec.Pixel,
-          arcseconds: response.Response.RMSError.Dec.Arcseconds,
+          pixels: response.Response.RMSError?.Dec?.Pixel,
+          arcseconds: response.Response.RMSError?.Dec?.Arcseconds,
         },
         total: {
-          pixels: response.Response.RMSError.Total.Pixel,
-          arcseconds: response.Response.RMSError.Total.Arcseconds,
+          pixels: response.Response.RMSError?.Total?.Pixel,
+          arcseconds: response.Response.RMSError?.Total?.Arcseconds,
         },
       },
     });

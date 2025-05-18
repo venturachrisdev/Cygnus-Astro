@@ -51,10 +51,10 @@ export const getMountInfo = async () => {
       longitude: response.Response.SiteLongitude,
       elevation: response.Response.SiteElevation,
       sideOfPier: response.Response.SideOfPier.replace(/pier/g, ''),
-      ra: response.Response.Coordinates.RAString,
-      dec: response.Response.Coordinates.DecString,
+      ra: response.Response.Coordinates?.RAString,
+      dec: response.Response.Coordinates?.DecString,
       timeToMeridianFlip: response.Response.TimeToMeridianFlipString,
-      epoch: response.Response.Coordinates.Epoch,
+      epoch: response.Response.Coordinates?.Epoch,
       siderealTime: response.Response.SiderealTimeString,
     });
     return response.Response;

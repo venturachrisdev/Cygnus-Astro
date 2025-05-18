@@ -32,7 +32,7 @@ export const TPPA = () => {
   const [didPlatesolveFailed, setDidPlatesolveFailed] = useState(false);
   const [altitudeError, setAltitudeError] = useState<number>(0);
   const [azimuthError, setAzimuthError] = useState<number>(0);
-  const [totalError, setTotalError] = useState<number>();
+  const [totalError, setTotalError] = useState<number>(0);
 
   useEffect(() => {
     initializeTPPASocket((message) => {
@@ -50,11 +50,15 @@ export const TPPA = () => {
         setDidPlatesolveFailed(false);
       } else if (message.Response === 'paused procedure') {
         setIsPaused(true);
+        setIsRunning(true);
       } else if (message.Response === 'resumed procedure') {
         setIsPaused(false);
+        setIsRunning(true);
       } else if (message.Response.TotalError) {
-        pauseTPPAAlignment();
+        setIsRunning(true);
         setIsPaused(true);
+        pauseTPPAAlignment();
+
         setAltitudeError(message.Response.AltitudeError);
         setAzimuthError(message.Response.AzimuthError);
         setTotalError(message.Response.TotalError);

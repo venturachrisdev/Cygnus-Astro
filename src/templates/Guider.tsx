@@ -134,22 +134,22 @@ export const Guider = () => {
         <Text className="text-sm text-white">
           RA:{' '}
           <Text className="font-medium">
-            {guiderState.error?.RA.pixels.toPrecision(2)} (
-            {guiderState.error?.RA.arcseconds.toPrecision(2)}'')
+            {guiderState.error?.RA?.pixels?.toPrecision(2)} (
+            {guiderState.error?.RA?.arcseconds?.toPrecision(2)}'')
           </Text>
         </Text>
         <Text className="text-sm text-white">
           Dec:{' '}
           <Text className="font-medium">
-            {guiderState.error?.Dec.pixels.toPrecision(2)} (
-            {guiderState.error?.Dec.arcseconds.toPrecision(2)}'')
+            {guiderState.error?.Dec?.pixels?.toPrecision(2)} (
+            {guiderState.error?.Dec?.arcseconds?.toPrecision(2)}'')
           </Text>
         </Text>
         <Text className="text-sm text-white">
           Total:{' '}
           <Text className="font-medium">
-            {guiderState.error?.total.pixels.toPrecision(2)} (
-            {guiderState.error?.total.arcseconds.toPrecision(2)}'')
+            {guiderState.error?.total?.pixels?.toPrecision(2)} (
+            {guiderState.error?.total?.arcseconds?.toPrecision(2)}'')
           </Text>
         </Text>
       </View>
