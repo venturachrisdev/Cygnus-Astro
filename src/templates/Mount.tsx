@@ -146,6 +146,8 @@ export const Mount = () => {
 
   const onStarInputChange = (value: string) => {
     setStarsInputText(value);
+    setCurrentStar(undefined);
+
     if (value && value.length >= 3) {
       const list = starsAsDevices.filter((star) =>
         star.id.toLowerCase().includes(value.trim().toLowerCase()),
@@ -407,7 +409,8 @@ export const Mount = () => {
               </Text>
             </Text>
           )}
-          <View className="my-3 flex flex-row items-center justify-end gap-x-3">
+          {!selectedStarInfo?.name && <View />}
+          <View className="my-3 flex flex-row items-center justify-end gap-x-3 self-end">
             <Text
               style={{ opacity: mountState.isConnected ? 1.0 : 0.3 }}
               className="text-lg font-medium text-white"
