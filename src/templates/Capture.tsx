@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Dimensions, Pressable, Text, View } from 'react-native';
 
 import {
@@ -126,9 +126,13 @@ const Capture = () => {
     }
   }, [cameraState.countdown]);
 
-  const currentFilterText = filterWheelState.availableFilters.find(
-    (f) => f.id === filterWheelState.currentFilter,
-  )?.name;
+  const currentFilterText = useMemo(
+    () =>
+      filterWheelState.availableFilters.find(
+        (f) => f.id === filterWheelState.currentFilter,
+      )?.name,
+    [filterWheelState.currentFilter, filterWheelState.availableFilters],
+  );
 
   return (
     <>

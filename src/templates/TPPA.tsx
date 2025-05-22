@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Animated, Easing, ScrollView, Text, View } from 'react-native';
 
 import { getCameraInfo } from '@/actions/camera';
@@ -95,10 +95,13 @@ export const TPPA = () => {
     return error <= 0.0334;
   };
 
-  const allComponentsConnected =
-    configState.isConnected &&
-    mountState.isConnected &&
-    cameraState.isConnected;
+  const allComponentsConnected = useMemo(
+    () =>
+      configState.isConnected &&
+      mountState.isConnected &&
+      cameraState.isConnected,
+    [configState.isConnected, mountState.isConnected, cameraState.isConnected],
+  );
 
   const spinValue = new Animated.Value(0);
   Animated.loop(

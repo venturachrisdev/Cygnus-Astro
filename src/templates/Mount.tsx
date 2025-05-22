@@ -1,5 +1,5 @@
 import { orderBy } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
 
 import type { Device } from '@/actions/constants';
@@ -112,33 +112,39 @@ export const Mount = () => {
     setCurrentSlewRate(item);
   };
 
-  const starsFormatted = VisibleStars.map((star) => {
-    const raInDegrees = convertHMStoDegrees(star.ra);
-    const decInDegrees = convertDMStoDegrees(star.dec);
+  const starsFormatted = useMemo(
+    () =>
+      VisibleStars.map((star) => {
+        const raInDegrees = convertHMStoDegrees(star.ra);
+        const decInDegrees = convertDMStoDegrees(star.dec);
 
-    return {
-      ...star,
-      ra: star.ra,
-      raInDegrees,
-      dec: star.dec,
-      decInDegrees,
-      altitude: getAltitude({
-        raDeg: raInDegrees,
-        decDeg: decInDegrees,
-        latDeg: configState.config.astrometry.latitude,
-        lonDeg: configState.config.astrometry.longitude,
-        date: new Date(),
-      }).altDeg,
-    };
-  });
+        return {
+          ...star,
+          ra: star.ra,
+          raInDegrees,
+          dec: star.dec,
+          decInDegrees,
+          altitude: getAltitude({
+            raDeg: raInDegrees,
+            decDeg: decInDegrees,
+            latDeg: configState.config.astrometry.latitude,
+            lonDeg: configState.config.astrometry.longitude,
+            date: new Date(),
+          }).altDeg,
+        };
+      }),
+    [configState.config.astrometry],
+  );
 
-  let starsAboveHorizon = starsFormatted.filter((star) => star.altitude >= 0);
-  starsAboveHorizon = orderBy(starsAboveHorizon, ['altitude'], ['desc']);
+  const starsAsDevices = useMemo(() => {
+    let starsAboveHorizon = starsFormatted.filter((star) => star.altitude >= 0);
+    starsAboveHorizon = orderBy(starsAboveHorizon, ['altitude'], ['desc']);
 
-  const starsAsDevices = starsAboveHorizon.map((star) => ({
-    id: star.name,
-    name: `${star.name} (${star.magnitude})`,
-  }));
+    return starsAboveHorizon.map((star) => ({
+      id: star.name,
+      name: `${star.name} (${star.magnitude})`,
+    }));
+  }, [starsFormatted]);
 
   if (!starsInputText && !filteredStarts.length) {
     setFilteredStars(starsAsDevices);
@@ -170,8 +176,9 @@ export const Mount = () => {
     }
   };
 
-  const selectedStarInfo = starsFormatted.find(
-    (s) => s.name === currentStar?.id,
+  const selectedStarInfo = useMemo(
+    () => starsFormatted.find((s) => s.name === currentStar?.id),
+    [starsFormatted, currentStar],
   );
 
   const onStarSelected = async (item: Device) => {

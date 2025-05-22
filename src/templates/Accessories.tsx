@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
 
 import type { Device } from '@/actions/constants';
@@ -77,14 +77,21 @@ export const Accessories = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const filtersToDevices: Device[] = filterWheelState.availableFilters.map(
-    (filter) => ({
-      ...filter,
-      id: String(filter.id),
-    }),
+  useEffect(() => {
+    setSelectedFilter(filterWheelState.currentFilter);
+  }, [filterWheelState.currentFilter]);
+
+  const filtersToDevices: Device[] = useMemo(
+    () =>
+      filterWheelState.availableFilters.map((filter) => ({
+        ...filter,
+        id: String(filter.id),
+      })),
+    [filterWheelState.availableFilters],
   );
-  const currentFilter = filtersToDevices.find(
-    (f) => f.id === String(selectedFilter),
+  const currentFilter = useMemo(
+    () => filtersToDevices.find((f) => f.id === String(selectedFilter)),
+    [selectedFilter, filtersToDevices],
   );
 
   return (

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { orderBy } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
@@ -20,6 +20,13 @@ import { DeviceConnection } from '@/components/DeviceConnection';
 import { StatusChip } from '@/components/StatusChip';
 import { useConfigStore } from '@/stores/config.store';
 import { useFocuserStore } from '@/stores/focuser.store';
+
+const FocusErrorLine = (props: { height?: number }) => (
+  <View
+    style={{ height: props.height || 20 }}
+    className="h-10 w-[10px] bg-red-800"
+  />
+);
 
 export const Focuser = () => {
   const focuserState = useFocuserStore();
@@ -57,14 +64,7 @@ export const Focuser = () => {
     };
   }, []);
 
-  const FocusErrorLine = (props: { height?: number }) => (
-    <View
-      style={{ height: props.height || 20 }}
-      className="h-10 w-[10px] bg-red-800"
-    />
-  );
-
-  const getSecondaryData = () => {
+  const secondaryData = useMemo(() => {
     const calculatedFocusPosition =
       focuserState.lastAutoFocusRun?.calculatedFocusPoint.position || 0;
     const calculatedFocusValue =
@@ -77,7 +77,7 @@ export const Focuser = () => {
       textColor: 'orange',
     };
 
-    const secondaryData =
+    const data =
       focuserState.lastAutoFocusRun?.points.map((_p) => ({
         value: 10,
         hideDataPoint: true,
@@ -101,23 +101,31 @@ export const Focuser = () => {
       (focuserState.lastAutoFocusRun?.points[0]?.position || 0) -
       (focuserState.lastAutoFocusRun?.points[1]?.position || 0);
 
-    secondaryData[closestIndex] = {
+    data[closestIndex] = {
       ...litPoint,
-      textShiftX: (580 / secondaryData.length) * (lastDifference / stepSize),
+      textShiftX: (580 / data.length) * (lastDifference / stepSize),
       hideDataPoint: false,
     };
 
-    return secondaryData;
-  };
+    return data;
+  }, [focuserState.lastAutoFocusRun]);
 
-  const minimumFocusValue = Math.floor(
-    orderBy(focuserState.lastAutoFocusRun?.points, 'value', ['asc'])[0]
-      ?.value || 2,
+  const minimumFocusValue = useMemo(
+    () =>
+      Math.floor(
+        orderBy(focuserState.lastAutoFocusRun?.points, 'value', ['asc'])[0]
+          ?.value || 2,
+      ),
+    [focuserState.lastAutoFocusRun],
   );
 
-  const maximumFocusValue = Math.ceil(
-    orderBy(focuserState.lastAutoFocusRun?.points, ['value'], ['desc'])[0]
-      ?.value || 6,
+  const maximumFocusValue = useMemo(
+    () =>
+      Math.ceil(
+        orderBy(focuserState.lastAutoFocusRun?.points, ['value'], ['desc'])[0]
+          ?.value || 6,
+      ),
+    [focuserState.lastAutoFocusRun],
   );
 
   return (
@@ -335,7 +343,7 @@ export const Focuser = () => {
             dataPointsColor: 'transparent',
             zIndex: 99,
           }}
-          secondaryData={getSecondaryData()}
+          secondaryData={secondaryData}
         />
       )}
       <View className="mb-16" />
