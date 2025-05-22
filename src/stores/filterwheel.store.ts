@@ -8,8 +8,8 @@ export interface Filter {
 }
 
 interface FilterWheelStore {
-  isConnected: false;
-  isMoving: false;
+  isConnected: boolean;
+  isMoving: boolean;
   currentFilter: number | null;
   availableFilters: Filter[];
 

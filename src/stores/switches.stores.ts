@@ -14,7 +14,7 @@ interface WritableSwitch extends ReadableSwitch {
 }
 
 interface SwitchesStore {
-  isConnected: false;
+  isConnected: boolean;
 
   currentDevice: Device | null;
   devices: Device[];
