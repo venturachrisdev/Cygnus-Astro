@@ -134,6 +134,8 @@ const Capture = () => {
     [filterWheelState.currentFilter, filterWheelState.availableFilters],
   );
 
+  const { height } = Dimensions.get('window');
+
   return (
     <>
       <View className="flex h-full flex-1 bg-black">
@@ -180,10 +182,6 @@ const Capture = () => {
         <View className="flex h-full w-full flex-1 items-center justify-center">
           <ZoomableCameraImage
             image={cameraState.image}
-            cropHeight={Dimensions.get('window').height - 75}
-            cropWidth={Dimensions.get('window').width - 300}
-            height={Dimensions.get('window').height - 75}
-            width={Dimensions.get('window').width - 300}
             resizeMode="contain"
             isLoading={cameraState.isLoading}
           />
@@ -297,7 +295,8 @@ const Capture = () => {
           {cameraState.countdown > 0 ? `${cameraState.countdown}s` : ' '}
         </Text>
 
-        {!sequenceState.isRunning && !sequenceState.images.length && (
+        {((!sequenceState.isRunning && !sequenceState.images.length) ||
+          height >= 720) && (
           <LabelSwitch
             label="Loop"
             disabled={!cameraState.isConnected}

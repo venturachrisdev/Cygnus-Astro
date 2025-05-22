@@ -22,9 +22,9 @@ import { useSequenceStore } from '@/stores/sequence.store';
 export const ImageHistory = () => {
   const router = useRouter();
   const sequenceState = useSequenceStore();
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [selectedImage, setSelectedImage] = useState<number | null>();
   const [isImageLoading, setImageLoading] = useState<boolean>(false);
-  const [imageResult, setImageResult] = useState<string | null>(null);
+  const [imageResult, setImageResult] = useState<string | null>();
 
   useEffect(() => {
     getImageHistory();
@@ -89,12 +89,9 @@ export const ImageHistory = () => {
             </Pressable>
             {!!imageResult && (
               <ZoomableCameraImage
-                width={Dimensions.get('window').width}
-                height={Dimensions.get('window').height}
-                cropHeight={Dimensions.get('window').height}
-                cropWidth={Dimensions.get('window').width}
                 image={imageResult}
                 isLoading={false}
+                fullscreen
               />
             )}
             {isImageLoading && (
