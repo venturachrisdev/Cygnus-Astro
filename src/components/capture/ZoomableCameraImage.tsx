@@ -48,8 +48,9 @@ export const ZoomableCameraImage = ({
 
   let scaledWidth = width;
   let scaledHeight = height;
+  const isPortrait = limitY > limitX;
 
-  if (width > height) {
+  if (width > height || isPortrait) {
     scaledWidth = limitX;
     scaledHeight = height * (limitX / width);
   } else {
