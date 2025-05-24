@@ -44,7 +44,11 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": ["@config-plugins/detox", "expo-router"],
+    "plugins": [
+      "@config-plugins/detox",
+      "expo-router",
+      "./plugins/trust-lan.js"
+    ],
     "extra": {
       "router": {
         "origin": false

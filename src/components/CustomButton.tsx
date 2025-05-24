@@ -29,7 +29,7 @@ export const CustomButton = ({
       disabled={disabled}
       className={`${pressed ? 'opacity-70' : ''} ${
         disabled ? 'bg-neutral-700 opacity-40' : `bg-${color}-800`
-      } flex flex-1 items-center rounded-lg p-3`}
+      } flex flex-1 items-center justify-center rounded-lg p-3`}
       onPress={onPress}
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
