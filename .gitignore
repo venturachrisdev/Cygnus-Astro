@@ -16,6 +16,7 @@ index.js
 dist/
 web-build/
 *.ipa
+*.apk
 
 # debug
 npm-debug.log*
