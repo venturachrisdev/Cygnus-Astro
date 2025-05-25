@@ -271,8 +271,9 @@ const Capture = () => {
           contentContainerStyle={{
             justifyContent: 'center',
             alignItems: 'center',
+            minHeight: '99%',
           }}
-          className="my-4 flex h-full w-full"
+          className="flex w-full"
         >
           <CameraControl
             label={`${cameraState.duration}s`}
