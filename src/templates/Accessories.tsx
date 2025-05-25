@@ -7,7 +7,6 @@ import {
   connectFilterWheel,
   disconnectFilterWheel,
   getFilterWheelInfo,
-  listFilterWheelDevices,
   rescanFilterWheelDevices,
 } from '@/actions/filterwheel';
 import { getCurrentProfile } from '@/actions/hosts';
@@ -15,7 +14,6 @@ import {
   connectSwitches,
   disconnectSwitches,
   getSwitchesInfo,
-  listSwitchesDevices,
   rescanSwitchesDevices,
   setSwitchValue,
 } from '@/actions/switches';
@@ -63,8 +61,8 @@ export const Accessories = () => {
   };
 
   useEffect(() => {
-    listFilterWheelDevices();
-    listSwitchesDevices();
+    rescanFilterWheelDevices();
+    rescanSwitchesDevices();
     getCurrentProfile();
     getFilterWheelInfo();
     getSwitchesInfo();

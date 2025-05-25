@@ -10,7 +10,6 @@ import {
   disconnectFocuser,
   getFocuserInfo,
   getLastAutoFocus,
-  listFocuserDevices,
   moveFocuser,
   rescanFocuserDevices,
   startAutofocus,
@@ -46,7 +45,7 @@ export const Focuser = () => {
   };
 
   useEffect(() => {
-    listFocuserDevices();
+    rescanFocuserDevices();
     getFocuserInfo();
     getLastAutoFocus();
 

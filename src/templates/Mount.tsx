@@ -19,7 +19,6 @@ import {
   getMountInfo,
   homeMount,
   initializeMountSocket,
-  listMountDevices,
   parkMount,
   rescanMountDevices,
   sendMountEvent,
@@ -92,7 +91,7 @@ export const Mount = () => {
     initializeMountSocket((message) => {
       console.log('Message received', message);
     });
-    listMountDevices();
+    rescanMountDevices();
     getMountInfo();
 
     const interval = setInterval((_) => {
