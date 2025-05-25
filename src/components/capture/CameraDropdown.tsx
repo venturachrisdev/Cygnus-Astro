@@ -12,6 +12,7 @@ interface CameraDropDownItemProps {
 
 export const CameraDropDown = ({ children }: CameraDropDownProps) => (
   <ScrollView
+    style={{ zIndex: 99 }}
     contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
     className="absolute right-24 flex h-full w-24 bg-neutral-900 bg-opacity-50 py-6"
   >

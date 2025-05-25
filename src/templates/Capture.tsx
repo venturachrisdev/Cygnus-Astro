@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { Dimensions, Pressable, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import {
   abortCaptureImage,
@@ -42,6 +42,7 @@ import { LabelSwitch } from '@/components/capture/LabelSwitch';
 import { ZoomableCameraImage } from '@/components/capture/ZoomableCameraImage';
 import { MenuItem } from '@/components/MenuItem';
 import { useCameraStore } from '@/stores/camera.store';
+import { useCaptureStore } from '@/stores/capture.store';
 import { useConfigStore } from '@/stores/config.store';
 import { useFilterWheelStore } from '@/stores/filterwheel.store';
 import { useFocuserStore } from '@/stores/focuser.store';
@@ -55,6 +56,7 @@ const durations = [
 ];
 
 const Capture = () => {
+  const captureState = useCaptureStore();
   const configState = useConfigStore();
   const cameraState = useCameraStore();
   const mountState = useMountStore();
@@ -66,10 +68,6 @@ const Capture = () => {
 
   const [showDurationView, setShowDurationView] = useState(false);
   const [showFilterView, setShowFilterView] = useState(false);
-
-  const [showGuiding, setShowGuiding] = useState(false);
-  const [showMountControl, setShowMountControl] = useState(false);
-  const [showFocuserControl, setShowFocuserControl] = useState(false);
 
   const abortCapture = async () => {
     await abortCaptureImage();
@@ -134,8 +132,6 @@ const Capture = () => {
     [filterWheelState.currentFilter, filterWheelState.availableFilters],
   );
 
-  const { height } = Dimensions.get('window');
-
   return (
     <>
       <View className="flex h-full flex-1 bg-black">
@@ -157,24 +153,36 @@ const Capture = () => {
               direction="horizontal"
               size={24}
               icon="image-filter-center-focus-strong-outline"
-              onPress={() => setShowFocuserControl(!showFocuserControl)}
-              isActive={showFocuserControl}
+              onPress={() =>
+                captureState.set({
+                  showFocuserControl: !captureState.showFocuserControl,
+                })
+              }
+              isActive={captureState.showFocuserControl}
             />
             <MenuItem
               disabled={!mountState.isConnected}
               direction="horizontal"
               size={24}
               icon="telescope"
-              onPress={() => setShowMountControl(!showMountControl)}
-              isActive={showMountControl}
+              onPress={() =>
+                captureState.set({
+                  showMountControl: !captureState.showMountControl,
+                })
+              }
+              isActive={captureState.showMountControl}
             />
             <MenuItem
               disabled={!guiderState.isConnected}
               direction="horizontal"
               size={24}
               icon="target"
-              onPress={() => setShowGuiding(!showGuiding)}
-              isActive={showGuiding}
+              onPress={() =>
+                captureState.set({
+                  showGuiding: !captureState.showGuiding,
+                })
+              }
+              isActive={captureState.showGuiding}
             />
           </View>
         </CameraBarToggle>
@@ -186,7 +194,7 @@ const Capture = () => {
             isLoading={cameraState.isLoading}
           />
 
-          {showMountControl && (
+          {captureState.showMountControl && (
             <CameraMountControlBar
               disabled={!mountState.isConnected || mountState.isParked}
               absolute
@@ -205,7 +213,7 @@ const Capture = () => {
             />
           )}
 
-          {showFocuserControl && (
+          {captureState.showFocuserControl && (
             <CameraFocuserControlBar
               position={focuserState.position}
               onMoveUp={moveFocuserUp}
@@ -213,7 +221,7 @@ const Capture = () => {
             />
           )}
 
-          {showGuiding && (
+          {captureState.showGuiding && (
             <CameraGuidingBar
               graph={guiderState.graph}
               error={guiderState.error}
@@ -258,69 +266,75 @@ const Capture = () => {
         className="flex h-full w-24 items-center justify-center bg-neutral-900"
         style={{ zIndex: 99 }}
       >
-        <CameraControl
-          label={`${cameraState.duration}s`}
-          onPress={() => setShowDurationView(!showDurationView)}
-        />
-        <CameraControl
-          label={currentFilterText || '...'}
-          onPress={() => setShowFilterView(!showFilterView)}
-        />
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          className="my-4 flex h-full w-full"
+        >
+          <CameraControl
+            label={`${cameraState.duration}s`}
+            onPress={() => setShowDurationView(!showDurationView)}
+          />
+          <CameraControl
+            label={currentFilterText || '...'}
+            onPress={() => setShowFilterView(!showFilterView)}
+          />
 
-        <CaptureButton
-          progressPercentage={
-            (cameraState.countdown /
-              (cameraState.isCapturing
-                ? cameraState.duration
-                : configState.config.snapshot.duration)) *
-            100
-          }
-          isCapturing={
-            cameraState.isCapturing ||
-            (cameraState.isExposing && !sequenceState.isRunning)
-          }
-          disabled={
-            !configState.isConnected ||
-            !cameraState.isConnected ||
-            cameraState.isLoading ||
-            !cameraState.canCapture ||
-            sequenceState.isRunning ||
-            filterWheelState.isMoving
-          }
-          onCancel={abortCapture}
-          onCapture={captureImage}
-        />
+          <CaptureButton
+            progressPercentage={
+              (cameraState.countdown /
+                (cameraState.isCapturing
+                  ? cameraState.duration
+                  : configState.config.snapshot.duration)) *
+              100
+            }
+            isCapturing={
+              cameraState.isCapturing ||
+              (cameraState.isExposing && !sequenceState.isRunning)
+            }
+            disabled={
+              !configState.isConnected ||
+              !cameraState.isConnected ||
+              cameraState.isLoading ||
+              !cameraState.canCapture ||
+              sequenceState.isRunning ||
+              filterWheelState.isMoving
+            }
+            onCancel={abortCapture}
+            onCapture={captureImage}
+          />
 
-        <Text className="my-3 text-center text-sm text-gray-100">
-          {cameraState.countdown > 0 ? `${cameraState.countdown}s` : ' '}
-        </Text>
+          <Text className="my-3 text-center text-sm text-gray-100">
+            {cameraState.countdown > 0 ? `${cameraState.countdown}s` : ' '}
+          </Text>
 
-        {((!sequenceState.isRunning && !sequenceState.images.length) ||
-          height >= 720) && (
+          {sequenceState.images.length > 0 && (
+            <Pressable
+              disabled={sequenceState.isLoadingImages}
+              onPress={() => router.push('/image-history')}
+              className="mt-4 h-14 w-14 overflow-hidden rounded-lg border-2 border-neutral-600 bg-gray-900 p-[1px]"
+            >
+              <View className="flex h-full w-full flex-1 items-center justify-center">
+                <CameraImage
+                  image={sequenceState.images[0]?.image || null}
+                  resizeMode="center"
+                  isLoading={sequenceState.isLoadingImages}
+                  defaultText=""
+                />
+              </View>
+            </Pressable>
+          )}
+
           <LabelSwitch
             label="Loop"
             disabled={!cameraState.isConnected}
             value={cameraState.loop}
             onChange={(value) => cameraState.set({ loop: value })}
           />
-        )}
-
-        {sequenceState.images.length > 0 && (
-          <Pressable
-            disabled={sequenceState.isLoadingImages}
-            onPress={() => router.push('/image-history')}
-            className="mt-4 h-14 w-14 overflow-hidden rounded-lg border-2 border-neutral-600 bg-gray-900 p-[1px]"
-          >
-            <View className="flex h-full w-full flex-1 items-center justify-center">
-              <CameraImage
-                image={sequenceState.images[0]?.image || null}
-                resizeMode="center"
-                isLoading={sequenceState.isLoadingImages}
-                defaultText=""
-              />
-            </View>
-          </Pressable>
-        )}
+        </ScrollView>
       </View>
     </>
   );
