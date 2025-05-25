@@ -7,7 +7,6 @@ import {
   coolCamera,
   disconnectCamera,
   getCameraInfo,
-  listCameraDevices,
   rescanCameraDevices,
   warmCamera,
 } from '@/actions/camera';
@@ -41,7 +40,7 @@ export const Camera = () => {
   };
 
   useEffect(() => {
-    listCameraDevices();
+    rescanCameraDevices();
     getCurrentProfile();
     getCameraInfo();
 

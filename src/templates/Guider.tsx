@@ -7,7 +7,6 @@ import {
   disconnectGuider,
   getGuiderInfo,
   getGuidingGraph,
-  listGuiderDevices,
   rescanGuiderDevices,
   startGuiding,
   stopGuiding,
@@ -34,7 +33,7 @@ export const Guider = () => {
   };
 
   useEffect(() => {
-    listGuiderDevices();
+    rescanGuiderDevices();
     getGuiderInfo();
 
     const interval = setInterval((_) => {
