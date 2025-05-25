@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import type { Device } from '@/actions/constants';
+import { fetchGPSLocation } from '@/actions/gps';
 import {
   getApplicationVersion,
   getCurrentProfile,
@@ -12,6 +13,7 @@ import {
   switchProfile,
 } from '@/actions/hosts';
 import { CircleButton } from '@/components/CircleButton';
+import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
 import { DropDown } from '@/components/DropDown';
 import { TextInputLabel } from '@/components/TextInputLabel';
@@ -129,10 +131,18 @@ export const Config = () => {
               }
               label="Latitude"
             />
+
+            <View className="w-20">
+              <CustomButton
+                onPress={fetchGPSLocation}
+                icon="crosshairs-gps"
+                iconSize={24}
+              />
+            </View>
           </View>
         </View>
 
-        <View className="p-5" />
+        <View className="pb-24" />
       </ScrollView>
 
       <View className="absolute bottom-5 right-5">
