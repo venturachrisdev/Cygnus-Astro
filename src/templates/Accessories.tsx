@@ -268,7 +268,7 @@ export const Accessories = () => {
 
       <Text className="my-4 text-lg font-semibold text-white">Rotator</Text>
       <DeviceConnection
-        isAPIConnected={rotatorState.isConnected}
+        isAPIConnected={configState.isConnected}
         onListExpand={() => setShowRotatorDevicesList(!showRotatorDevicesList)}
         currentDevice={rotatorState.currentDevice}
         isConnected={rotatorState.isConnected}
@@ -337,7 +337,7 @@ export const Accessories = () => {
         Safety Monitor
       </Text>
       <DeviceConnection
-        isAPIConnected={safetyMonitorState.isConnected}
+        isAPIConnected={configState.isConnected}
         onListExpand={() =>
           setShowSafetyMonitorDevicesList(!showSafetyMonitorDevicesList)
         }
@@ -370,7 +370,7 @@ export const Accessories = () => {
 
       <Text className="mb-4 text-lg font-semibold text-white">Weather</Text>
       <DeviceConnection
-        isAPIConnected={weatherState.isConnected}
+        isAPIConnected={configState.isConnected}
         onListExpand={() => setShowWeatherDevicesList(!showWeatherDevicesList)}
         currentDevice={weatherState.currentDevice}
         isConnected={weatherState.isConnected}
@@ -386,86 +386,88 @@ export const Accessories = () => {
       />
 
       <View className="mx-2 mt-10 flex flex-row items-center">
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Cloud Cover</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.cloudCover}
-          </Text>
-        </View>
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Dew Point</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.dewPoint}
-          </Text>
-        </View>
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Humidity</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.humidity}
-          </Text>
-        </View>
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Pressure</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.pressure}
-          </Text>
-        </View>
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Rain Rate</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.rainRate}
-          </Text>
-        </View>
-      </View>
-      <View className="mx-2 mt-10 flex flex-row items-center">
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Sky Brightness</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.skyBrightness}
-          </Text>
-        </View>
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Sky Quality</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.skyQuality}
-          </Text>
-        </View>
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Sky Temperature</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.skyTemperature}
-          </Text>
-        </View>
-        <View className="mr-12 w-20">
-          <Text className="text-gray-300">Star FWHM</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.starFWHM}
-          </Text>
-        </View>
-        <View className="mr-12 w-20">
+        <View className="mr-12 w-24">
           <Text className="text-gray-300">Temperature</Text>
           <Text className="text-3xl font-medium text-white">
-            {weatherState.temperature}
+            {weatherState.temperature || '--'}
+          </Text>
+        </View>
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Dew Point</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.dewPoint || '--'}
+          </Text>
+        </View>
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Humidity</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.humidity || '--'}
+          </Text>
+        </View>
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Pressure</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.pressure || '--'}
           </Text>
         </View>
       </View>
       <View className="mx-2 mt-10 flex flex-row items-center">
-        <View className="mr-12 w-20">
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Sky Brightness</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.skyBrightness || '--'}
+          </Text>
+        </View>
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Sky Quality</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.skyQuality || '--'}
+          </Text>
+        </View>
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Sky Temperature</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.skyTemperature || '--'}
+          </Text>
+        </View>
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Rain Rate</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.rainRate || '--'}
+          </Text>
+        </View>
+      </View>
+      <View className="mx-2 mt-10 flex flex-row items-center">
+        <View className="mr-12 w-24">
           <Text className="text-gray-300">Wind Direction</Text>
           <Text className="text-3xl font-medium text-white">
-            {weatherState.windDirection}
+            {weatherState.windDirection || '--'}
           </Text>
         </View>
-        <View className="mr-12 w-20">
+        <View className="mr-12 w-24">
           <Text className="text-gray-300">Wind Speed</Text>
           <Text className="text-3xl font-medium text-white">
-            {weatherState.windSpeed}
+            {weatherState.windSpeed || '--'}
           </Text>
         </View>
-        <View className="mr-12 w-20">
+        <View className="mr-12 w-24">
           <Text className="text-gray-300">Wind Gust</Text>
           <Text className="text-3xl font-medium text-white">
-            {weatherState.windGust}
+            {weatherState.windGust || '--'}
+          </Text>
+        </View>
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Star FWHM</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.starFWHM || '--'}
+          </Text>
+        </View>
+      </View>
+      <View className="mx-2 mt-10 flex flex-row items-center">
+        <View className="mr-12 w-24">
+          <Text className="text-gray-300">Cloud Cover</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.cloudCover || '--'}
           </Text>
         </View>
       </View>

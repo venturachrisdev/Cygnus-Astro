@@ -147,7 +147,7 @@ export const Config = () => {
 
       <View className="absolute bottom-5 right-5">
         <CircleButton
-          disabled={!configState.isConnected}
+          disabled={!configState.isConnected || configState.isLoading}
           onPress={() => handleDraftConfigUpdate()}
           color="green"
           icon="content-save-check"

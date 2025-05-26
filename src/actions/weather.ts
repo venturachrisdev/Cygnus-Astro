@@ -4,6 +4,16 @@ import { useWeatherStore } from '@/stores/weather.store';
 
 import { getApiUrl } from './hosts';
 
+const parseWeatherValue = (
+  value: string | number,
+): string | number | undefined => {
+  if (value === 'NaN') {
+    return undefined;
+  }
+
+  return value;
+};
+
 export const getWeatherInfo = async () => {
   const weatherState = useWeatherStore.getState();
 
@@ -23,19 +33,19 @@ export const getWeatherInfo = async () => {
 
     weatherState.set({
       isConnected: response.Response.Connected,
-      cloudCover: response.Response.CloudCover,
-      dewPoint: response.Response.DewPoint,
-      humidity: response.Response.Humidity,
-      pressure: response.Response.Pressure,
-      rainRate: response.Response.RainRate,
-      skyBrightness: response.Response.SkyBrightness,
-      skyQuality: response.Response.SkyQuality,
-      skyTemperature: response.Response.SkyTemperature,
-      starFWHM: response.Response.StarFWHM,
-      temperature: response.Response.Temperature,
-      windDirection: response.Response.WindDirection,
-      windGust: response.Response.WindGust,
-      windSpeed: response.Response.WindSpeed,
+      cloudCover: parseWeatherValue(response.Response.CloudCover),
+      dewPoint: parseWeatherValue(response.Response.DewPoint),
+      humidity: parseWeatherValue(response.Response.Humidity),
+      pressure: parseWeatherValue(response.Response.Pressure),
+      rainRate: parseWeatherValue(response.Response.RainRate),
+      skyBrightness: parseWeatherValue(response.Response.SkyBrightness),
+      skyQuality: parseWeatherValue(response.Response.SkyQuality),
+      skyTemperature: parseWeatherValue(response.Response.SkyTemperature),
+      starFWHM: parseWeatherValue(response.Response.StarFWHM),
+      temperature: parseWeatherValue(response.Response.Temperature),
+      windDirection: parseWeatherValue(response.Response.WindDirection),
+      windGust: parseWeatherValue(response.Response.WindGust),
+      windSpeed: parseWeatherValue(response.Response.WindSpeed),
     });
   } catch (e) {
     console.log('Error getting weather', e);

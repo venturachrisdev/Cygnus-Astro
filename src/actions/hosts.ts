@@ -303,6 +303,8 @@ export const setDraftConfigNumber = (
 
 export const handleDraftConfigUpdate = async () => {
   const configState = useConfigStore.getState();
+  const alertState = useAlertsStore.getState();
+
   configState.set({ isLoading: true });
   const updatePromises = [];
 
@@ -321,6 +323,18 @@ export const handleDraftConfigUpdate = async () => {
     }
   }
 
-  await Promise.all(updatePromises);
-  configState.set({ isLoading: false });
+  try {
+    await Promise.all(updatePromises);
+    alertState.set({
+      message: 'Configuration saved successfully!',
+      type: 'success',
+    });
+  } catch (e) {
+    alertState.set({
+      message: 'Unable to save configuration. Please try again.',
+      type: 'error',
+    });
+  } finally {
+    configState.set({ isLoading: false });
+  }
 };

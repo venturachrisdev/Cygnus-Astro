@@ -10,6 +10,7 @@ import { Accessories } from '@/templates/Accessories';
 import { Camera } from '@/templates/Camera';
 import { Capture } from '@/templates/Capture';
 import { Config } from '@/templates/Config';
+import { Dome } from '@/templates/Dome';
 import { Focuser } from '@/templates/Focuser';
 import { Guider } from '@/templates/Guider';
 import { Mount } from '@/templates/Mount';
@@ -110,15 +111,6 @@ export default function Layout() {
             <MenuItem
               direction="vertical"
               size={28}
-              icon="usb"
-              onPress={() => {
-                setCurrentTab('accessories');
-              }}
-              isActive={currentTab === 'accessories'}
-            />
-            <MenuItem
-              direction="vertical"
-              size={28}
               icon="star-four-points"
               onPress={() => {
                 setCurrentTab('tppa');
@@ -133,6 +125,24 @@ export default function Layout() {
                 setCurrentTab('sequence');
               }}
               isActive={currentTab === 'sequence'}
+            />
+            <MenuItem
+              direction="vertical"
+              size={28}
+              icon="usb"
+              onPress={() => {
+                setCurrentTab('accessories');
+              }}
+              isActive={currentTab === 'accessories'}
+            />
+            <MenuItem
+              direction="vertical"
+              size={28}
+              icon="hoop-house"
+              onPress={() => {
+                setCurrentTab('dome');
+              }}
+              isActive={currentTab === 'dome'}
             />
             <MenuItem
               direction="vertical"
@@ -155,6 +165,7 @@ export default function Layout() {
           {currentTab === 'mount' && <Mount />}
           {currentTab === 'sequence' && <Sequence />}
           {currentTab === 'tppa' && <TPPA />}
+          {currentTab === 'dome' && <Dome />}
         </View>
 
         <View className="absolute bottom-6 flex w-full items-center justify-center opacity-95">

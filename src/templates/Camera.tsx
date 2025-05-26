@@ -186,7 +186,11 @@ export const Camera = () => {
 
       <View className="absolute bottom-5 right-5">
         <CircleButton
-          disabled={!cameraState.isConnected || !configState.isConnected}
+          disabled={
+            !cameraState.isConnected ||
+            !configState.isConnected ||
+            configState.isLoading
+          }
           onPress={() => handleDraftConfigUpdate()}
           color="green"
           icon="content-save-check"
