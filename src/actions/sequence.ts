@@ -163,7 +163,7 @@ export const getImageHistory = async (
     if (Array.isArray(response.Response)) {
       const currentSet =
         response.Response.length === sequenceState.images.length
-          ? sequenceState.images
+          ? [...sequenceState.images]
           : [];
       response.Response.forEach((item: any, index: number) => {
         if (!currentSet[index]) {
