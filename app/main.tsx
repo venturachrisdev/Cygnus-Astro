@@ -11,6 +11,7 @@ import { Camera } from '@/templates/Camera';
 import { Capture } from '@/templates/Capture';
 import { Config } from '@/templates/Config';
 import { Dome } from '@/templates/Dome';
+import { FlatPanel } from '@/templates/FlatPanel';
 import { Focuser } from '@/templates/Focuser';
 import { Guider } from '@/templates/Guider';
 import { Mount } from '@/templates/Mount';
@@ -147,6 +148,15 @@ export default function Layout() {
             <MenuItem
               direction="vertical"
               size={28}
+              icon="television-ambient-light"
+              onPress={() => {
+                setCurrentTab('flatpanel');
+              }}
+              isActive={currentTab === 'flatpanel'}
+            />
+            <MenuItem
+              direction="vertical"
+              size={28}
               icon="cog"
               onPress={() => {
                 setCurrentTab('config');
@@ -166,6 +176,7 @@ export default function Layout() {
           {currentTab === 'sequence' && <Sequence />}
           {currentTab === 'tppa' && <TPPA />}
           {currentTab === 'dome' && <Dome />}
+          {currentTab === 'flatpanel' && <FlatPanel />}
         </View>
 
         <View className="absolute bottom-6 flex w-full items-center justify-center opacity-95">
