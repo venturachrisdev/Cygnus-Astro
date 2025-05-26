@@ -89,7 +89,7 @@ export const Dome = () => {
             isConnected={domeState.isConnected}
             bubble
             label="Open"
-            isActive={domeState.shutterStatus === 'OPEN'}
+            isActive={domeState.shutterStatus === 'ShutterOpen'}
           />
         </View>
       </View>
@@ -141,7 +141,7 @@ export const Dome = () => {
 
       <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-10">
         <View className="flex-1">
-          {domeState.shutterStatus === 'OPEN' && (
+          {domeState.shutterStatus === 'ShutterOpen' && (
             <CustomButton
               disabled={!domeState.isConnected || !configState.isConnected}
               onPress={() => closeDomeShutter()}
@@ -150,7 +150,7 @@ export const Dome = () => {
             />
           )}
 
-          {domeState.shutterStatus !== 'OPEN' && (
+          {domeState.shutterStatus !== 'ShutterOpen' && (
             <CustomButton
               disabled={
                 !domeState.isConnected ||

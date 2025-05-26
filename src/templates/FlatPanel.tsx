@@ -13,12 +13,14 @@ import {
 import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
 import { StatusChip } from '@/components/StatusChip';
+import { useAlertsStore } from '@/stores/alerts.store';
 import { useConfigStore } from '@/stores/config.store';
 import { useFlatPanelStore } from '@/stores/flatpanel.store';
 
 export const FlatPanel = () => {
   const flatPanelState = useFlatPanelStore();
   const configState = useConfigStore();
+  const alertsState = useAlertsStore();
 
   const [showDevicesList, setShowDevicesList] = useState(false);
   const [brightness, setBrightness] = useState(
@@ -35,6 +37,20 @@ export const FlatPanel = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const setFlatBrightness = (brightnessValue: number) => {
+    if (
+      brightnessValue <= flatPanelState.maxBrightness &&
+      brightnessValue >= flatPanelState.minBrightness
+    ) {
+      setFlatPanelBrightness(brightnessValue);
+    } else {
+      alertsState.set({
+        message: `Brightness value must be between ${flatPanelState.minBrightness} - ${flatPanelState.maxBrightness}`,
+        type: 'error',
+      });
+    }
+  };
 
   return (
     <ScrollView
@@ -74,7 +90,7 @@ export const FlatPanel = () => {
             isConnected={flatPanelState.isConnected}
             bubble
             label="Open"
-            isActive={flatPanelState.coverState === 'OPEN'}
+            isActive={flatPanelState.coverState === 'Open'}
           />
           <StatusChip
             isConnected={flatPanelState.isConnected}
@@ -88,7 +104,7 @@ export const FlatPanel = () => {
 
       <View className="mx-2 my-8 flex flex-row items-center justify-between gap-x-10">
         <View className="flex-1">
-          {flatPanelState.coverState === 'OPEN' && (
+          {flatPanelState.coverState === 'Open' && (
             <CustomButton
               disabled={!flatPanelState.isConnected || !configState.isConnected}
               onPress={() => setFlatPanelCover(true)}
@@ -97,7 +113,7 @@ export const FlatPanel = () => {
             />
           )}
 
-          {flatPanelState.coverState !== 'OPEN' && (
+          {flatPanelState.coverState !== 'Open' && (
             <CustomButton
               disabled={!flatPanelState.isConnected || !configState.isConnected}
               onPress={() => setFlatPanelCover(false)}
@@ -125,6 +141,12 @@ export const FlatPanel = () => {
         </View>
       </View>
 
+      <Text className="my-2 font-medium text-white">
+        Brightness{' '}
+        <Text className="text-xs font-normal">
+          ({flatPanelState.minBrightness} - {flatPanelState.maxBrightness})
+        </Text>
+      </Text>
       <View className="m-2 flex flex-row items-center justify-between gap-x-4">
         <View className="flex flex-1 items-center justify-center rounded-lg bg-black p-3">
           <TextInput
@@ -136,7 +158,7 @@ export const FlatPanel = () => {
         <View className="ml-4 w-48">
           <CustomButton
             disabled={!flatPanelState.isConnected || !configState.isConnected}
-            onPress={() => setFlatPanelBrightness(Number(brightness))}
+            onPress={() => setFlatBrightness(Number(brightness))}
             label="Set Brightness"
           />
         </View>
