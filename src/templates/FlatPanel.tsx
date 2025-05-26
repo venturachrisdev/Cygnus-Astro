@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 
 import {
   connectFlatPanel,
   disconnectFlatPanel,
   getFlatPanelInfo,
   rescanFlatPanelDevices,
+  setFlatPanelBrightness,
+  setFlatPanelCover,
+  setFlatPanelLight,
 } from '@/actions/flatpanel';
+import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
 import { StatusChip } from '@/components/StatusChip';
 import { useConfigStore } from '@/stores/config.store';
@@ -17,6 +21,9 @@ export const FlatPanel = () => {
   const configState = useConfigStore();
 
   const [showDevicesList, setShowDevicesList] = useState(false);
+  const [brightness, setBrightness] = useState(
+    String(flatPanelState.brightness),
+  );
 
   useEffect(() => {
     rescanFlatPanelDevices();
@@ -73,7 +80,64 @@ export const FlatPanel = () => {
             isConnected={flatPanelState.isConnected}
             bubble
             label="Light"
+            last
             isActive={flatPanelState.lightOn}
+          />
+        </View>
+      </View>
+
+      <View className="mx-2 my-8 flex flex-row items-center justify-between gap-x-10">
+        <View className="flex-1">
+          {flatPanelState.coverState === 'OPEN' && (
+            <CustomButton
+              disabled={!flatPanelState.isConnected || !configState.isConnected}
+              onPress={() => setFlatPanelCover(true)}
+              label="Close Panel"
+              color="red"
+            />
+          )}
+
+          {flatPanelState.coverState !== 'OPEN' && (
+            <CustomButton
+              disabled={!flatPanelState.isConnected || !configState.isConnected}
+              onPress={() => setFlatPanelCover(false)}
+              label="Open Panel"
+            />
+          )}
+        </View>
+        <View className="flex-1">
+          {flatPanelState.lightOn && (
+            <CustomButton
+              disabled={!flatPanelState.isConnected || !configState.isConnected}
+              onPress={() => setFlatPanelLight(false)}
+              label="Set Light Off"
+              color="red"
+            />
+          )}
+
+          {!flatPanelState.lightOn && (
+            <CustomButton
+              disabled={!flatPanelState.isConnected || !configState.isConnected}
+              onPress={() => setFlatPanelLight(true)}
+              label="Set Light On"
+            />
+          )}
+        </View>
+      </View>
+
+      <View className="m-2 flex flex-row items-center justify-between gap-x-4">
+        <View className="flex flex-1 items-center justify-center rounded-lg bg-black p-3">
+          <TextInput
+            className="flex py-1 text-white"
+            value={brightness}
+            onChangeText={(text) => setBrightness(text)}
+          />
+        </View>
+        <View className="ml-4 w-48">
+          <CustomButton
+            disabled={!flatPanelState.isConnected || !configState.isConnected}
+            onPress={() => setFlatPanelBrightness(Number(brightness))}
+            label="Set Brightness"
           />
         </View>
       </View>

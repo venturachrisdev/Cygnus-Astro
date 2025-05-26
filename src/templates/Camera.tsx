@@ -101,6 +101,7 @@ export const Camera = () => {
               bubble
               isConnected={cameraState.isConnected}
               label="Exposing"
+              last
               isActive={cameraState.isExposing}
             />
           </View>

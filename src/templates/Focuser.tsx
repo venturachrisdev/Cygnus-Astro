@@ -178,6 +178,7 @@ export const Focuser = () => {
           />
           <StatusChip
             bubble
+            last
             isConnected={focuserState.isConnected}
             label="Autofocus"
             isActive={focuserState.isAutofocusing}

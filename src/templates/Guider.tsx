@@ -66,7 +66,7 @@ export const Guider = () => {
       />
 
       <View className="my-3 flex w-full flex-row items-center justify-end">
-        <View className="m-2 flex flex-row items-center justify-between">
+        <View className="my-2 flex flex-row items-center justify-between">
           <StatusChip
             isConnected={guiderState.isConnected}
             bubble
