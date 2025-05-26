@@ -43,7 +43,7 @@ export default function Layout() {
         source={require('../assets/splash.png')}
       />
       <Text className="absolute bottom-8 right-16 text-white">
-        Connecting to NINA...
+        Connecting to N.I.N.A...
       </Text>
     </>
   );

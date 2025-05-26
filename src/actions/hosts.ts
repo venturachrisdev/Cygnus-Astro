@@ -49,7 +49,7 @@ export const scanHosts = async (autoConnect?: boolean) => {
         } else if (devices.length === 0) {
           alertState.set({
             message:
-              'No NINA instance found. Connect to the same network as your PC',
+              'No N.I.N.A. instance found. Connect to the same network as your PC',
             type: 'info',
           });
           configState.set({
@@ -62,7 +62,7 @@ export const scanHosts = async (autoConnect?: boolean) => {
   } catch (e) {
     console.log('Error scanning hosts', e);
     alertState.set({
-      message: 'No network available. Unable to auto-detect NINA instance',
+      message: 'No network available. Unable to auto-detect N.I.N.A. instance',
       type: 'error',
     });
     configState.set({

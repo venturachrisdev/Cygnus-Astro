@@ -1,6 +1,6 @@
 # Cygnus Astro
 
-Mobile interface to Manage NINA using the Advanced API plugin.
+Mobile interface to Manage N.I.N.A. using the Advanced API plugin.
 
 ![assets/splash.png](assets/splash.png)
 
@@ -11,5 +11,5 @@ Mobile interface to Manage NINA using the Advanced API plugin.
 ![screenshots/4.PNG](screenshots/4.PNG)
 
 ## Credits
-- [NINA Advance API Plugin](https://github.com/christian-photo/ninaAPI)
+- [N.I.N.A. Advance API Plugin](https://github.com/christian-photo/ninaAPI)
 - [OpenNGC](https://github.com/mattiaverga/OpenNGC)

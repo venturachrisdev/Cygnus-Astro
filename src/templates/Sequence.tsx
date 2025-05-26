@@ -636,7 +636,7 @@ export const Sequence = () => {
         {sequenceState.sequence.length === 0 && (
           <View className="mt-20 flex h-full w-full flex-1 items-center justify-center">
             <Text className="w-full px-24 text-center text-gray-700">
-              No sequence found. Make sure your sequence is loaded in NINA
+              No sequence found. Make sure your sequence is loaded in N.I.N.A.
               Advance Sequencer and it contains a Deep Sky Object.
             </Text>
           </View>

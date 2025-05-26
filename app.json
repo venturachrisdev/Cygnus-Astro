@@ -26,7 +26,7 @@
           }
         },
         "ITSAppUsesNonExemptEncryption": false,
-        "NSLocationWhenInUseUsageDescription": "This app uses your current location to auto-fill astrometry data in NINA"
+        "NSLocationWhenInUseUsageDescription": "This app uses your current location to auto-fill astrometry data in N.I.N.A."
       }
     },
     "android": {

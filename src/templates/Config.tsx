@@ -64,7 +64,7 @@ export const Config = () => {
         className="flex h-full flex-1 bg-neutral-950 p-4"
       >
         <Text className="mb-4 text-lg font-semibold text-white">
-          NINA Advanced API
+          N.I.N.A. Advanced API
         </Text>
         <DeviceConnection
           isAPIConnected
