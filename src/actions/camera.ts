@@ -186,8 +186,13 @@ export const getCapturedImageWithRetries = async () => {
   cameraState.set({
     isLoading: false,
     countdown: 0,
-    image: response.Image ?? null,
   });
+
+  if (response.Image) {
+    cameraState.set({
+      image: response.Image,
+    });
+  }
 
   if (cameraState.isCapturing && cameraState.loop) {
     captureImage();

@@ -1,7 +1,7 @@
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
 import { chunk, orderBy } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -34,7 +34,7 @@ export const ImageHistory = () => {
         const oldImagesCount = sequenceState.images.length;
         const newImages = await getImageHistory(false, false);
 
-        if (newImages.length > oldImagesCount) {
+        if (newImages.length !== oldImagesCount) {
           await getImageHistory();
         }
       };
@@ -62,11 +62,11 @@ export const ImageHistory = () => {
 
   const { width } = Dimensions.get('window');
 
-  const gridItems = useMemo(() => {
+  const gridItems = (() => {
     const images = sequenceState.images.filter((img) => img.image);
     const sortedImages = orderBy(images, ['index'], ['desc']);
     return chunk(sortedImages, width >= 1180 ? 5 : 3);
-  }, [sequenceState.images, width]);
+  })();
 
   return (
     <>
@@ -121,7 +121,8 @@ export const ImageHistory = () => {
         {gridItems.length === 0 && (
           <View className="flex h-72 flex-1 items-center justify-center">
             <Text className="text-sm font-medium text-gray-700">
-              Sequence images will appear here...
+              Sequence images will appear here
+              {sequenceState.isLoadingImages ? '. Please wait' : ''}...
             </Text>
           </View>
         )}

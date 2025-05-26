@@ -320,7 +320,10 @@ const Capture = () => {
             >
               <View className="flex h-full w-full flex-1 items-center justify-center">
                 <CameraImage
-                  image={sequenceState.images[0]?.image || null}
+                  image={
+                    sequenceState.images[sequenceState.images.length - 1]
+                      ?.image || null
+                  }
                   resizeMode="center"
                   isLoading={sequenceState.isLoadingImages}
                   defaultText=""

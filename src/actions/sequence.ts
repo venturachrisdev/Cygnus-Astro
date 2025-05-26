@@ -201,7 +201,7 @@ export const getImageHistory = async (
         sequenceState.set({ isLoadingImages: false });
       }
 
-      if (autoSave) {
+      if (autoSave && currentSet !== sequenceState.images) {
         sequenceState.set({
           images: currentSet,
         });
