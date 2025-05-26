@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ScrollView, Switch, Text, View } from 'react-native';
+import { ScrollView, Switch, Text, TextInput, View } from 'react-native';
 
 import type { Device } from '@/actions/constants';
 import {
@@ -11,12 +11,31 @@ import {
 } from '@/actions/filterwheel';
 import { getCurrentProfile } from '@/actions/hosts';
 import {
+  connectRotator,
+  disconnectRotator,
+  getRotatorInfo,
+  moveRotator,
+  rescanRotatorDevices,
+} from '@/actions/rotator';
+import {
+  connectSafetyMonitor,
+  disconnectSafetyMonitor,
+  getSafetyMonitorInfo,
+  rescanSafetyMonitorDevices,
+} from '@/actions/safetymonitor';
+import {
   connectSwitches,
   disconnectSwitches,
   getSwitchesInfo,
   rescanSwitchesDevices,
   setSwitchValue,
 } from '@/actions/switches';
+import {
+  connectWeather,
+  disconnectWeather,
+  getWeatherInfo,
+  rescanWeatherDevices,
+} from '@/actions/weather';
 import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
 import { DropDown } from '@/components/DropDown';
@@ -24,12 +43,18 @@ import { StatusChip } from '@/components/StatusChip';
 import { TextInputLabel } from '@/components/TextInputLabel';
 import { useConfigStore } from '@/stores/config.store';
 import { useFilterWheelStore } from '@/stores/filterwheel.store';
+import { useRotatorStore } from '@/stores/rotator.store';
+import { useSafetyMonitorStore } from '@/stores/safetymonitor.store';
 import { useSwitchesStore } from '@/stores/switches.stores';
+import { useWeatherStore } from '@/stores/weather.store';
 
 export const Accessories = () => {
   const filterWheelState = useFilterWheelStore();
   const switchesState = useSwitchesStore();
   const configState = useConfigStore();
+  const rotatorState = useRotatorStore();
+  const safetyMonitorState = useSafetyMonitorStore();
+  const weatherState = useWeatherStore();
 
   const [showFilterDevicesList, setShowFilterDevicesList] = useState(false);
   const [filtersListExpanded, setFiltersListExpanded] = useState(false);
@@ -38,6 +63,14 @@ export const Accessories = () => {
   );
 
   const [showSwitchDevicesList, setShowSwitchesDevicesList] = useState(false);
+  const [showRotatorDevicesList, setShowRotatorDevicesList] = useState(false);
+  const [showSafetyMonitorDevicesList, setShowSafetyMonitorDevicesList] =
+    useState(false);
+  const [showWeatherDevicesList, setShowWeatherDevicesList] = useState(false);
+
+  const [rotatorPosition, setRotatorPosition] = useState(
+    String(rotatorState.position),
+  );
 
   const connectToFilterWheel = () => {
     connectFilterWheel(
@@ -63,13 +96,23 @@ export const Accessories = () => {
   useEffect(() => {
     rescanFilterWheelDevices();
     rescanSwitchesDevices();
+    rescanSafetyMonitorDevices();
+    rescanRotatorDevices();
+    rescanWeatherDevices();
+
     getCurrentProfile();
     getFilterWheelInfo();
     getSwitchesInfo();
+    getSafetyMonitorInfo();
+    getRotatorInfo();
+    getWeatherInfo();
 
     const interval = setInterval((_) => {
       getFilterWheelInfo();
       getSwitchesInfo();
+      getSafetyMonitorInfo();
+      getRotatorInfo();
+      getWeatherInfo();
     }, 1000);
 
     return () => clearInterval(interval);
@@ -117,14 +160,13 @@ export const Accessories = () => {
       />
 
       <View className="my-3 flex w-full flex-row items-center justify-end">
-        <View className="flex flex-row items-center justify-between">
-          <StatusChip
-            bubble
-            label="Moving"
-            isActive={filterWheelState.isMoving}
-            isConnected={filterWheelState.isConnected}
-          />
-        </View>
+        <StatusChip
+          bubble
+          last
+          label="Moving"
+          isActive={filterWheelState.isMoving}
+          isConnected={filterWheelState.isConnected}
+        />
       </View>
 
       <View className="my-3 flex flex-row">
@@ -174,46 +216,258 @@ export const Accessories = () => {
         }}
       />
 
-      <View className="mt-10 flex flex-row items-center">
-        {switchesState.readSwitches?.map((sw) => (
-          <View className="mr-12">
-            <Text className="text-gray-300">{sw.name}</Text>
-            <Text className="text-3xl font-medium text-white">{sw.value}</Text>
+      {switchesState.isConnected && (
+        <>
+          <View className="mt-10 flex flex-row items-center">
+            {switchesState.readSwitches?.map((sw) => (
+              <View className="mr-12">
+                <Text className="text-gray-300">{sw.name}</Text>
+                <Text className="text-3xl font-medium text-white">
+                  {sw.value}
+                </Text>
+              </View>
+            ))}
           </View>
-        ))}
+
+          <View className="mt-10 flex flex-row items-center">
+            {switchesState.writeSwitches?.map((sw, index) => (
+              <View className="mr-12">
+                <Text className="mb-4 text-gray-300">
+                  {sw.name}{' '}
+                  {sw.maxValue - sw.minValue !== 1
+                    ? `(${sw.minValue} - ${sw.maxValue})`
+                    : ''}
+                </Text>
+
+                {sw.maxValue - sw.minValue === 1 && (
+                  <Switch
+                    value={sw.value === sw.maxValue}
+                    onChange={() =>
+                      setSwitchValue(
+                        index,
+                        sw.value === sw.maxValue ? sw.minValue : sw.maxValue,
+                      )
+                    }
+                  />
+                )}
+                {sw.maxValue - sw.minValue !== 1 && (
+                  <TextInputLabel
+                    disabled
+                    placeholder=""
+                    onChange={() => {}}
+                    value={String(sw.value)}
+                  />
+                )}
+              </View>
+            ))}
+          </View>
+        </>
+      )}
+
+      <View className="my-10 border-[0.5px] border-neutral-800" />
+
+      <Text className="my-4 text-lg font-semibold text-white">Rotator</Text>
+      <DeviceConnection
+        isAPIConnected={rotatorState.isConnected}
+        onListExpand={() => setShowRotatorDevicesList(!showRotatorDevicesList)}
+        currentDevice={rotatorState.currentDevice}
+        isConnected={rotatorState.isConnected}
+        devices={rotatorState.devices}
+        isListExpanded={showRotatorDevicesList}
+        onConnect={() => connectRotator(rotatorState.currentDevice?.id || '')}
+        onDisconnect={() => disconnectRotator()}
+        onRescan={() => rescanRotatorDevices()}
+        onDeviceSelected={(device) => {
+          setShowRotatorDevicesList(false);
+          rotatorState.set({ currentDevice: device });
+        }}
+      />
+
+      <View className="my-3 flex w-full flex-row items-center justify-end">
+        <View
+          style={{ opacity: rotatorState.isConnected ? 1.0 : 0.4 }}
+          className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
+        >
+          <Text className="text-xs font-medium text-white">
+            Position: <Text className="font-bold">{rotatorState.position}</Text>
+          </Text>
+        </View>
+        <View
+          style={{ opacity: rotatorState.isConnected ? 1.0 : 0.4 }}
+          className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
+        >
+          <Text className="text-xs font-medium text-white">
+            Step Size:{' '}
+            <Text className="font-bold">{rotatorState.stepSize}</Text>
+          </Text>
+        </View>
+        <StatusChip
+          bubble
+          last
+          label="Moving"
+          isActive={rotatorState.isMoving}
+          isConnected={rotatorState.isConnected}
+        />
       </View>
 
-      <View className="mt-10 flex flex-row items-center">
-        {switchesState.writeSwitches?.map((sw, index) => (
-          <View className="mr-12">
-            <Text className="mb-4 text-gray-300">
-              {sw.name}{' '}
-              {sw.maxValue - sw.minValue !== 1
-                ? `(${sw.minValue} - ${sw.maxValue})`
-                : ''}
-            </Text>
+      <View className="mx-2 mt-10 flex flex-row items-center justify-between gap-x-4">
+        <View className="flex flex-1 items-center justify-center rounded-lg bg-black p-3">
+          <TextInput
+            className="flex py-1 text-white"
+            value={rotatorPosition}
+            onChangeText={(text) => setRotatorPosition(text)}
+          />
+        </View>
+        <View className="ml-4 w-24">
+          <CustomButton
+            disabled={
+              !rotatorState.isConnected ||
+              rotatorState.isMoving ||
+              !configState.isConnected
+            }
+            onPress={() => moveRotator(Number(rotatorPosition))}
+            label="Move"
+          />
+        </View>
+      </View>
 
-            {sw.maxValue - sw.minValue === 1 && (
-              <Switch
-                value={sw.value === sw.maxValue}
-                onChange={() =>
-                  setSwitchValue(
-                    index,
-                    sw.value === sw.maxValue ? sw.minValue : sw.maxValue,
-                  )
-                }
-              />
-            )}
-            {sw.maxValue - sw.minValue !== 1 && (
-              <TextInputLabel
-                disabled
-                placeholder=""
-                onChange={() => {}}
-                value={String(sw.value)}
-              />
-            )}
-          </View>
-        ))}
+      <View className="my-10 border-[0.5px] border-neutral-800" />
+
+      <Text className="mb-4 text-lg font-semibold text-white">
+        Safety Monitor
+      </Text>
+      <DeviceConnection
+        isAPIConnected={safetyMonitorState.isConnected}
+        onListExpand={() =>
+          setShowSafetyMonitorDevicesList(!showSafetyMonitorDevicesList)
+        }
+        currentDevice={safetyMonitorState.currentDevice}
+        isConnected={safetyMonitorState.isConnected}
+        devices={safetyMonitorState.devices}
+        isListExpanded={showSafetyMonitorDevicesList}
+        onConnect={() =>
+          connectSafetyMonitor(safetyMonitorState.currentDevice?.id || '')
+        }
+        onDisconnect={() => disconnectSafetyMonitor()}
+        onRescan={() => rescanSafetyMonitorDevices()}
+        onDeviceSelected={(device) => {
+          setShowSafetyMonitorDevicesList(false);
+          safetyMonitorState.set({ currentDevice: device });
+        }}
+      />
+
+      <View className="my-3 flex w-full flex-row items-center justify-end">
+        <StatusChip
+          bubble
+          last
+          label="Safe"
+          isActive={safetyMonitorState.isSafe}
+          isConnected={safetyMonitorState.isConnected}
+        />
+      </View>
+
+      <View className="my-10 border-[0.5px] border-neutral-800" />
+
+      <Text className="mb-4 text-lg font-semibold text-white">Weather</Text>
+      <DeviceConnection
+        isAPIConnected={weatherState.isConnected}
+        onListExpand={() => setShowWeatherDevicesList(!showWeatherDevicesList)}
+        currentDevice={weatherState.currentDevice}
+        isConnected={weatherState.isConnected}
+        devices={weatherState.devices}
+        isListExpanded={showWeatherDevicesList}
+        onConnect={() => connectWeather(weatherState.currentDevice?.id || '')}
+        onDisconnect={() => disconnectWeather()}
+        onRescan={() => rescanWeatherDevices()}
+        onDeviceSelected={(device) => {
+          setShowWeatherDevicesList(false);
+          weatherState.set({ currentDevice: device });
+        }}
+      />
+
+      <View className="mx-2 mt-10 flex flex-row items-center">
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Cloud Cover</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.cloudCover}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Dew Point</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.dewPoint}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Humidity</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.humidity}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Pressure</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.pressure}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Rain Rate</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.rainRate}
+          </Text>
+        </View>
+      </View>
+      <View className="mx-2 mt-10 flex flex-row items-center">
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Sky Brightness</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.skyBrightness}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Sky Quality</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.skyQuality}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Sky Temperature</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.skyTemperature}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Star FWHM</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.starFWHM}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Temperature</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.temperature}
+          </Text>
+        </View>
+      </View>
+      <View className="mx-2 mt-10 flex flex-row items-center">
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Wind Direction</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.windDirection}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Wind Speed</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.windSpeed}
+          </Text>
+        </View>
+        <View className="mr-12 w-20">
+          <Text className="text-gray-300">Wind Gust</Text>
+          <Text className="text-3xl font-medium text-white">
+            {weatherState.windGust}
+          </Text>
+        </View>
       </View>
 
       <View className="h-64" />
