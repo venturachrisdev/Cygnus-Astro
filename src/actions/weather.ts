@@ -4,7 +4,7 @@ import { useWeatherStore } from '@/stores/weather.store';
 
 import { getApiUrl } from './hosts';
 
-const parseWeatherValue = (
+export const parseNaNValue = (
   value: string | number,
 ): string | number | undefined => {
   if (value === 'NaN') {
@@ -33,19 +33,19 @@ export const getWeatherInfo = async () => {
 
     weatherState.set({
       isConnected: response.Response.Connected,
-      cloudCover: parseWeatherValue(response.Response.CloudCover),
-      dewPoint: parseWeatherValue(response.Response.DewPoint),
-      humidity: parseWeatherValue(response.Response.Humidity),
-      pressure: parseWeatherValue(response.Response.Pressure),
-      rainRate: parseWeatherValue(response.Response.RainRate),
-      skyBrightness: parseWeatherValue(response.Response.SkyBrightness),
-      skyQuality: parseWeatherValue(response.Response.SkyQuality),
-      skyTemperature: parseWeatherValue(response.Response.SkyTemperature),
-      starFWHM: parseWeatherValue(response.Response.StarFWHM),
-      temperature: parseWeatherValue(response.Response.Temperature),
-      windDirection: parseWeatherValue(response.Response.WindDirection),
-      windGust: parseWeatherValue(response.Response.WindGust),
-      windSpeed: parseWeatherValue(response.Response.WindSpeed),
+      cloudCover: parseNaNValue(response.Response.CloudCover),
+      dewPoint: parseNaNValue(response.Response.DewPoint),
+      humidity: parseNaNValue(response.Response.Humidity),
+      pressure: parseNaNValue(response.Response.Pressure),
+      rainRate: parseNaNValue(response.Response.RainRate),
+      skyBrightness: parseNaNValue(response.Response.SkyBrightness),
+      skyQuality: parseNaNValue(response.Response.SkyQuality),
+      skyTemperature: parseNaNValue(response.Response.SkyTemperature),
+      starFWHM: parseNaNValue(response.Response.StarFWHM),
+      temperature: parseNaNValue(response.Response.Temperature),
+      windDirection: parseNaNValue(response.Response.WindDirection),
+      windGust: parseNaNValue(response.Response.WindGust),
+      windSpeed: parseNaNValue(response.Response.WindSpeed),
     });
   } catch (e) {
     console.log('Error getting weather', e);

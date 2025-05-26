@@ -24,7 +24,7 @@ export const Dome = () => {
   const configState = useConfigStore();
 
   const [showDevicesList, setShowDevicesList] = useState(false);
-  const [azimuth] = useState(String(domeState.azimuth));
+  const [azimuth] = useState(String(domeState.azimuth || 0));
 
   useEffect(() => {
     rescanDomeDevices();

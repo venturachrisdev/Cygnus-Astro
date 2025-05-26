@@ -3,6 +3,7 @@ import Axios from 'axios';
 import { useDomeStore } from '@/stores/dome.store';
 
 import { getApiUrl } from './hosts';
+import { parseNaNValue } from './weather';
 
 export const getDomeInfo = async () => {
   const domeState = useDomeStore.getState();
@@ -29,7 +30,7 @@ export const getDomeInfo = async () => {
       isSlewing: response.Response.Slewing,
       isFollowing: response.Response.IsFollowing,
       isSynchronized: response.Response.IsSynchronized,
-      azimuth: response.Response.Azimuth,
+      azimuth: parseNaNValue(response.Response.Azimuth),
     });
   } catch (e) {
     console.log('Error getting dome', e);
