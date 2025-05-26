@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import {
   connectFlatPanel,
@@ -54,11 +54,26 @@ export const FlatPanel = () => {
 
       <View className="my-3 flex w-full flex-row items-center justify-end">
         <View className="m-2 flex flex-row items-center justify-between">
+          <View
+            style={{ opacity: flatPanelState.isConnected ? 1.0 : 0.4 }}
+            className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
+          >
+            <Text className="text-xs font-medium text-white">
+              Brightness:{' '}
+              <Text className="font-bold">{flatPanelState.brightness}</Text>
+            </Text>
+          </View>
           <StatusChip
             isConnected={flatPanelState.isConnected}
             bubble
             label="Open"
-            isActive={flatPanelState.isConnected}
+            isActive={flatPanelState.coverState === 'OPEN'}
+          />
+          <StatusChip
+            isConnected={flatPanelState.isConnected}
+            bubble
+            label="Light"
+            isActive={flatPanelState.lightOn}
           />
         </View>
       </View>
