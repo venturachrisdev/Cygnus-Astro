@@ -6,6 +6,7 @@ interface CaptureStore {
   showGuiding: boolean;
   showMountControl: boolean;
   showFocuserControl: boolean;
+  showSequenceControl: boolean;
 
   set: (options: Partial<CaptureStore>) => void;
 }
@@ -16,6 +17,7 @@ export const useCaptureStore = create<CaptureStore>()(
       showGuiding: false,
       showFocuserControl: false,
       showMountControl: false,
+      showSequenceControl: false,
 
       set: (options) => set({ ...options }),
     }),
@@ -25,6 +27,7 @@ export const useCaptureStore = create<CaptureStore>()(
         showGuiding: state.showGuiding,
         showFocuserControl: state.showFocuserControl,
         showMountControl: state.showMountControl,
+        showSequenceControl: state.showSequenceControl,
       }),
       storage: createJSONStorage(() => AsyncStorage),
     },

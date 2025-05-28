@@ -36,6 +36,7 @@ import { CameraFocuserControlBar } from '@/components/capture/CameraFocuserContr
 import { CameraGuidingBar } from '@/components/capture/CameraGuidingBar';
 import { CameraImage } from '@/components/capture/CameraImage';
 import { CameraMountControlBar } from '@/components/capture/CameraMountControlBar';
+import { CameraSequenceActiveStep } from '@/components/capture/CameraSequenceActiveStep';
 import { CameraStatusBar } from '@/components/capture/CameraStatusBar';
 import { CaptureButton } from '@/components/capture/CaptureButton';
 import { LabelSwitch } from '@/components/capture/LabelSwitch';
@@ -164,6 +165,18 @@ const Capture = () => {
 
           <View className="flex flex-row">
             <MenuItem
+              disabled={!sequenceState.isRunning}
+              direction="horizontal"
+              size={24}
+              icon="format-list-numbered"
+              onPress={() =>
+                captureState.set({
+                  showSequenceControl: !captureState.showSequenceControl,
+                })
+              }
+              isActive={captureState.showSequenceControl}
+            />
+            <MenuItem
               disabled={!filterWheelState.isConnected}
               direction="horizontal"
               size={24}
@@ -242,6 +255,7 @@ const Capture = () => {
               error={guiderState.error}
             />
           )}
+          {captureState.showSequenceControl && <CameraSequenceActiveStep sequence={sequenceState.sequence} />}
         </View>
       </View>
 
@@ -290,6 +304,7 @@ const Capture = () => {
           }}
           className="flex w-full"
         >
+          <View className="h-4" />
           <CameraControl
             label={`${cameraState.duration}s`}
             onPress={() => setShowDurationView(!showDurationView)}
@@ -353,6 +368,14 @@ const Capture = () => {
             value={cameraState.loop}
             onChange={(value) => cameraState.set({ loop: value })}
           />
+
+          <LabelSwitch
+            label="Platesolve"
+            disabled={!cameraState.isConnected}
+            value={cameraState.platesolve}
+            onChange={(value) => cameraState.set({ platesolve: value })}
+          />
+          <View className="h-4" />
         </ScrollView>
       </View>
     </>
