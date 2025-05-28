@@ -11,6 +11,14 @@ export const initializeEventsSocket = (onMessage: (message: any) => void) => {
   eventsSocket.connect('/v2/socket', onMessage);
 };
 
+export const disconnectTPPASocket = () => {
+  tppaSocket.disconnect();
+};
+
+export const disconnectEventsSocket = () => {
+  eventsSocket.disconnect();
+};
+
 export const stopTPPAAlignment = () => {
   tppaSocket.send('stop-alignment');
 };

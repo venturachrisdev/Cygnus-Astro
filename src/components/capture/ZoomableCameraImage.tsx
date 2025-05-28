@@ -40,11 +40,11 @@ export const ZoomableCameraImage = ({
   }, [image]);
 
   const limitX = fullscreen
-    ? Dimensions.get('screen').width
-    : Dimensions.get('screen').width - 170;
+    ? Dimensions.get('window').width
+    : Dimensions.get('window').width - 170;
   const limitY = fullscreen
-    ? Dimensions.get('screen').height
-    : Dimensions.get('screen').height - 70;
+    ? Dimensions.get('window').height
+    : Dimensions.get('window').height - 70;
 
   let scaledWidth = width;
   let scaledHeight = height;

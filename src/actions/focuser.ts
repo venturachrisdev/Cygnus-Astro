@@ -136,8 +136,14 @@ export const rescanFocuserDevices = async () => {
   }
 };
 
-export const connectFocuser = async (id: string) => {
+export const connectFocuser = async () => {
   try {
+    const focuserState = useFocuserStore.getState();
+    const id = focuserState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/${API_FOCUSER_CONNECT}`, {
       params: {

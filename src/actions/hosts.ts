@@ -3,6 +3,7 @@ import type { LSScanConfig } from 'react-native-lan-port-scanner';
 import LanPortScanner from 'react-native-lan-port-scanner';
 
 import { useAlertsStore } from '@/stores/alerts.store';
+import { useCameraStore } from '@/stores/camera.store';
 import type { ProfileConfig } from '@/stores/config.store';
 import {
   ApplicationTab,
@@ -10,8 +11,57 @@ import {
   NINAConfigMap,
   useConfigStore,
 } from '@/stores/config.store';
+import { useDomeStore } from '@/stores/dome.store';
+import { useFilterWheelStore } from '@/stores/filterwheel.store';
+import { useFlatPanelStore } from '@/stores/flatpanel.store';
+import { useFocuserStore } from '@/stores/focuser.store';
+import { useGuiderStore } from '@/stores/guider.store';
+import { useMountStore } from '@/stores/mount.store';
+import { useRotatorStore } from '@/stores/rotator.store';
+import { useSafetyMonitorStore } from '@/stores/safetymonitor.store';
+import { useSwitchesStore } from '@/stores/switches.stores';
+import { useWeatherStore } from '@/stores/weather.store';
 
+import { connectCamera, disconnectCamera, listCameraDevices } from './camera';
 import type { Device } from './constants';
+import { connectDome, disconnectDome, listDomeDevices } from './dome';
+import {
+  connectFilterWheel,
+  disconnectFilterWheel,
+  listFilterWheelDevices,
+} from './filterwheel';
+import {
+  connectFlatPanel,
+  disconnectFlatPanel,
+  listFlatPanelDevices,
+} from './flatpanel';
+import {
+  connectFocuser,
+  disconnectFocuser,
+  listFocuserDevices,
+} from './focuser';
+import { connectGuider, disconnectGuider, listGuiderDevices } from './guider';
+import { connectMount, disconnectMount, listMountDevices } from './mount';
+import {
+  connectRotator,
+  disconnectRotator,
+  listRotatorDevices,
+} from './rotator';
+import {
+  connectSafetyMonitor,
+  disconnectSafetyMonitor,
+  listSafetyMonitorDevices,
+} from './safetymonitor';
+import {
+  connectSwitches,
+  disconnectSwitches,
+  listSwitchesDevices,
+} from './switches';
+import {
+  connectWeather,
+  disconnectWeather,
+  listWeatherDevices,
+} from './weather';
 
 export const scanHosts = async (autoConnect?: boolean) => {
   const configState = useConfigStore.getState();
@@ -115,7 +165,7 @@ export const getProfiles = async () => {
   configState.set({ isLoading: false });
 };
 
-export const getCurrentProfile = async () => {
+export const getCurrentProfile = async (fillDeviceInventory?: boolean) => {
   const configState = useConfigStore.getState();
   configState.set({ isLoading: true });
 
@@ -139,6 +189,53 @@ export const getCurrentProfile = async () => {
         duration: response.Response.SnapShotControlSettings.ExposureDuration,
       },
     };
+
+    if (fillDeviceInventory) {
+      await Promise.all([
+        listCameraDevices(),
+        listDomeDevices(),
+        listFilterWheelDevices(),
+        listFocuserDevices(),
+        listSwitchesDevices(),
+        listMountDevices(),
+        listSafetyMonitorDevices(),
+        listFlatPanelDevices(),
+        listRotatorDevices(),
+        listWeatherDevices(),
+        listGuiderDevices(),
+      ]);
+
+      const storesByDeviceSettingKey: Record<string, any> = {
+        CameraSettings: useCameraStore.getState(),
+        DomeSettings: useDomeStore.getState(),
+        FilterWheelSettings: useFilterWheelStore.getState(),
+        FocuserSettings: useFocuserStore.getState(),
+        SwitchSettings: useSwitchesStore.getState(),
+        TelescopeSettings: useMountStore.getState(),
+        SafetyMonitorSettings: useSafetyMonitorStore.getState(),
+        FlatDeviceSettings: useFlatPanelStore.getState(),
+        RotatorSettings: useRotatorStore.getState(),
+        WeatherDataSettings: useWeatherStore.getState(),
+        GuiderSettings: useGuiderStore.getState(),
+      };
+
+      for (const key of Object.keys(storesByDeviceSettingKey)) {
+        const state = storesByDeviceSettingKey[key]!;
+        const deviceId =
+          response.Response[key].Id || response.Response[key].GuiderName;
+        if (deviceId && deviceId !== 'No_Device' && deviceId !== 'No_Guider') {
+          const currentDevice = state.devices.filter(
+            (dev: Device) => dev.id === deviceId,
+          );
+
+          if (currentDevice.length) {
+            state.set({
+              currentDevice: currentDevice[0],
+            });
+          }
+        }
+      }
+    }
 
     configState.set({
       currentProfile: {
@@ -336,5 +433,55 @@ export const handleDraftConfigUpdate = async () => {
     });
   } finally {
     configState.set({ isLoading: false });
+  }
+};
+
+export const connectAllEquipment = async () => {
+  const alertsState = useAlertsStore.getState();
+  try {
+    await Promise.all([
+      connectCamera(),
+      connectMount(),
+      connectFocuser(),
+      connectGuider(),
+      connectFlatPanel(),
+      connectSafetyMonitor(),
+      connectDome(),
+      connectFilterWheel(),
+      connectWeather(),
+      connectSwitches(),
+      connectRotator(),
+    ]);
+  } catch (e) {
+    console.log('An error happened connecting all equipment', e);
+    alertsState.set({
+      message: 'Unable to connect equipment. Please try again.',
+      type: 'error',
+    });
+  }
+};
+
+export const disconnectAllEquipment = async () => {
+  const alertsState = useAlertsStore.getState();
+  try {
+    await Promise.all([
+      disconnectCamera(),
+      disconnectMount(),
+      disconnectFocuser(),
+      disconnectGuider(),
+      disconnectFlatPanel(),
+      disconnectSafetyMonitor(),
+      disconnectDome(),
+      disconnectFilterWheel(),
+      disconnectWeather(),
+      disconnectSwitches(),
+      disconnectRotator(),
+    ]);
+  } catch (e) {
+    console.log('An error happened disconnecting all equipment', e);
+    alertsState.set({
+      message: 'Unable to disconnect equipment. Please try again.',
+      type: 'error',
+    });
   }
 };

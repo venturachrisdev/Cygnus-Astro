@@ -112,8 +112,16 @@ export const rescanCameraDevices = async () => {
   }
 };
 
-export const connectCamera = async (id: string) => {
+export const connectCamera = async () => {
   try {
+    const cameraState = useCameraStore.getState();
+    const id = cameraState.currentDevice?.id;
+
+    if (!id) {
+      console.log('No camera ID', cameraState.currentDevice);
+      return;
+    }
+
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/${API_CAMERA_CONNECT}`, {
       params: {

@@ -96,8 +96,14 @@ export const rescanGuiderDevices = async () => {
   }
 };
 
-export const connectGuider = async (id: string) => {
+export const connectGuider = async () => {
   try {
+    const guiderState = useGuiderStore.getState();
+    const id = guiderState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/${API_GUIDER_CONNECT}`, {
       params: {

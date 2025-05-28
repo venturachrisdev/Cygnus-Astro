@@ -2,7 +2,7 @@
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { orderBy } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import { Dimensions, ScrollView, Text, TextInput, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
 import {
@@ -35,14 +35,6 @@ export const Focuser = () => {
   const [focuserPosition, setFocuserPosition] = useState(
     String(focuserState.position),
   );
-
-  const connectToFocuser = () => {
-    connectFocuser(
-      focuserState.currentDevice?.id ||
-        useFocuserStore.getState().currentDevice?.id ||
-        '',
-    );
-  };
 
   useEffect(() => {
     rescanFocuserDevices();
@@ -139,7 +131,7 @@ export const Focuser = () => {
         isConnected={focuserState.isConnected}
         devices={focuserState.devices}
         isListExpanded={showDevicesList}
-        onConnect={() => connectToFocuser()}
+        onConnect={() => connectFocuser()}
         onDisconnect={() => disconnectFocuser()}
         onRescan={() => rescanFocuserDevices()}
         onDeviceSelected={(device) => {
@@ -189,7 +181,7 @@ export const Focuser = () => {
       <View className="m-2 flex flex-row items-center justify-between gap-x-4">
         <View className="flex flex-1 items-center justify-center rounded-lg bg-black p-3">
           <TextInput
-            className="flex py-1 text-white"
+            className="flex w-full py-1 text-white"
             value={focuserPosition}
             onChangeText={(text) => setFocuserPosition(text)}
           />
@@ -295,7 +287,7 @@ export const Focuser = () => {
 
       {!!focuserState.lastAutoFocusRun && (
         <LineChart
-          disableScroll
+          disableScroll={Dimensions.get('window').width > 580}
           curved
           width={580}
           height={300}
@@ -333,10 +325,10 @@ export const Focuser = () => {
           data={focuserState.lastAutoFocusRun?.points.map((p) => ({
             value: p.value,
             dataPointLabelComponent: () => (
-              <FocusErrorLine height={Math.floor(p.error * 100)} />
+              <FocusErrorLine height={Math.floor(p.error * 20)} />
             ),
-            dataPointLabelShiftX: 0.5,
-            dataPointLabelWidth: 3 + Math.floor(p.error * 100) / -4,
+            dataPointLabelWidth: 2,
+            dataPointLabelShiftY: p.error / 0.5,
           }))}
           secondaryLineConfig={{
             color: 'transparent',

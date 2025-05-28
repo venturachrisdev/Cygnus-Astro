@@ -22,11 +22,9 @@ export const TextInputLabel = ({
     <TextInput
       autoCorrect={autoCorrect}
       onChangeText={onChange}
-      className="rounded-lg bg-black p-4 text-gray-200"
+      className="w-full rounded-lg bg-black p-4 text-gray-200"
       value={value}
-      aria-disabled={disabled}
       readOnly={disabled}
-      editable={!disabled}
       placeholder={placeholder}
     />
   </View>

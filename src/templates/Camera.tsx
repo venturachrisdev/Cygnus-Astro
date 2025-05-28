@@ -31,14 +31,6 @@ export const Camera = () => {
   const [showDevicesList, setShowDevicesList] = useState(false);
   const [coolingTemp, setCoolingTemp] = useState('-10');
 
-  const connectToCamera = () => {
-    connectCamera(
-      cameraState.currentDevice?.id ||
-        useCameraStore.getState().currentDevice?.id ||
-        '',
-    );
-  };
-
   useEffect(() => {
     rescanCameraDevices();
     getCurrentProfile();
@@ -64,7 +56,7 @@ export const Camera = () => {
           isConnected={cameraState.isConnected}
           devices={cameraState.devices}
           isListExpanded={showDevicesList}
-          onConnect={() => connectToCamera()}
+          onConnect={() => connectCamera()}
           onDisconnect={() => disconnectCamera()}
           onRescan={() => rescanCameraDevices()}
           onDeviceSelected={(device) => {
@@ -114,7 +106,7 @@ export const Camera = () => {
         <View className="my-2 flex flex-row items-center justify-between">
           <View className="mr-3 flex flex-1">
             <TextInputLabel
-              disabled={cameraState.isConnected}
+              disabled={!cameraState.isConnected}
               placeholder="Enter Cooling Temperature"
               onChange={(value) => setCoolingTemp(value)}
               value={coolingTemp}

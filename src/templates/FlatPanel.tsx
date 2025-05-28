@@ -64,9 +64,7 @@ export const FlatPanel = () => {
         isConnected={flatPanelState.isConnected}
         devices={flatPanelState.devices}
         isListExpanded={showDevicesList}
-        onConnect={() =>
-          connectFlatPanel(flatPanelState.currentDevice?.id || '')
-        }
+        onConnect={() => connectFlatPanel()}
         onDisconnect={() => disconnectFlatPanel()}
         onRescan={() => rescanFlatPanelDevices()}
         onDeviceSelected={(device) => {
@@ -102,7 +100,7 @@ export const FlatPanel = () => {
         </View>
       </View>
 
-      <View className="mx-2 my-8 flex flex-row items-center justify-between gap-x-10">
+      <View className="mx-2 my-8 flex flex-row items-center justify-between gap-x-4">
         <View className="flex-1">
           {flatPanelState.coverState === 'Open' && (
             <CustomButton
@@ -133,7 +131,11 @@ export const FlatPanel = () => {
 
           {!flatPanelState.lightOn && (
             <CustomButton
-              disabled={!flatPanelState.isConnected || !configState.isConnected}
+              disabled={
+                !flatPanelState.isConnected ||
+                !configState.isConnected ||
+                flatPanelState.coverState === 'Open'
+              }
               onPress={() => setFlatPanelLight(true)}
               label="Set Light On"
             />
@@ -150,7 +152,7 @@ export const FlatPanel = () => {
       <View className="m-2 flex flex-row items-center justify-between gap-x-4">
         <View className="flex flex-1 items-center justify-center rounded-lg bg-black p-3">
           <TextInput
-            className="flex py-1 text-white"
+            className="flex w-full py-1 text-white"
             value={brightness}
             onChangeText={(text) => setBrightness(text)}
           />

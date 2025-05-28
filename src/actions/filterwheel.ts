@@ -106,8 +106,14 @@ export const rescanFilterWheelDevices = async () => {
   }
 };
 
-export const connectFilterWheel = async (id: string) => {
+export const connectFilterWheel = async () => {
   try {
+    const filterWheelState = useFilterWheelStore.getState();
+    const id = filterWheelState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/${API_FILTERWHEEL_CONNECT}`, {
       params: {

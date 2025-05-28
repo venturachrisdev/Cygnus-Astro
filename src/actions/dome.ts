@@ -78,8 +78,14 @@ export const rescanDomeDevices = async () => {
   }
 };
 
-export const connectDome = async (id: string) => {
+export const connectDome = async () => {
   try {
+    const domeState = useDomeStore.getState();
+    const id = domeState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/equipment/dome/connect`, {
       params: {
@@ -169,6 +175,19 @@ export const setDomeFollow = async (enabled: boolean) => {
     await Axios.get(`${await getApiUrl()}/equipment/dome/set-follow`, {
       params: {
         enabled,
+      },
+    });
+    await getDomeInfo();
+  } catch (e) {
+    console.log('Error getting dome', e);
+  }
+};
+
+export const slewDome = async (azimuth: number) => {
+  try {
+    await Axios.get(`${await getApiUrl()}/equipment/dome/slew`, {
+      params: {
+        azimuth,
       },
     });
     await getDomeInfo();

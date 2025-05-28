@@ -6,11 +6,14 @@ import {
   connectDome,
   disconnectDome,
   getDomeInfo,
+  homeDome,
   openDomeShutter,
   parkDome,
   rescanDomeDevices,
   setDomeFollow,
   setDomePark,
+  slewDome,
+  stopDome,
   syncDome,
 } from '@/actions/dome';
 import { CustomButton } from '@/components/CustomButton';
@@ -49,7 +52,7 @@ export const Dome = () => {
         isConnected={domeState.isConnected}
         devices={domeState.devices}
         isListExpanded={showDevicesList}
-        onConnect={() => connectDome(domeState.currentDevice?.id || '')}
+        onConnect={() => connectDome()}
         onDisconnect={() => disconnectDome()}
         onRescan={() => rescanDomeDevices()}
         onDeviceSelected={(device) => {
@@ -60,6 +63,14 @@ export const Dome = () => {
 
       <View className="my-3 flex w-full flex-row items-center justify-end">
         <View className="m-2 flex flex-row items-center justify-between">
+          <View
+            style={{ opacity: domeState.isConnected ? 1.0 : 0.4 }}
+            className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
+          >
+            <Text className="mr-1 text-xs font-medium text-white">
+              {domeState.azimuth}°
+            </Text>
+          </View>
           <StatusChip
             isConnected={domeState.isConnected}
             bubble
@@ -94,11 +105,11 @@ export const Dome = () => {
         </View>
       </View>
 
-      <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-10">
+      <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-4">
         <View className="flex-1">
           <CustomButton
             disabled={!domeState.isConnected || !configState.isConnected}
-            onPress={() => {}}
+            onPress={() => homeDome()}
             label="Home"
           />
         </View>
@@ -132,14 +143,25 @@ export const Dome = () => {
       <View className="mx-2 mb-10 flex flex-row items-center justify-between gap-x-4">
         <View className="flex flex-1 items-center justify-center rounded-lg bg-black p-3">
           <TextInput
-            className="flex py-1 text-white"
+            className="flex w-full py-1 text-white"
             value={azimuth}
             onChangeText={() => {}}
           />
         </View>
+        <View className="ml-4 w-24">
+          <CustomButton
+            disabled={
+              !domeState.isConnected ||
+              domeState.isSlewing ||
+              !configState.isConnected
+            }
+            onPress={() => slewDome(Number(azimuth))}
+            label="Slew"
+          />
+        </View>
       </View>
 
-      <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-10">
+      <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-4">
         <View className="flex-1">
           {domeState.shutterStatus === 'ShutterOpen' && (
             <CustomButton
@@ -164,16 +186,16 @@ export const Dome = () => {
         </View>
       </View>
 
-      <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-10">
+      <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-4">
         <View className="flex-1">
           <CustomButton
             disabled={!domeState.isConnected || !configState.isConnected}
             onPress={() => syncDome()}
-            label="Sync with Telescope"
+            label="Sync"
           />
         </View>
         <View className="flex-1">
-          {domeState.isSlewing && (
+          {domeState.isFollowing && (
             <CustomButton
               disabled={!domeState.isConnected || !configState.isConnected}
               onPress={() => setDomeFollow(false)}
@@ -182,13 +204,29 @@ export const Dome = () => {
             />
           )}
 
-          {!domeState.isSlewing && (
+          {!domeState.isFollowing && (
             <CustomButton
-              disabled={!domeState.isConnected || !configState.isConnected}
+              disabled={
+                !domeState.isConnected ||
+                !configState.isConnected ||
+                domeState.shutterStatus !== 'ShutterOpen'
+              }
               onPress={() => setDomeFollow(true)}
               label="Follow Telescope"
             />
           )}
+        </View>
+        <View className="flex-1">
+          <CustomButton
+            disabled={
+              !domeState.isConnected ||
+              !configState.isConnected ||
+              !domeState.isSlewing
+            }
+            onPress={() => stopDome()}
+            label="Stop Slew"
+            color="red"
+          />
         </View>
       </View>
 

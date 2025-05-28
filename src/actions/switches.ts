@@ -102,8 +102,14 @@ export const rescanSwitchesDevices = async () => {
   }
 };
 
-export const connectSwitches = async (id: string) => {
+export const connectSwitches = async () => {
   try {
+    const switchesState = useSwitchesStore.getState();
+    const id = switchesState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/equipment/switch/connect`, {
       params: {

@@ -10,6 +10,8 @@ import {
   stopSlewMount,
 } from '@/actions/mount';
 import {
+  disconnectEventsSocket,
+  disconnectTPPASocket,
   initializeEventsSocket,
   initializeTPPASocket,
   pauseTPPAAlignment,
@@ -84,7 +86,11 @@ export const TPPA = () => {
       getMountInfo();
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      disconnectTPPASocket();
+      disconnectEventsSocket();
+    };
   }, []);
 
   useEffect(() => {

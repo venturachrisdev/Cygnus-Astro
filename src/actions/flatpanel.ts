@@ -75,8 +75,14 @@ export const rescanFlatPanelDevices = async () => {
   }
 };
 
-export const connectFlatPanel = async (id: string) => {
+export const connectFlatPanel = async () => {
   try {
+    const flatPanelState = useFlatPanelStore.getState();
+    const id = flatPanelState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/equipment/flatdevice/connect`, {
       params: {

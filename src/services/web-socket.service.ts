@@ -8,6 +8,13 @@ export class WebSocketService {
     return `ws://${await getApiUrl(true, false)}`;
   }
 
+  async disconnect() {
+    if (this.socket) {
+      console.log('Disconnecting socket');
+      this.socket.close();
+    }
+  }
+
   async connect(endpoint: string, onMessage: (message: any) => void) {
     if (!this.socket || this.socket.readyState === WebSocket.OPEN) {
       const url = `${await this.getSocketUrl()}${endpoint}`;

@@ -15,6 +15,7 @@ import {
   convertDMStoDegrees,
   convertHMStoDegrees,
   disconnectMount,
+  disconnectMountSocket,
   getAltitude,
   getMountInfo,
   homeMount,
@@ -79,14 +80,6 @@ export const Mount = () => {
     mountState.set({ currentDevice: device });
   };
 
-  const connectToMount = () => {
-    connectMount(
-      mountState.currentDevice?.id ||
-        useMountStore.getState().currentDevice?.id ||
-        '',
-    );
-  };
-
   useEffect(() => {
     initializeMountSocket((message) => {
       console.log('Message received', message);
@@ -98,7 +91,10 @@ export const Mount = () => {
       getMountInfo();
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      disconnectMountSocket();
+    };
   }, []);
 
   const onTrackingModeSelected = (item: Device) => {
@@ -220,7 +216,7 @@ export const Mount = () => {
         isConnected={mountState.isConnected}
         devices={mountState.devices}
         isListExpanded={showDevicesList}
-        onConnect={() => connectToMount()}
+        onConnect={() => connectMount()}
         onDisconnect={() => disconnectMount()}
         onRescan={() => rescanMountDevices()}
         onDeviceSelected={(device) => setMountDevice(device)}
@@ -325,7 +321,7 @@ export const Mount = () => {
         </View>
       </View>
 
-      <View className="m-2 flex flex-row items-center justify-between gap-x-10">
+      <View className="m-2 flex flex-row items-center justify-between gap-x-4">
         <View className="flex-1">
           <CustomButton
             disabled={!mountState.isConnected || !configState.isConnected}

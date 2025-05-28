@@ -73,8 +73,14 @@ export const rescanRotatorDevices = async () => {
   }
 };
 
-export const connectRotator = async (id: string) => {
+export const connectRotator = async () => {
   try {
+    const rotatorState = useRotatorStore.getState();
+    const id = rotatorState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/equipment/rotator/connect`, {
       params: {

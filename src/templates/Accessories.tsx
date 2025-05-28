@@ -72,22 +72,6 @@ export const Accessories = () => {
     String(rotatorState.position),
   );
 
-  const connectToFilterWheel = () => {
-    connectFilterWheel(
-      filterWheelState.currentDevice?.id ||
-        useFilterWheelStore.getState().currentDevice?.id ||
-        '',
-    );
-  };
-
-  const connectToSwitches = () => {
-    connectSwitches(
-      switchesState.currentDevice?.id ||
-        useSwitchesStore.getState().currentDevice?.id ||
-        '',
-    );
-  };
-
   const onFilterSelected = (filter: number) => {
     setFiltersListExpanded(false);
     setSelectedFilter(filter);
@@ -150,7 +134,7 @@ export const Accessories = () => {
         isConnected={filterWheelState.isConnected}
         devices={filterWheelState.devices}
         isListExpanded={showFilterDevicesList}
-        onConnect={() => connectToFilterWheel()}
+        onConnect={() => connectFilterWheel()}
         onDisconnect={() => disconnectFilterWheel()}
         onRescan={() => rescanFilterWheelDevices()}
         onDeviceSelected={(device) => {
@@ -207,7 +191,7 @@ export const Accessories = () => {
         isConnected={switchesState.isConnected}
         devices={switchesState.devices}
         isListExpanded={showSwitchDevicesList}
-        onConnect={() => connectToSwitches()}
+        onConnect={() => connectSwitches()}
         onDisconnect={() => disconnectSwitches()}
         onRescan={() => rescanSwitchesDevices()}
         onDeviceSelected={(device) => {
@@ -217,51 +201,57 @@ export const Accessories = () => {
       />
 
       {switchesState.isConnected && (
-        <>
-          <View className="mt-10 flex flex-row items-center">
-            {switchesState.readSwitches?.map((sw) => (
-              <View className="mr-12">
-                <Text className="text-gray-300">{sw.name}</Text>
-                <Text className="text-3xl font-medium text-white">
-                  {sw.value}
-                </Text>
-              </View>
-            ))}
-          </View>
+        <ScrollView
+          bounces={false}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          <View>
+            <View className="mt-10 flex flex-row items-center">
+              {switchesState.readSwitches?.map((sw) => (
+                <View className="mr-12">
+                  <Text className="text-gray-300">{sw.name}</Text>
+                  <Text className="text-3xl font-medium text-white">
+                    {sw.value}
+                  </Text>
+                </View>
+              ))}
+            </View>
 
-          <View className="mt-10 flex flex-row items-center">
-            {switchesState.writeSwitches?.map((sw, index) => (
-              <View className="mr-12">
-                <Text className="mb-4 text-gray-300">
-                  {sw.name}{' '}
-                  {sw.maxValue - sw.minValue !== 1
-                    ? `(${sw.minValue} - ${sw.maxValue})`
-                    : ''}
-                </Text>
+            <View className="mt-10 flex flex-row items-center">
+              {switchesState.writeSwitches?.map((sw, index) => (
+                <View className="mr-12">
+                  <Text className="mb-4 text-gray-300">
+                    {sw.name}{' '}
+                    {sw.maxValue - sw.minValue !== 1
+                      ? `(${sw.minValue} - ${sw.maxValue})`
+                      : ''}
+                  </Text>
 
-                {sw.maxValue - sw.minValue === 1 && (
-                  <Switch
-                    value={sw.value === sw.maxValue}
-                    onChange={() =>
-                      setSwitchValue(
-                        index,
-                        sw.value === sw.maxValue ? sw.minValue : sw.maxValue,
-                      )
-                    }
-                  />
-                )}
-                {sw.maxValue - sw.minValue !== 1 && (
-                  <TextInputLabel
-                    disabled
-                    placeholder=""
-                    onChange={() => {}}
-                    value={String(sw.value)}
-                  />
-                )}
-              </View>
-            ))}
+                  {sw.maxValue - sw.minValue === 1 && (
+                    <Switch
+                      value={sw.value === sw.maxValue}
+                      onChange={() =>
+                        setSwitchValue(
+                          index,
+                          sw.value === sw.maxValue ? sw.minValue : sw.maxValue,
+                        )
+                      }
+                    />
+                  )}
+                  {sw.maxValue - sw.minValue !== 1 && (
+                    <TextInputLabel
+                      disabled
+                      placeholder=""
+                      onChange={() => {}}
+                      value={String(sw.value)}
+                    />
+                  )}
+                </View>
+              ))}
+            </View>
           </View>
-        </>
+        </ScrollView>
       )}
 
       <View className="my-10 border-[0.5px] border-neutral-800" />
@@ -274,7 +264,7 @@ export const Accessories = () => {
         isConnected={rotatorState.isConnected}
         devices={rotatorState.devices}
         isListExpanded={showRotatorDevicesList}
-        onConnect={() => connectRotator(rotatorState.currentDevice?.id || '')}
+        onConnect={() => connectRotator()}
         onDisconnect={() => disconnectRotator()}
         onRescan={() => rescanRotatorDevices()}
         onDeviceSelected={(device) => {
@@ -289,7 +279,8 @@ export const Accessories = () => {
           className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
         >
           <Text className="text-xs font-medium text-white">
-            Position: <Text className="font-bold">{rotatorState.position}</Text>
+            Position:{' '}
+            <Text className="font-bold">{rotatorState.position}°</Text>
           </Text>
         </View>
         <View
@@ -313,7 +304,7 @@ export const Accessories = () => {
       <View className="mx-2 mt-10 flex flex-row items-center justify-between gap-x-4">
         <View className="flex flex-1 items-center justify-center rounded-lg bg-black p-3">
           <TextInput
-            className="flex py-1 text-white"
+            className="flex w-full py-1 text-white"
             value={rotatorPosition}
             onChangeText={(text) => setRotatorPosition(text)}
           />
@@ -345,9 +336,7 @@ export const Accessories = () => {
         isConnected={safetyMonitorState.isConnected}
         devices={safetyMonitorState.devices}
         isListExpanded={showSafetyMonitorDevicesList}
-        onConnect={() =>
-          connectSafetyMonitor(safetyMonitorState.currentDevice?.id || '')
-        }
+        onConnect={() => connectSafetyMonitor()}
         onDisconnect={() => disconnectSafetyMonitor()}
         onRescan={() => rescanSafetyMonitorDevices()}
         onDeviceSelected={(device) => {
@@ -376,7 +365,7 @@ export const Accessories = () => {
         isConnected={weatherState.isConnected}
         devices={weatherState.devices}
         isListExpanded={showWeatherDevicesList}
-        onConnect={() => connectWeather(weatherState.currentDevice?.id || '')}
+        onConnect={() => connectWeather()}
         onDisconnect={() => disconnectWeather()}
         onRescan={() => rescanWeatherDevices()}
         onDeviceSelected={(device) => {
@@ -385,95 +374,102 @@ export const Accessories = () => {
         }}
       />
 
-      <View className="mx-2 mt-10 flex flex-row items-center">
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Temperature</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.temperature || '--'}
-          </Text>
+      <ScrollView
+        bounces={false}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        <View>
+          <View className="mx-2 mt-10 flex flex-row items-center">
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Temperature</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.temperature || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Dew Point</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.dewPoint || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Humidity</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.humidity || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Pressure</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.pressure || '--'}
+              </Text>
+            </View>
+          </View>
+          <View className="mx-2 mt-10 flex flex-row items-center">
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Sky Brightness</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.skyBrightness || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Sky Quality</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.skyQuality || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Sky Temperature</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.skyTemperature || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Rain Rate</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.rainRate || '--'}
+              </Text>
+            </View>
+          </View>
+          <View className="mx-2 mt-10 flex flex-row items-center">
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Wind Direction</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.windDirection || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Wind Speed</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.windSpeed || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Wind Gust</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.windGust || '--'}
+              </Text>
+            </View>
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Star FWHM</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.starFWHM || '--'}
+              </Text>
+            </View>
+          </View>
+          <View className="mx-2 mt-10 flex flex-row items-center">
+            <View className="mr-12 w-24">
+              <Text className="text-gray-300">Cloud Cover</Text>
+              <Text className="text-3xl font-medium text-white">
+                {weatherState.cloudCover || '--'}
+              </Text>
+            </View>
+          </View>
         </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Dew Point</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.dewPoint || '--'}
-          </Text>
-        </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Humidity</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.humidity || '--'}
-          </Text>
-        </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Pressure</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.pressure || '--'}
-          </Text>
-        </View>
-      </View>
-      <View className="mx-2 mt-10 flex flex-row items-center">
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Sky Brightness</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.skyBrightness || '--'}
-          </Text>
-        </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Sky Quality</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.skyQuality || '--'}
-          </Text>
-        </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Sky Temperature</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.skyTemperature || '--'}
-          </Text>
-        </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Rain Rate</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.rainRate || '--'}
-          </Text>
-        </View>
-      </View>
-      <View className="mx-2 mt-10 flex flex-row items-center">
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Wind Direction</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.windDirection || '--'}
-          </Text>
-        </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Wind Speed</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.windSpeed || '--'}
-          </Text>
-        </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Wind Gust</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.windGust || '--'}
-          </Text>
-        </View>
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Star FWHM</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.starFWHM || '--'}
-          </Text>
-        </View>
-      </View>
-      <View className="mx-2 mt-10 flex flex-row items-center">
-        <View className="mr-12 w-24">
-          <Text className="text-gray-300">Cloud Cover</Text>
-          <Text className="text-3xl font-medium text-white">
-            {weatherState.cloudCover || '--'}
-          </Text>
-        </View>
-      </View>
+      </ScrollView>
 
-      <View className="h-64" />
-      <View className="h-8" />
+      <View className="h-24" />
     </ScrollView>
   );
 };

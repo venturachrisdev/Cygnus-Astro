@@ -4,6 +4,8 @@ import { ScrollView, Text, View } from 'react-native';
 import type { Device } from '@/actions/constants';
 import { fetchGPSLocation } from '@/actions/gps';
 import {
+  connectAllEquipment,
+  disconnectAllEquipment,
   getApplicationVersion,
   getCurrentProfile,
   getProfiles,
@@ -17,10 +19,32 @@ import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
 import { DropDown } from '@/components/DropDown';
 import { TextInputLabel } from '@/components/TextInputLabel';
+import { useCameraStore } from '@/stores/camera.store';
 import { useConfigStore } from '@/stores/config.store';
+import { useDomeStore } from '@/stores/dome.store';
+import { useFilterWheelStore } from '@/stores/filterwheel.store';
+import { useFlatPanelStore } from '@/stores/flatpanel.store';
+import { useFocuserStore } from '@/stores/focuser.store';
+import { useGuiderStore } from '@/stores/guider.store';
+import { useMountStore } from '@/stores/mount.store';
+import { useRotatorStore } from '@/stores/rotator.store';
+import { useSafetyMonitorStore } from '@/stores/safetymonitor.store';
+import { useSwitchesStore } from '@/stores/switches.stores';
+import { useWeatherStore } from '@/stores/weather.store';
 
 export const Config = () => {
   const configState = useConfigStore();
+  const cameraState = useCameraStore();
+  const domeState = useDomeStore();
+  const filterWheelState = useFilterWheelStore();
+  const focuserState = useFocuserStore();
+  const switchState = useSwitchesStore();
+  const mountState = useMountStore();
+  const safetyMonitorState = useSafetyMonitorStore();
+  const flatDeviceState = useFlatPanelStore();
+  const rotatorState = useRotatorStore();
+  const weatherState = useWeatherStore();
+  const guiderState = useGuiderStore();
 
   const [showHostsList, setShowHostsList] = useState(false);
   const [showProfilesList, setShowProfilesList] = useState(false);
@@ -54,8 +78,34 @@ export const Config = () => {
     }
 
     getProfiles();
-    getCurrentProfile();
+    getCurrentProfile(true);
   }, []);
+
+  const allConnected =
+    cameraState.isConnected &&
+    domeState.isConnected &&
+    filterWheelState.isConnected &&
+    focuserState.isConnected &&
+    switchState.isConnected &&
+    mountState.isConnected &&
+    safetyMonitorState.isConnected &&
+    flatDeviceState.isConnected &&
+    rotatorState.isConnected &&
+    weatherState.isConnected &&
+    guiderState.isConnected;
+
+  const noneConnected =
+    !cameraState.isConnected &&
+    !domeState.isConnected &&
+    !filterWheelState.isConnected &&
+    !focuserState.isConnected &&
+    !switchState.isConnected &&
+    !mountState.isConnected &&
+    !safetyMonitorState.isConnected &&
+    !flatDeviceState.isConnected &&
+    !rotatorState.isConnected &&
+    !weatherState.isConnected &&
+    !guiderState.isConnected;
 
   return (
     <>
@@ -97,6 +147,28 @@ export const Config = () => {
             <Text className="font-bold">{configState.apiVersion}</Text>
           </Text>
         )}
+
+        <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-4">
+          <View className="flex-1">
+            <CustomButton
+              icon="connection"
+              iconSize={20}
+              disabled={!configState.isConnected || allConnected}
+              onPress={() => connectAllEquipment()}
+              label="Connect All Equipment"
+            />
+          </View>
+          <View className="flex-1">
+            <CustomButton
+              icon="connection"
+              iconSize={20}
+              disabled={!configState.isConnected || noneConnected}
+              onPress={() => disconnectAllEquipment()}
+              label="Disconnect All Equipment"
+              color="red"
+            />
+          </View>
+        </View>
 
         <Text className="mt-6 text-lg font-semibold text-white">
           Astrometry

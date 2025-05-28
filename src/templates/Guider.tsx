@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, Switch, Text, View } from 'react-native';
+import { Dimensions, ScrollView, Switch, Text, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
 import {
@@ -24,14 +24,6 @@ export const Guider = () => {
   const [showDevicesList, setShowDevicesList] = useState(false);
   const [calibrate, setCalibrate] = useState(false);
 
-  const connectToGuider = () => {
-    connectGuider(
-      guiderState.currentDevice?.id ||
-        useGuiderStore.getState().currentDevice?.id ||
-        '',
-    );
-  };
-
   useEffect(() => {
     rescanGuiderDevices();
     getGuiderInfo();
@@ -43,6 +35,11 @@ export const Guider = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const guidingGraphWidth = (() => {
+    const { width } = Dimensions.get('window');
+    return width <= 900 ? width - 300 : width - 200;
+  })();
 
   return (
     <ScrollView
@@ -56,7 +53,7 @@ export const Guider = () => {
         isConnected={guiderState.isConnected}
         devices={guiderState.devices}
         isListExpanded={showDevicesList}
-        onConnect={() => connectToGuider()}
+        onConnect={() => connectGuider()}
         onDisconnect={() => disconnectGuider()}
         onRescan={() => rescanGuiderDevices()}
         onDeviceSelected={(device) => {
@@ -154,7 +151,7 @@ export const Guider = () => {
       </View>
       <LineChart
         disableScroll
-        width={580}
+        width={guidingGraphWidth}
         height={100}
         adjustToWidth
         formatYLabel={(l) => String(Math.ceil(Number(l)))}
@@ -177,7 +174,22 @@ export const Guider = () => {
         dataPointsRadius1={0}
         color1="blue"
         dataPointsColor1="white"
-        data={guiderState.graph.map((g) => ({ value: g.raDistance }))}
+        data={guiderState.graph.map((g) => ({
+          value: g.raDistance,
+          ...(g.dither
+            ? {
+                showVerticalLine: true,
+                verticalLineColor: '#ccc',
+                verticalLineHeight: 10,
+                verticalLineThickness: 1,
+                label: 'Dither',
+                labelTextStyle: {
+                  color: '#fff',
+                  fontSize: 10,
+                },
+              }
+            : {}),
+        }))}
         secondaryLineConfig={{
           color: 'red',
         }}

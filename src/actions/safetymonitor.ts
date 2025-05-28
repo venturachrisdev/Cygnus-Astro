@@ -73,8 +73,14 @@ export const rescanSafetyMonitorDevices = async () => {
   }
 };
 
-export const connectSafetyMonitor = async (id: string) => {
+export const connectSafetyMonitor = async () => {
   try {
+    const safetyMonitorState = useSafetyMonitorStore.getState();
+    const id = safetyMonitorState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/equipment/safetymonitor/connect`, {
       params: {

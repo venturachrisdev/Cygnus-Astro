@@ -93,8 +93,14 @@ export const rescanWeatherDevices = async () => {
   }
 };
 
-export const connectWeather = async (id: string) => {
+export const connectWeather = async () => {
   try {
+    const weatherState = useWeatherStore.getState();
+    const id = weatherState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/equipment/weather/connect`, {
       params: {

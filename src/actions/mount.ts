@@ -21,6 +21,10 @@ export const initializeMountSocket = (onMessage: (message: any) => void) => {
   mountSocket.connect('/v2/mount', onMessage);
 };
 
+export const disconnectMountSocket = () => {
+  mountSocket.disconnect();
+};
+
 export const sendMountEvent = (message: any) => {
   mountSocket.send(message);
 };
@@ -103,8 +107,14 @@ export const rescanMountDevices = async () => {
   }
 };
 
-export const connectMount = async (id: string) => {
+export const connectMount = async () => {
   try {
+    const mountState = useMountStore.getState();
+    const id = mountState.currentDevice?.id;
+
+    if (!id) {
+      return;
+    }
     console.log('Connecting to', id);
     await Axios.get(`${await getApiUrl()}/${API_MOUNT_CONNECT}`, {
       params: {
