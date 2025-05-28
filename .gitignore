@@ -17,6 +17,7 @@ dist/
 web-build/
 *.ipa
 *.apk
+*.aab
 
 # debug
 npm-debug.log*

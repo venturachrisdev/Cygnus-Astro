@@ -27,7 +27,7 @@ export const Dome = () => {
   const configState = useConfigStore();
 
   const [showDevicesList, setShowDevicesList] = useState(false);
-  const [azimuth] = useState(String(domeState.azimuth || 0));
+  const [azimuth, setAzimuth] = useState(String(domeState.azimuth || 0));
 
   useEffect(() => {
     rescanDomeDevices();
@@ -145,7 +145,7 @@ export const Dome = () => {
           <TextInput
             className="flex w-full py-1 text-white"
             value={azimuth}
-            onChangeText={() => {}}
+            onChangeText={(text) => setAzimuth(text)}
           />
         </View>
         <View className="ml-4 w-24">
