@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
@@ -141,12 +142,16 @@ export const Config = () => {
           defaultText="Select Profile"
         />
 
-        {configState.apiVersion && (
-          <Text className="my-4 text-right text-sm text-gray-500">
-            API Version:{' '}
-            <Text className="font-bold">{configState.apiVersion}</Text>
-          </Text>
-        )}
+        <Text className="my-4 text-right text-sm text-gray-500">
+          App Version:{' '}
+          <Text className="font-bold">{Constants.expoConfig?.version}</Text>
+          {configState.apiVersion && (
+            <Text>
+              {'    |    '}API Version:{' '}
+              <Text className="font-bold">{configState.apiVersion}</Text>
+            </Text>
+          )}
+        </Text>
 
         <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-4">
           <View className="flex-1">
