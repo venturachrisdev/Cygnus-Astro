@@ -159,7 +159,9 @@ export const Camera = () => {
               onChange={(value) =>
                 setDraftConfigNumber('telescope', 'focalLength', value)
               }
-              value={String(configState.draftConfig.telescope?.focalLength)}
+              value={String(
+                configState.draftConfig.telescope?.focalLength || '',
+              )}
             />
           </View>
 
@@ -170,7 +172,9 @@ export const Camera = () => {
               onChange={(value) =>
                 setDraftConfigNumber('telescope', 'focalRatio', value)
               }
-              value={String(configState.draftConfig.telescope?.focalRatio)}
+              value={String(
+                configState.draftConfig.telescope?.focalRatio || '',
+              )}
             />
           </View>
         </View>

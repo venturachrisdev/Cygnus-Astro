@@ -61,6 +61,7 @@ import {
   connectWeather,
   disconnectWeather,
   listWeatherDevices,
+  parseNaNValue,
 } from './weather';
 
 export const scanHosts = async (autoConnect?: boolean) => {
@@ -182,8 +183,12 @@ export const getCurrentProfile = async (fillDeviceInventory?: boolean) => {
       },
       telescope: {
         name: response.Response.TelescopeSettings.Name,
-        focalLength: response.Response.TelescopeSettings.FocalLength,
-        focalRatio: response.Response.TelescopeSettings.FocalRatio,
+        focalLength: parseNaNValue(
+          response.Response.TelescopeSettings.FocalLength,
+        ),
+        focalRatio: parseNaNValue(
+          response.Response.TelescopeSettings.FocalRatio,
+        ),
       },
       snapshot: {
         duration: response.Response.SnapShotControlSettings.ExposureDuration,
