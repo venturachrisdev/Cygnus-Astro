@@ -12,14 +12,14 @@ interface WeatherStore {
   dewPoint: number;
   humidity: number;
   pressure: number;
-  rainRate: string;
-  skyBrightness: string;
-  skyQuality: string;
-  skyTemperature: string;
-  starFWHM: string;
+  rainRate: number;
+  skyBrightness: number;
+  skyQuality: number;
+  skyTemperature: number;
+  starFWHM: number;
   temperature: number;
   windDirection: number;
-  windGust: string;
+  windGust: number;
   windSpeed: number;
 
   set: (options: Partial<WeatherStore>) => void;
@@ -34,14 +34,14 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
   dewPoint: 0,
   humidity: 0,
   pressure: 0,
-  rainRate: '',
-  skyBrightness: '',
-  skyQuality: '',
-  skyTemperature: '',
-  starFWHM: '',
+  rainRate: 0,
+  skyBrightness: 0,
+  skyQuality: 0,
+  skyTemperature: 0,
+  starFWHM: 0,
   temperature: 0,
   windDirection: 0,
-  windGust: '',
+  windGust: 0,
   windSpeed: 0,
 
   set: (options) => set({ ...options }),

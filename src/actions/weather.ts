@@ -11,7 +11,7 @@ export const parseNaNValue = (
     return undefined;
   }
 
-  return value;
+  return Number(value);
 };
 
 export const getWeatherInfo = async () => {

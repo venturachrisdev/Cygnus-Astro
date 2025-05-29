@@ -48,6 +48,33 @@ import { useSafetyMonitorStore } from '@/stores/safetymonitor.store';
 import { useSwitchesStore } from '@/stores/switches.stores';
 import { useWeatherStore } from '@/stores/weather.store';
 
+const WeatherItem = ({
+  value,
+  unit,
+  decimals,
+  top,
+}: {
+  value: number;
+  unit: string;
+  decimals?: number;
+  top?: boolean;
+}) => (
+  <View className={`flex flex-row ${top ? '' : 'items-end'}`}>
+    {!!value && (
+      <>
+        <Text className="text-2xl font-medium text-white">
+          {value.toFixed(decimals)}
+        </Text>
+        <Text className={`${top ? 'mt-1' : 'mb-1'} text-xs text-white`}>
+          {' '}
+          {unit}
+        </Text>
+      </>
+    )}
+    {!value && <Text className="text-2xl font-medium text-white">--</Text>}
+  </View>
+);
+
 export const Accessories = () => {
   const filterWheelState = useFilterWheelStore();
   const switchesState = useSwitchesStore();
@@ -383,87 +410,82 @@ export const Accessories = () => {
           <View className="mx-2 mt-10 flex flex-row items-center">
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Temperature</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.temperature || '--'}
-              </Text>
+              <WeatherItem
+                value={weatherState.temperature}
+                unit="°c"
+                decimals={1}
+              />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Dew Point</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.dewPoint || '--'}
-              </Text>
+              <WeatherItem
+                value={weatherState.dewPoint}
+                unit="°c"
+                decimals={1}
+              />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Humidity</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.humidity || '--'}
-              </Text>
+              <WeatherItem value={weatherState.humidity} unit="%" />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Pressure</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.pressure || '--'}
-              </Text>
+              <WeatherItem value={weatherState.pressure} unit="hPa" />
             </View>
           </View>
           <View className="mx-2 mt-10 flex flex-row items-center">
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Sky Brightness</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.skyBrightness || '--'}
-              </Text>
+              <WeatherItem value={weatherState.skyBrightness} unit="lx" />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Sky Quality</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.skyQuality || '--'}
-              </Text>
+              <WeatherItem
+                value={weatherState.skyQuality}
+                unit="mag/a²"
+                decimals={1}
+              />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Sky Temperature</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.skyTemperature || '--'}
-              </Text>
+              <WeatherItem
+                value={weatherState.skyTemperature}
+                unit="°c"
+                decimals={1}
+              />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Rain Rate</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.rainRate || '--'}
-              </Text>
+              <WeatherItem value={weatherState.rainRate} unit="mm/h" />
             </View>
           </View>
           <View className="mx-2 mt-10 flex flex-row items-center">
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Wind Direction</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.windDirection || '--'}
-              </Text>
+              <WeatherItem value={weatherState.windDirection} unit="°" top />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Wind Speed</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.windSpeed || '--'}
-              </Text>
+              <WeatherItem value={weatherState.windSpeed} unit="m/s" />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Wind Gust</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.windGust || '--'}
-              </Text>
+              <WeatherItem value={weatherState.windGust} unit="m/s" />
             </View>
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Star FWHM</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.starFWHM || '--'}
-              </Text>
+              <WeatherItem
+                value={weatherState.starFWHM}
+                unit="''"
+                top
+                decimals={1}
+              />
             </View>
           </View>
           <View className="mx-2 mt-10 flex flex-row items-center">
             <View className="mr-12 w-24">
               <Text className="text-gray-300">Cloud Cover</Text>
-              <Text className="text-3xl font-medium text-white">
-                {weatherState.cloudCover || '--'}
-              </Text>
+              <WeatherItem value={weatherState.cloudCover} unit="%" />
             </View>
           </View>
         </View>
