@@ -307,7 +307,9 @@ export const Accessories = () => {
         >
           <Text className="text-xs font-medium text-white">
             Position:{' '}
-            <Text className="font-bold">{rotatorState.position}°</Text>
+            <Text className="font-bold">
+              {rotatorState.position.toFixed(1)}°
+            </Text>
           </Text>
         </View>
         <View

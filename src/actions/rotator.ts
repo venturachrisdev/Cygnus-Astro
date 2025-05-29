@@ -23,7 +23,7 @@ export const getRotatorInfo = async () => {
 
     rotatorState.set({
       isConnected: response.Response.Connected,
-      isMoving: response.Response.isMoving,
+      isMoving: response.Response.IsMoving,
       stepSize: response.Response.StepSize,
       position: response.Response.Position,
     });
@@ -104,7 +104,7 @@ export const disconnectRotator = async () => {
 
 export const moveRotator = async (position: number) => {
   try {
-    await Axios.get(`${await getApiUrl()}/equipment/rotator/move`, {
+    await Axios.get(`${await getApiUrl()}/equipment/rotator/move-mechanical`, {
       params: {
         position,
       },
