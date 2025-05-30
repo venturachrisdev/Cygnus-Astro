@@ -16,7 +16,7 @@ export class WebSocketService {
   }
 
   async connect(endpoint: string, onMessage: (message: any) => void) {
-    if (!this.socket || this.socket.readyState === WebSocket.OPEN) {
+    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
       const url = `${await this.getSocketUrl()}${endpoint}`;
       this.socket = new WebSocket(url);
 

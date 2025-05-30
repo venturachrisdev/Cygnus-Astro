@@ -125,7 +125,7 @@ export const Config = () => {
           onListExpand={() => setShowHostsList(!showHostsList)}
           currentDevice={configState.currentDevice}
           isConnected={configState.isConnected}
-          devices={configState.devices}
+          devices={!configState.isConnected ? configStxaate.devices : []}
           isListExpanded={showHostsList}
           onConnect={() => getApplicationVersion(true)}
           onDisconnect={onDisconnect}

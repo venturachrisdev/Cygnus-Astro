@@ -9,6 +9,8 @@
 - Show both open and close dome buttons to handle in-between status
 - Image History does not reset when a new capture is detected
 - Android: Stars dropdown displayed under input correctly. No text edition allowed
+- Disable instances dropdown if is connected
+- TTPA and mount sockets are correctly reconnected when entering the page a second time
 
 ## 1.1.0 (27-06-2025)
 
