@@ -90,15 +90,30 @@ const Capture = () => {
       getGuidingGraph();
       getGuiderInfo();
       getSequenceState();
-      getImageHistory(false);
     }, 1000);
     const intervalCapture = setInterval((_) => {
       getCameraInfo();
     }, 500);
 
+    const intervalImages = setInterval(() => {
+      const checkImages = async () => {
+        const currentImages = useSequenceStore.getState().images;
+        const newImages = await getImageHistory(false, false);
+
+        if (currentImages.length !== newImages.length) {
+          getImageHistory();
+        }
+      };
+
+      if (sequenceState.isRunning) {
+        checkImages();
+      }
+    }, 3000);
+
     return () => {
       clearInterval(interval);
       clearInterval(intervalCapture);
+      clearInterval(intervalImages);
     };
   }, []);
 

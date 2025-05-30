@@ -185,7 +185,6 @@ export const getCapturedImageWithRetries = async () => {
 
   let retries = 0;
   while ((typeof response === 'string' || !response.Image) && retries < 10) {
-    console.log('Retrying capture');
     response = await getCapturedImage();
     retries += 1;
     await sleep(250);

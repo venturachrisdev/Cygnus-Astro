@@ -5,6 +5,9 @@
 - Rotator moves mechanically when "move" button is pressed
 - Decimals for Weather device are formatted correctly
 - Show empty value when focal length and ratio are not set
+- Format camera temperature digits correctly
+- Show both open and close dome buttons to handle in-between status
+- Image History does not reset when a new capture is detected
 
 ## 1.1.0 (27-06-2025)
 
