@@ -21,7 +21,6 @@ import {
 import {
   convertDMStoDegrees,
   convertHMStoDegrees,
-  getAltitude,
   getMountInfo,
   stopSlewMount,
 } from '@/actions/mount';
@@ -31,10 +30,10 @@ import { initializeEventsSocket } from '@/actions/tppa';
 import { CircleButton } from '@/components/CircleButton';
 import { CustomButton } from '@/components/CustomButton';
 import { TextInputLabel } from '@/components/TextInputLabel';
+import { getAltitudePoints } from '@/helpers/sequence';
 import { useCameraStore } from '@/stores/camera.store';
 import { useConfigStore } from '@/stores/config.store';
 import { useMountStore } from '@/stores/mount.store';
-import type { NGCObject } from '@/stores/ngc.store';
 import { useNGCStore } from '@/stores/ngc.store';
 import { useSequenceStore } from '@/stores/sequence.store';
 
@@ -124,21 +123,6 @@ export const TargetSearch = () => {
       router.back();
     }
   };
-
-  const getAltitudePoints = (ngc: NGCObject) =>
-    [...Array(24).keys()].map((i: number) => {
-      const now = new Date().addHours(i);
-
-      const altitude = getAltitude({
-        decDeg: convertDMStoDegrees(ngc.dec, true),
-        latDeg: configState.config.astrometry.latitude,
-        raDeg: convertHMStoDegrees(ngc.ra, true),
-        date: now,
-        lonDeg: configState.config.astrometry.longitude,
-      });
-
-      return altitude.altDeg;
-    });
 
   const spinValue = new Animated.Value(0);
   Animated.loop(
@@ -372,7 +356,11 @@ export const TargetSearch = () => {
                         mostNegativeValue={0}
                         color1="#e77"
                         dataPointsColor1="white"
-                        data={getAltitudePoints(ngc).map((i) => ({ value: i }))}
+                        data={getAltitudePoints(
+                          ngc,
+                          configState.config.astrometry.longitude,
+                          configState.config.astrometry.latitude,
+                        ).map((i) => ({ value: i }))}
                       />
                     </View>
                   </View>
