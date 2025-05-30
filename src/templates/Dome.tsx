@@ -163,26 +163,28 @@ export const Dome = () => {
 
       <View className="mx-2 my-4 flex flex-row items-center justify-between gap-x-4">
         <View className="flex-1">
-          {domeState.shutterStatus === 'ShutterOpen' && (
-            <CustomButton
-              disabled={!domeState.isConnected || !configState.isConnected}
-              onPress={() => closeDomeShutter()}
-              label="Close Shutter"
-              color="red"
-            />
-          )}
-
-          {domeState.shutterStatus !== 'ShutterOpen' && (
-            <CustomButton
-              disabled={
-                !domeState.isConnected ||
-                !configState.isConnected ||
-                domeState.isSlewing
-              }
-              onPress={() => openDomeShutter()}
-              label="Open Shutter"
-            />
-          )}
+          <CustomButton
+            disabled={
+              !domeState.isConnected ||
+              !configState.isConnected ||
+              domeState.isSlewing ||
+              domeState.shutterStatus === 'ShutterOpen'
+            }
+            onPress={() => openDomeShutter()}
+            label="Open"
+          />
+        </View>
+        <View className="flex-1">
+          <CustomButton
+            disabled={
+              !domeState.isConnected ||
+              !configState.isConnected ||
+              domeState.shutterStatus === 'ShutterClosed'
+            }
+            onPress={() => closeDomeShutter()}
+            label="Close"
+            color="red"
+          />
         </View>
       </View>
 
@@ -224,7 +226,7 @@ export const Dome = () => {
               !domeState.isSlewing
             }
             onPress={() => stopDome()}
-            label="Stop Slew"
+            label="Stop"
             color="red"
           />
         </View>

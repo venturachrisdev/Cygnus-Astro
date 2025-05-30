@@ -72,7 +72,7 @@ export const Camera = () => {
               className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
             >
               <Text className="text-xs font-medium text-white">
-                {cameraState.temperature}
+                {cameraState.temperature?.toFixed(1)}
               </Text>
               <Icon name="temperature-celsius" size={12} color="white" />
             </View>
