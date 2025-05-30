@@ -133,7 +133,7 @@ export const Mount = () => {
 
   const starsAsDevices = useMemo(() => {
     let starsAboveHorizon = starsFormatted.filter((star) => star.altitude >= 0);
-    starsAboveHorizon = orderBy(starsAboveHorizon, ['altitude'], ['desc']);
+    starsAboveHorizon = orderBy(starsAboveHorizon, ['name'], ['asc']);
 
     return starsAboveHorizon.map((star) => ({
       id: star.name,
@@ -373,7 +373,6 @@ export const Mount = () => {
           <DropDown
             defaultText="Select Star"
             currentItem={currentStar || null}
-            useInputText
             icon={starsInputText ? 'text-search' : undefined}
             inputTextValue={starsInputText}
             inputTextPlaceholder="Search Star"
