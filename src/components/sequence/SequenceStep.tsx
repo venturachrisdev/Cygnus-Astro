@@ -1,5 +1,6 @@
+/* eslint-disable no-nested-ternary */
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import { Animated, Easing, Text, View } from 'react-native';
+import { Animated, Text, View } from 'react-native';
 
 import {
   getIconNameForStep,
@@ -10,33 +11,27 @@ import {
 interface SequenceStepProps {
   item: any;
   index: number;
+  spinValue: any;
+  transparent?: boolean;
 }
 
-export const SequenceStep = ({ item, index }: SequenceStepProps) => {
-  const spinValue = new Animated.Value(0);
-  Animated.loop(
-    Animated.timing(spinValue, {
-      toValue: 1,
-      duration: 1200,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }),
-  ).start();
-
-  const spin = spinValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
+export const SequenceStep = ({
+  item,
+  index,
+  spinValue,
+  transparent,
+}: SequenceStepProps) => {
   return (
     <View
       key={index}
       className={`${
-        item.Status === 'RUNNING'
+        transparent
+          ? ''
+          : item.Status === 'RUNNING'
           ? 'border-[0.5px] border-neutral-700 bg-neutral-950'
           : 'bg-neutral-900'
       } ${
-        item.Status === 'FINISHED' ? 'bg-neutral-800' : ''
+        transparent ? '' : item.Status === 'FINISHED' ? 'bg-neutral-800' : ''
       } my-[2px] flex flex-row items-center justify-between rounded-lg px-4 py-2`}
     >
       <View className="my-1 flex flex-row items-center">
@@ -55,7 +50,7 @@ export const SequenceStep = ({ item, index }: SequenceStepProps) => {
 
       <View>
         {item.Status === 'RUNNING' && (
-          <Animated.View style={{ transform: [{ rotate: spin }] }}>
+          <Animated.View style={{ transform: [{ rotate: spinValue }] }}>
             <Icon name="loading" size={20} color="white" />
           </Animated.View>
         )}

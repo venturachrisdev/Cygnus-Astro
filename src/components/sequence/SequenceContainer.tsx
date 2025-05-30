@@ -12,6 +12,7 @@ interface SequenceContainerProps {
   latitude: number;
   hourDate: number;
   index: number;
+  spinValue: any;
 }
 
 export const SequenceContainer = ({
@@ -20,6 +21,7 @@ export const SequenceContainer = ({
   longitude,
   latitude,
   hourDate,
+  spinValue,
 }: SequenceContainerProps) => {
   const hasChildren =
     container.Triggers || container.Conditions || container.Items;
@@ -29,7 +31,7 @@ export const SequenceContainer = ({
       {((!hasChildren && container.Name) ||
         container.Name === 'Take Many Exposures_Container' ||
         container.Name === 'Smart Exposure_Container') && (
-        <SequenceStep item={container} index={index} />
+        <SequenceStep item={container} index={index} spinValue={spinValue} />
       )}
       {hasChildren &&
         container.Name &&
@@ -56,6 +58,7 @@ export const SequenceContainer = ({
                         latitude={latitude}
                         longitude={longitude}
                         index={idx}
+                        spinValue={spinValue}
                       />
                     ),
                   )}
@@ -75,6 +78,7 @@ export const SequenceContainer = ({
                           latitude={latitude}
                           longitude={longitude}
                           index={idx}
+                          spinValue={spinValue}
                         />
                       ),
                     )}
@@ -93,6 +97,7 @@ export const SequenceContainer = ({
                           hourDate={hourDate}
                           latitude={latitude}
                           longitude={longitude}
+                          spinValue={spinValue}
                           index={idx}
                         />
                       ),

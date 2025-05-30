@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Animated, Easing, ScrollView, Text, View } from 'react-native';
 
 import {
   getSequenceState,
@@ -19,8 +19,22 @@ export const Sequence = () => {
   const sequenceState = useSequenceStore();
   const configState = useConfigStore();
   const router = useRouter();
+  const spinValue = useRef(new Animated.Value(0)).current;
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   useEffect(() => {
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 1200,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ).start();
+
     getSequenceState();
 
     const interval = setInterval((_) => {
@@ -67,6 +81,7 @@ export const Sequence = () => {
                 latitude={configState.config.astrometry.latitude}
                 longitude={configState.config.astrometry.longitude}
                 index={idx}
+                spinValue={spin}
               />
             );
           })}

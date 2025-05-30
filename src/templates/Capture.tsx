@@ -1,6 +1,13 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 
 import {
   abortCaptureImage,
@@ -42,6 +49,7 @@ import { CaptureButton } from '@/components/capture/CaptureButton';
 import { LabelSwitch } from '@/components/capture/LabelSwitch';
 import { ZoomableCameraImage } from '@/components/capture/ZoomableCameraImage';
 import { MenuItem } from '@/components/MenuItem';
+import { getRunningStep } from '@/helpers/sequence';
 import { useCameraStore } from '@/stores/camera.store';
 import { useCaptureStore } from '@/stores/capture.store';
 import { useConfigStore } from '@/stores/config.store';
@@ -69,6 +77,12 @@ const Capture = () => {
 
   const [showDurationView, setShowDurationView] = useState(false);
   const [showFilterView, setShowFilterView] = useState(false);
+  const spinValue = useRef(new Animated.Value(0)).current;
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   const abortCapture = async () => {
     await abortCaptureImage();
@@ -82,6 +96,15 @@ const Capture = () => {
     getMountInfo();
     getFilterWheelInfo();
     getImageHistory();
+
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 1200,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ).start();
 
     const interval = setInterval((_) => {
       getCurrentProfile();
@@ -146,6 +169,21 @@ const Capture = () => {
         (f) => f.id === filterWheelState.currentFilter,
       )?.name,
     [filterWheelState.currentFilter, filterWheelState.availableFilters],
+  );
+
+  const runningStep = useMemo(
+    () => getRunningStep(sequenceState.sequence),
+    [sequenceState.sequence],
+  );
+
+  const runnningExposureTime = useMemo(
+    () =>
+      runningStep &&
+      runningStep.Name.includes('Exposure') &&
+      runningStep.Items?.length
+        ? runningStep.Items[0]?.ExposureTime
+        : undefined,
+    [runningStep],
   );
 
   return (
@@ -214,7 +252,6 @@ const Capture = () => {
             />
           </View>
         </CameraBarToggle>
-
         <View className="flex h-full w-full flex-1 items-center justify-center">
           <ZoomableCameraImage
             image={cameraState.image}
@@ -255,8 +292,15 @@ const Capture = () => {
               error={guiderState.error}
             />
           )}
-          {captureState.showSequenceControl && <CameraSequenceActiveStep sequence={sequenceState.sequence} />}
         </View>
+        {runningStep && (
+          <CameraSequenceActiveStep
+            step={runningStep}
+            spinValue={spin}
+            enabled={captureState.showSequenceControl}
+            isShowingGuiding={captureState.showGuiding}
+          />
+        )}
       </View>
 
       {showDurationView && (
@@ -319,7 +363,8 @@ const Capture = () => {
               (cameraState.countdown /
                 (cameraState.isCapturing
                   ? cameraState.duration
-                  : configState.config.snapshot.duration)) *
+                  : runnningExposureTime ||
+                    configState.config.snapshot.duration)) *
               100
             }
             isCapturing={
@@ -367,13 +412,6 @@ const Capture = () => {
             disabled={!cameraState.isConnected}
             value={cameraState.loop}
             onChange={(value) => cameraState.set({ loop: value })}
-          />
-
-          <LabelSwitch
-            label="Platesolve"
-            disabled={!cameraState.isConnected}
-            value={cameraState.platesolve}
-            onChange={(value) => cameraState.set({ platesolve: value })}
           />
           <View className="h-4" />
         </ScrollView>
