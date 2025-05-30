@@ -328,9 +328,32 @@ export const getRunningStep = (sequences: any[]): any => {
 
   for (const sequence of sequences) {
     if (sequence.Status === 'RUNNING') {
-      if (sequence.Items > 0) {
-        runningStep = getRunningStep(sequence);
-      } else {
+      const hasItems = sequence.Items?.length > 0;
+      const hasConditions = sequence.Conditions?.length > 0;
+      const hasTriggers = sequence.Triggers?.length > 0;
+
+      if (hasItems) {
+        runningStep = getRunningStep(sequence.Items);
+        if (runningStep && !runningStep.Name) {
+          runningStep = sequence;
+        }
+      }
+
+      if (hasConditions && !runningStep) {
+        runningStep = getRunningStep(sequence.Conditions);
+        if (runningStep && !runningStep.Name) {
+          runningStep = sequence;
+        }
+      }
+
+      if (hasTriggers && !runningStep) {
+        runningStep = getRunningStep(sequence.Triggers);
+        if (runningStep && !runningStep.Name) {
+          runningStep = sequence;
+        }
+      }
+
+      if (!hasConditions && !hasTriggers && !hasItems) {
         runningStep = sequence;
       }
     }
