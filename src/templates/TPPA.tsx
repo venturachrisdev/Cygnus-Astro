@@ -288,7 +288,7 @@ export const TPPA = () => {
       <View className="absolute bottom-5 right-5 flex flex-row items-center justify-end gap-x-3 p-3">
         {!tppaState.isRunning && (
           <CircleButton
-            disabled={!allComponentsConnected}
+            disabled={!allComponentsConnected || mountState.isParked}
             onPress={() => startTPPAAlignment()}
             color="green"
             icon="play"
@@ -297,7 +297,7 @@ export const TPPA = () => {
 
         {tppaState.isPaused && tppaState.isRunning && (
           <CircleButton
-            disabled={!allComponentsConnected}
+            disabled={!allComponentsConnected || mountState.isParked}
             onPress={() => resumeTPPAAlignment()}
             color="green"
             icon="play"
