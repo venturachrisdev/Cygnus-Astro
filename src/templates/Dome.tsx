@@ -30,7 +30,9 @@ export const Dome = () => {
   const [azimuth, setAzimuth] = useState(String(domeState.azimuth || 0));
 
   useEffect(() => {
-    rescanDomeDevices();
+    if (!domeState.isConnected) {
+      rescanDomeDevices();
+    }
     getDomeInfo();
 
     const interval = setInterval((_) => {

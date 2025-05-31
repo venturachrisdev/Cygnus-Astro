@@ -32,7 +32,10 @@ export const Camera = () => {
   const [coolingTemp, setCoolingTemp] = useState('-10');
 
   useEffect(() => {
-    rescanCameraDevices();
+    if (!cameraState.isConnected) {
+      rescanCameraDevices();
+    }
+
     getCurrentProfile();
     getCameraInfo();
 

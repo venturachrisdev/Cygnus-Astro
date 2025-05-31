@@ -84,7 +84,9 @@ export const Mount = () => {
     initializeMountSocket((message) => {
       console.log('Message received', message);
     });
-    rescanMountDevices();
+    if (!mountState.isConnected) {
+      rescanMountDevices();
+    }
     getMountInfo();
 
     const interval = setInterval((_) => {

@@ -28,7 +28,9 @@ export const FlatPanel = () => {
   );
 
   useEffect(() => {
-    rescanFlatPanelDevices();
+    if (!flatPanelState.isConnected) {
+      rescanFlatPanelDevices();
+    }
     getFlatPanelInfo();
 
     const interval = setInterval((_) => {

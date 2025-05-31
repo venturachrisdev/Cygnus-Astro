@@ -1,6 +1,6 @@
 {
   "name": "cygnus",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "main": "Main.tsx",
   "scripts": {
     "start": "expo start --dev-client",

@@ -105,11 +105,21 @@ export const Accessories = () => {
   };
 
   useEffect(() => {
-    rescanFilterWheelDevices();
-    rescanSwitchesDevices();
-    rescanSafetyMonitorDevices();
-    rescanRotatorDevices();
-    rescanWeatherDevices();
+    if (!filterWheelState.isConnected) {
+      rescanFilterWheelDevices();
+    }
+    if (!switchesState.isConnected) {
+      rescanSwitchesDevices();
+    }
+    if (!safetyMonitorState.isConnected) {
+      rescanSafetyMonitorDevices();
+    }
+    if (!rotatorState.isConnected) {
+      rescanRotatorDevices();
+    }
+    if (!weatherState.isConnected) {
+      rescanWeatherDevices();
+    }
 
     getCurrentProfile();
     getFilterWheelInfo();

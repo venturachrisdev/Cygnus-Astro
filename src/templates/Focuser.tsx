@@ -37,7 +37,10 @@ export const Focuser = () => {
   );
 
   useEffect(() => {
-    rescanFocuserDevices();
+    if (!focuserState.isConnected) {
+      rescanFocuserDevices();
+    }
+
     getFocuserInfo();
     getLastAutoFocus();
 

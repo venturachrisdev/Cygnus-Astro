@@ -25,7 +25,9 @@ export const Guider = () => {
   const [calibrate, setCalibrate] = useState(false);
 
   useEffect(() => {
-    rescanGuiderDevices();
+    if (!guiderState.isConnected) {
+      rescanGuiderDevices();
+    }
     getGuiderInfo();
 
     const interval = setInterval((_) => {
