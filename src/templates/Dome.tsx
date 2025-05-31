@@ -54,7 +54,7 @@ export const Dome = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={domeState.currentDevice}
         isConnected={domeState.isConnected}
-        devices={domeState.devices}
+        devices={!domeState.isConnected ? domeState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectDome()}
         onDisconnect={() => disconnectDome()}

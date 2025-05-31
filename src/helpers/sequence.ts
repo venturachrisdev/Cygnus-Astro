@@ -307,6 +307,18 @@ export const getIconNameForStep = (name: string): string => {
   if (parsedName.includes('moon')) {
     return 'moon-waning-crescent';
   }
+  if (parsedName.includes('dome')) {
+    return 'hoop-house';
+  }
+  if (parsedName.includes('flat')) {
+    return 'television-ambient-light';
+  }
+  if (parsedName.includes('brightness')) {
+    return 'brightness-6';
+  }
+  if (parsedName.includes('light')) {
+    return 'lightbulb';
+  }
 
   return 'debug-step-into';
 };

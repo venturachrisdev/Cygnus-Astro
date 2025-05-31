@@ -64,7 +64,7 @@ export const FlatPanel = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={flatPanelState.currentDevice}
         isConnected={flatPanelState.isConnected}
-        devices={flatPanelState.devices}
+        devices={!flatPanelState.isConnected ? flatPanelState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectFlatPanel()}
         onDisconnect={() => disconnectFlatPanel()}

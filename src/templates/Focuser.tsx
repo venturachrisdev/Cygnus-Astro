@@ -132,7 +132,7 @@ export const Focuser = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={focuserState.currentDevice}
         isConnected={focuserState.isConnected}
-        devices={focuserState.devices}
+        devices={!focuserState.isConnected ? focuserState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectFocuser()}
         onDisconnect={() => disconnectFocuser()}

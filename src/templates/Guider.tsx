@@ -53,7 +53,7 @@ export const Guider = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={guiderState.currentDevice}
         isConnected={guiderState.isConnected}
-        devices={guiderState.devices}
+        devices={!guiderState.isConnected ? guiderState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectGuider()}
         onDisconnect={() => disconnectGuider()}

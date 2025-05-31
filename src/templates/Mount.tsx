@@ -216,7 +216,7 @@ export const Mount = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={mountState.currentDevice}
         isConnected={mountState.isConnected}
-        devices={mountState.devices}
+        devices={!mountState.isConnected ? mountState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectMount()}
         onDisconnect={() => disconnectMount()}
