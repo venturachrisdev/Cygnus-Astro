@@ -1,3 +1,5 @@
+## 1.2.0 (Unreleased)
+- Add overlay in Capture page to display the running step on the current sequence
 
 ## 1.1.1 (Unreleased)
 
