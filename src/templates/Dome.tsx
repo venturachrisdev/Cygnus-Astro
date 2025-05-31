@@ -68,7 +68,7 @@ export const Dome = () => {
             className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
           >
             <Text className="mr-1 text-xs font-medium text-white">
-              {domeState.azimuth}°
+              {domeState.azimuth?.toFixed()}°
             </Text>
           </View>
           <StatusChip
