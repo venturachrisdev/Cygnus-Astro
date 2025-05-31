@@ -57,7 +57,7 @@ export const Camera = () => {
           onListExpand={() => setShowDevicesList(!showDevicesList)}
           currentDevice={cameraState.currentDevice}
           isConnected={cameraState.isConnected}
-          devices={cameraState.devices}
+          devices={!cameraState.isConnected ? cameraState.devices : []}
           isListExpanded={showDevicesList}
           onConnect={() => connectCamera()}
           onDisconnect={() => disconnectCamera()}

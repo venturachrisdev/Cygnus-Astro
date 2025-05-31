@@ -27,7 +27,9 @@ export const Dome = () => {
   const configState = useConfigStore();
 
   const [showDevicesList, setShowDevicesList] = useState(false);
-  const [azimuth, setAzimuth] = useState(String(domeState.azimuth || 0));
+  const [azimuth, setAzimuth] = useState(
+    String(domeState.azimuth?.toFixed() || 0),
+  );
 
   useEffect(() => {
     if (!domeState.isConnected) {
@@ -52,7 +54,7 @@ export const Dome = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={domeState.currentDevice}
         isConnected={domeState.isConnected}
-        devices={domeState.devices}
+        devices={!domeState.isConnected ? domeState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectDome()}
         onDisconnect={() => disconnectDome()}

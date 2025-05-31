@@ -1,5 +1,12 @@
 ## 1.2.0 (Unreleased)
+**Features**
 - Add overlay in Capture page to display the running step on the current sequence
+- Add sequence icons for flats and dome
+- Skip validation when starting a sequence
+
+**Bugfixes**
+- Disable devices dropdown when connected
+- Correctly format dome azimuth on slew input
 
 ## 1.1.1 (Unreleased)
 

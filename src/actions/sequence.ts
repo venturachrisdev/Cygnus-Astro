@@ -42,7 +42,11 @@ export const startSequence = async () => {
   const alertState = useAlertsStore.getState();
 
   try {
-    await Axios.get(`${await getApiUrl()}/${API_SEQUENCE_START}`);
+    await Axios.get(`${await getApiUrl()}/${API_SEQUENCE_START}`, {
+      params: {
+        skipValidation: true,
+      },
+    });
     await getSequenceState();
     if (sequenceState.isRunning) {
       alertState.set({ message: 'Sequence is now running', type: 'success' });
