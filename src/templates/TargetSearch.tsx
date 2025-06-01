@@ -1,6 +1,6 @@
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
@@ -26,7 +26,7 @@ import {
 } from '@/actions/mount';
 import { getNGCTypeText, searchNGC } from '@/actions/ngc';
 import { setSequenceTarget } from '@/actions/sequence';
-import { initializeEventsSocket } from '@/actions/tppa';
+import { disconnectEventsSocket, initializeEventsSocket } from '@/actions/tppa';
 import { CircleButton } from '@/components/CircleButton';
 import { CustomButton } from '@/components/CustomButton';
 import { TextInputLabel } from '@/components/TextInputLabel';
@@ -50,6 +50,12 @@ export const TargetSearch = () => {
   const [didPlatesolveFail, setDidPlatesolveFail] = useState<boolean>(false);
   const [canShowFramingModal, setCanShowFramingModal] = useState<boolean>(true);
 
+  const spinValue = useRef(new Animated.Value(0)).current;
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
   const onValueChange = (value: string) => {
     setSearchValue(value);
 
@@ -66,12 +72,6 @@ export const TargetSearch = () => {
     }
   };
 
-  initializeEventsSocket((message) => {
-    if (message.Response.Event === 'ERROR-PLATESOLVE') {
-      setDidPlatesolveFail(true);
-    }
-  });
-
   useEffect(() => {
     if (mountState.isSlewing || cameraState.isExposing) {
       setDidPlatesolveFail(false);
@@ -79,6 +79,21 @@ export const TargetSearch = () => {
   }, [mountState.isSlewing, cameraState.isExposing]);
 
   useEffect(() => {
+    initializeEventsSocket((message) => {
+      if (message.Response.Event === 'ERROR-PLATESOLVE') {
+        setDidPlatesolveFail(true);
+      }
+    });
+
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 1200,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ).start();
+
     const interval = setInterval((_) => {
       getMountInfo();
       getCameraInfo();
@@ -86,6 +101,7 @@ export const TargetSearch = () => {
 
     return () => {
       clearInterval(interval);
+      disconnectEventsSocket();
     };
   }, []);
 
@@ -123,21 +139,6 @@ export const TargetSearch = () => {
       router.back();
     }
   };
-
-  const spinValue = new Animated.Value(0);
-  Animated.loop(
-    Animated.timing(spinValue, {
-      toValue: 1,
-      duration: 1200,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }),
-  ).start();
-
-  const spin = spinValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
 
   const now = new Date();
   let hours = now.getHours();
