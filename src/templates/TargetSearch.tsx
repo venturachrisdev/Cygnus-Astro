@@ -49,6 +49,7 @@ export const TargetSearch = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [debounceID, setDebounceID] = useState<NodeJS.Timer>();
   const [didPlatesolveFail, setDidPlatesolveFail] = useState<boolean>(false);
+  const [canShowFramingModal, setCanShowFramingModal] = useState<boolean>(true);
 
   const onValueChange = (value: string) => {
     setSearchValue(value);
@@ -68,7 +69,7 @@ export const TargetSearch = () => {
 
   initializeEventsSocket((message) => {
     if (message.Response.Event === 'ERROR-PLATESOLVE') {
-      setDidPlatesolveFailed(true);
+      setDidPlatesolveFail(true);
     }
   });
 
@@ -104,6 +105,7 @@ export const TargetSearch = () => {
       await setFramingSource();
       await setFramingCoordinates(raInDegrees, decInDegrees);
       await framingSlew(center, true);
+      setCanShowFramingModal(true);
     }
   };
 
@@ -162,7 +164,7 @@ export const TargetSearch = () => {
   return (
     <>
       <Modal
-        visible={ngcState.isRunning}
+        visible={ngcState.isRunning && canShowFramingModal}
         transparent
         supportedOrientations={['landscape']}
       >
@@ -232,7 +234,7 @@ export const TargetSearch = () => {
                 <CustomButton
                   label="Close"
                   color="transparent"
-                  onPress={() => setIsModalVisible(false)}
+                  onPress={() => setCanShowFramingModal(false)}
                 />
               </View>
             </View>
