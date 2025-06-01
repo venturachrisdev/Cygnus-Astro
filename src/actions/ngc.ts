@@ -1,5 +1,7 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-nested-ternary */
 import NGCCatalog from '@/stores/ngc.json';
+import type { NGCObject } from '@/stores/ngc.store';
 import { useNGCStore } from '@/stores/ngc.store';
 
 export const getNGCTypeText = (type: string): string => {
@@ -79,6 +81,40 @@ export const searchNGC = async (value: string) => {
         dec: ngc.Dec,
         type: ngc.Type,
       })),
+    });
+
+    return results;
+  } catch (e) {
+    console.log('Error getting ngc', e);
+  }
+};
+
+export const filterNGC = async (
+  list: NGCObject[],
+  forceSearch: boolean = false,
+) => {
+  const ngcState = useNGCStore.getState();
+
+  try {
+    let results = (NGCCatalog as any[]).map((ngc: any) => ({
+      id: ngc.Name,
+      names: ngc['Common names'],
+      ra: ngc.RA,
+      dec: ngc.Dec,
+      type: ngc.Type,
+    }));
+
+    if (list.length || forceSearch) {
+      results = results.filter((ngc) =>
+        list.find((item) => item.names === ngc.names),
+      );
+    }
+
+    results = results.slice(0, 10);
+
+    ngcState.set({
+      selectedObject: null,
+      results,
     });
 
     return results;
