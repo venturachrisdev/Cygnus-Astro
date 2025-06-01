@@ -6,7 +6,6 @@
 
 **Bugfixes**
 - Disable devices dropdown when connected
-- Correctly format dome azimuth on slew input
 
 ## 1.1.1 (Unreleased)
 
