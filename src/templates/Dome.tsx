@@ -27,7 +27,9 @@ export const Dome = () => {
   const configState = useConfigStore();
 
   const [showDevicesList, setShowDevicesList] = useState(false);
-  const [azimuth, setAzimuth] = useState(String(domeState.azimuth || 0));
+  const [azimuth, setAzimuth] = useState(
+    String(domeState.azimuth?.toFixed() || 0),
+  );
 
   useEffect(() => {
     if (!domeState.isConnected) {

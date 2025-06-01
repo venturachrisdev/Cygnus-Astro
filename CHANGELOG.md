@@ -12,6 +12,7 @@
 - Disable instances dropdown if is connected
 - TTPA and mount sockets are correctly reconnected when entering the page a second time
 - TTPA is disabled if mount is parked
+- Correctly format dome azimuth on slew input
 
 ## 1.1.0 (27-06-2025)
 
