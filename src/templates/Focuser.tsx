@@ -37,19 +37,25 @@ export const Focuser = () => {
   );
 
   useEffect(() => {
-    if (!focuserState.isConnected) {
-      rescanFocuserDevices();
+    if (useConfigStore.getState().isConnected) {
+      if (!focuserState.isConnected) {
+        rescanFocuserDevices();
+      }
+
+      getFocuserInfo();
+      getLastAutoFocus();
     }
 
-    getFocuserInfo();
-    getLastAutoFocus();
-
     const interval = setInterval((_) => {
-      getFocuserInfo();
+      if (useConfigStore.getState().isConnected) {
+        getFocuserInfo();
+      }
     }, 1000);
 
     const longerInterval = setInterval((_) => {
-      getLastAutoFocus();
+      if (useConfigStore.getState().isConnected) {
+        getLastAutoFocus();
+      }
     }, 5000);
 
     return () => {

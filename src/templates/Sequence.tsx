@@ -35,10 +35,14 @@ export const Sequence = () => {
       }),
     ).start();
 
-    getSequenceState();
+    if (useConfigStore.getState().isConnected) {
+      getSequenceState();
+    }
 
     const interval = setInterval((_) => {
-      getSequenceState();
+      if (useConfigStore.getState().isConnected) {
+        getSequenceState();
+      }
     }, 1000);
 
     return () => clearInterval(interval);

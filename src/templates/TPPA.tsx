@@ -82,8 +82,10 @@ export const TPPA = () => {
     });
 
     const interval = setInterval((_) => {
-      getCameraInfo();
-      getMountInfo();
+      if (useConfigStore.getState().isConnected) {
+        getCameraInfo();
+        getMountInfo();
+      }
     }, 1000);
 
     return () => {

@@ -28,13 +28,17 @@ export const FlatPanel = () => {
   );
 
   useEffect(() => {
-    if (!flatPanelState.isConnected) {
-      rescanFlatPanelDevices();
+    if (useConfigStore.getState().isConnected) {
+      if (!flatPanelState.isConnected) {
+        rescanFlatPanelDevices();
+      }
+      getFlatPanelInfo();
     }
-    getFlatPanelInfo();
 
     const interval = setInterval((_) => {
-      getFlatPanelInfo();
+      if (useConfigStore.getState().isConnected) {
+        getFlatPanelInfo();
+      }
     }, 1000);
 
     return () => clearInterval(interval);

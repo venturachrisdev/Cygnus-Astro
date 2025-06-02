@@ -91,11 +91,13 @@ const Capture = () => {
 
   useEffect(() => {
     initializeMountSocket(() => {});
-    getCameraInfo();
-    getFocuserInfo();
-    getMountInfo();
-    getFilterWheelInfo();
-    getImageHistory();
+    if (useConfigStore.getState().isConnected) {
+      getCameraInfo();
+      getFocuserInfo();
+      getMountInfo();
+      getFilterWheelInfo();
+      getImageHistory();
+    }
 
     Animated.loop(
       Animated.timing(spinValue, {
@@ -107,16 +109,20 @@ const Capture = () => {
     ).start();
 
     const interval = setInterval((_) => {
-      getCurrentProfile();
-      getFocuserInfo();
-      getMountInfo();
-      getFilterWheelInfo();
-      getGuidingGraph();
-      getGuiderInfo();
-      getSequenceState();
+      if (useConfigStore.getState().isConnected) {
+        getCurrentProfile();
+        getFocuserInfo();
+        getMountInfo();
+        getFilterWheelInfo();
+        getGuidingGraph();
+        getGuiderInfo();
+        getSequenceState();
+      }
     }, 1000);
     const intervalCapture = setInterval((_) => {
-      getCameraInfo();
+      if (useConfigStore.getState().isConnected) {
+        getCameraInfo();
+      }
     }, 500);
 
     const intervalImages = setInterval(() => {

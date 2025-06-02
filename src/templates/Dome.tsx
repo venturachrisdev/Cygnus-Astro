@@ -32,13 +32,17 @@ export const Dome = () => {
   );
 
   useEffect(() => {
-    if (!domeState.isConnected) {
-      rescanDomeDevices();
+    if (useConfigStore.getState().isConnected) {
+      if (!domeState.isConnected) {
+        rescanDomeDevices();
+      }
+      getDomeInfo();
     }
-    getDomeInfo();
 
     const interval = setInterval((_) => {
-      getDomeInfo();
+      if (useConfigStore.getState().isConnected) {
+        getDomeInfo();
+      }
     }, 1000);
 
     return () => clearInterval(interval);

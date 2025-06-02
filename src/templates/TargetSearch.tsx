@@ -110,8 +110,10 @@ export const TargetSearch = () => {
     // filterNGC([]);
 
     const interval = setInterval((_) => {
-      getMountInfo();
-      getCameraInfo();
+      if (useConfigStore.getState().isConnected) {
+        getMountInfo();
+        getCameraInfo();
+      }
     }, 1000);
 
     return () => {

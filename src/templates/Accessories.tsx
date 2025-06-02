@@ -105,35 +105,39 @@ export const Accessories = () => {
   };
 
   useEffect(() => {
-    if (!filterWheelState.isConnected) {
-      rescanFilterWheelDevices();
-    }
-    if (!switchesState.isConnected) {
-      rescanSwitchesDevices();
-    }
-    if (!safetyMonitorState.isConnected) {
-      rescanSafetyMonitorDevices();
-    }
-    if (!rotatorState.isConnected) {
-      rescanRotatorDevices();
-    }
-    if (!weatherState.isConnected) {
-      rescanWeatherDevices();
-    }
+    if (useConfigStore.getState().isConnected) {
+      if (!filterWheelState.isConnected) {
+        rescanFilterWheelDevices();
+      }
+      if (!switchesState.isConnected) {
+        rescanSwitchesDevices();
+      }
+      if (!safetyMonitorState.isConnected) {
+        rescanSafetyMonitorDevices();
+      }
+      if (!rotatorState.isConnected) {
+        rescanRotatorDevices();
+      }
+      if (!weatherState.isConnected) {
+        rescanWeatherDevices();
+      }
 
-    getCurrentProfile();
-    getFilterWheelInfo();
-    getSwitchesInfo();
-    getSafetyMonitorInfo();
-    getRotatorInfo();
-    getWeatherInfo();
-
-    const interval = setInterval((_) => {
+      getCurrentProfile();
       getFilterWheelInfo();
       getSwitchesInfo();
       getSafetyMonitorInfo();
       getRotatorInfo();
       getWeatherInfo();
+    }
+
+    const interval = setInterval((_) => {
+      if (useConfigStore.getState().isConnected) {
+        getFilterWheelInfo();
+        getSwitchesInfo();
+        getSafetyMonitorInfo();
+        getRotatorInfo();
+        getWeatherInfo();
+      }
     }, 1000);
 
     return () => clearInterval(interval);
