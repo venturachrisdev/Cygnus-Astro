@@ -1,5 +1,10 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-nested-ternary */
+
+import { orderBy } from 'lodash';
+
+import { getAltitudePoints } from '@/helpers/sequence';
+import { useConfigStore } from '@/stores/config.store';
 import NGCCatalog from '@/stores/ngc.json';
 import type { NGCObject } from '@/stores/ngc.store';
 import { useNGCStore } from '@/stores/ngc.store';
@@ -43,11 +48,46 @@ export const getNGCTypeText = (type: string): string => {
   }
 };
 
+const mapCatalogToNGCObjects = (results: any[]): NGCObject[] => {
+  const configState = useConfigStore.getState();
+  const list = results.map((ngc: any) => {
+    const obj: NGCObject = {
+      id: ngc.Name,
+      names: ngc['Common names'],
+      ra: ngc.RA,
+      dec: ngc.Dec,
+      type: ngc.Type,
+      altitudePoints: [],
+      peakAltitudeHour: 0,
+    };
+
+    const altitudePoints = getAltitudePoints(
+      obj,
+      configState.draftConfig.astrometry.longitude,
+      configState.draftConfig.astrometry.latitude,
+    );
+    let peakAltitudeHour = 0;
+    altitudePoints.forEach((altitude, index) => {
+      if (altitude > (altitudePoints[peakAltitudeHour] || 0)) {
+        peakAltitudeHour = index;
+      }
+    });
+
+    return {
+      ...obj,
+      altitudePoints,
+      peakAltitudeHour,
+    };
+  });
+
+  return orderBy(list, ['peakAltitudeHour'], ['asc']);
+};
+
 export const searchNGC = async (value: string) => {
   const ngcState = useNGCStore.getState();
 
   try {
-    const results = (NGCCatalog as any[])
+    const catalog = (NGCCatalog as any[])
       .filter((ngc: any) => {
         const id = ngc.Name.toLowerCase();
         const parsedValue = value.toLowerCase().replace(/ /g, '').trim();
@@ -70,17 +110,13 @@ export const searchNGC = async (value: string) => {
           ngc.Type !== 'Dup'
         );
       })
-      .slice(0, 20);
+      .slice(0, 30);
+
+    const results = mapCatalogToNGCObjects(catalog);
 
     ngcState.set({
       selectedObject: null,
-      results: results.map((ngc: any) => ({
-        id: ngc.Name,
-        names: ngc['Common names'],
-        ra: ngc.RA,
-        dec: ngc.Dec,
-        type: ngc.Type,
-      })),
+      results,
     });
 
     return results;
@@ -97,17 +133,13 @@ export const filterNGC = async (
 
   if (list.length || forceSearch) {
     try {
-      let results = (NGCCatalog as any[]).map((ngc: any) => ({
-        id: ngc.Name,
-        names: ngc['Common names'],
-        ra: ngc.RA,
-        dec: ngc.Dec,
-        type: ngc.Type,
-      }));
+      const catalog = (NGCCatalog as any[])
+        .filter((ngc) =>
+          list.find((item) => item.names === ngc['Common names']),
+        )
+        .slice(0, 100);
 
-      results = results.filter((ngc) =>
-        list.find((item) => item.names === ngc.names),
-      );
+      const results = mapCatalogToNGCObjects(catalog);
 
       ngcState.set({
         selectedObject: null,

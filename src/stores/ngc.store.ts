@@ -6,6 +6,8 @@ export interface NGCObject {
   ra: string;
   dec: string;
   type: string;
+  altitudePoints: number[];
+  peakAltitudeHour: number;
 }
 
 interface NGCStore {

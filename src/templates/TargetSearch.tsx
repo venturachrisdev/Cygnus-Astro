@@ -19,6 +19,7 @@ import {
   setFramingCoordinates,
   setFramingSource,
 } from '@/actions/framing';
+import { fetchGPSLocation } from '@/actions/gps';
 import {
   convertDMStoDegrees,
   convertHMStoDegrees,
@@ -99,6 +100,12 @@ export const TargetSearch = () => {
         setDidPlatesolveFail(true);
       }
     });
+
+    const { latitude, longitude } = configState.draftConfig.astrometry;
+    if (!latitude || !longitude) {
+      console.log('No coordinates found. Using GPS');
+      fetchGPSLocation();
+    }
 
     Animated.loop(
       Animated.timing(spinValue, {
@@ -587,8 +594,8 @@ export const TargetSearch = () => {
                         dataPointsColor1="white"
                         data={getAltitudePoints(
                           ngc,
-                          configState.config.astrometry.longitude,
-                          configState.config.astrometry.latitude,
+                          configState.draftConfig.astrometry.longitude,
+                          configState.draftConfig.astrometry.latitude,
                         ).map((i) => ({ value: i }))}
                       />
                     </View>
