@@ -95,30 +95,33 @@ export const filterNGC = async (
 ) => {
   const ngcState = useNGCStore.getState();
 
-  try {
-    let results = (NGCCatalog as any[]).map((ngc: any) => ({
-      id: ngc.Name,
-      names: ngc['Common names'],
-      ra: ngc.RA,
-      dec: ngc.Dec,
-      type: ngc.Type,
-    }));
+  if (list.length || forceSearch) {
+    try {
+      let results = (NGCCatalog as any[]).map((ngc: any) => ({
+        id: ngc.Name,
+        names: ngc['Common names'],
+        ra: ngc.RA,
+        dec: ngc.Dec,
+        type: ngc.Type,
+      }));
 
-    if (list.length || forceSearch) {
       results = results.filter((ngc) =>
         list.find((item) => item.names === ngc.names),
       );
+
+      ngcState.set({
+        selectedObject: null,
+        results,
+      });
+
+      return results;
+    } catch (e) {
+      console.log('Error getting ngc', e);
     }
-
-    results = results.slice(0, 10);
-
+  } else {
     ngcState.set({
       selectedObject: null,
-      results,
+      results: [],
     });
-
-    return results;
-  } catch (e) {
-    console.log('Error getting ngc', e);
   }
 };

@@ -41,6 +41,8 @@ import { useMountStore } from '@/stores/mount.store';
 import { useNGCStore } from '@/stores/ngc.store';
 import { useSequenceStore } from '@/stores/sequence.store';
 
+const ALL_TARGETS_LIST_NAME = 'All targets';
+
 export const TargetSearch = () => {
   const router = useRouter();
   const configState = useConfigStore();
@@ -59,8 +61,8 @@ export const TargetSearch = () => {
   const [showFavoritesModal, setShowFavoritesModal] = useState<boolean>(false);
   const [showListsDropDown, setShowListsDropdown] = useState<boolean>(false);
   const [currentList, setCurrentList] = useState<Device>({
-    name: 'All targets',
-    id: 'All targets',
+    name: ALL_TARGETS_LIST_NAME,
+    id: ALL_TARGETS_LIST_NAME,
   });
 
   const spinValue = useRef(new Animated.Value(0)).current;
@@ -106,8 +108,6 @@ export const TargetSearch = () => {
         useNativeDriver: true,
       }),
     ).start();
-
-    // filterNGC([]);
 
     const interval = setInterval((_) => {
       if (useConfigStore.getState().isConnected) {
@@ -181,8 +181,9 @@ export const TargetSearch = () => {
   const onListSelected = (item: Device) => {
     setCurrentList(item);
     filterNGC(
-      favoritesState.lists.find((l) => l.name === item.name)?.targets || [],
-      item.name !== 'All targets',
+      useFavoritesStore.getState().lists.find((l) => l.name === item.name)
+        ?.targets || [],
+      item.name !== ALL_TARGETS_LIST_NAME,
     );
     setShowListsDropdown(false);
     setSearchValue('');
@@ -201,15 +202,17 @@ export const TargetSearch = () => {
         lists: [...remainingLists, selectedList],
       });
 
-      // Alert is on layout only
       alertState.set({
-        message: `'${ngcState.selectedObject?.names}' added to '${selectedList.name}' list!`,
+        message: `'${ngcState.selectedObject?.names.split(',')[0]}' added to '${
+          selectedList.name
+        }' list!`,
         type: 'success',
       });
+      const deviceList = { name: selectedList.name, id: selectedList.name };
+      setCurrentList(deviceList);
+      setShowFavoritesModal(false);
+      onListSelected(deviceList);
     }
-
-    setShowFavoritesModal(false);
-    onListSelected(currentList);
   };
 
   const removeFromFavorites = () => {
@@ -235,11 +238,38 @@ export const TargetSearch = () => {
               },
             ],
           });
+          alertState.set({
+            message: `'${ngcState.selectedObject?.names.split(
+              ',',
+            )[0]}' removed from '${list.name}' list!`,
+            type: 'success',
+          });
 
           onListSelected(currentList);
         }
       }
     }
+  };
+
+  const deleteList = (list: Device) => {
+    const remainingLists = favoritesState.lists.filter(
+      (l) => l.name !== list.name,
+    );
+    favoritesState.set({
+      lists: remainingLists,
+    });
+
+    alertState.set({
+      message: `'${list.name}' removed successfully!`,
+      type: 'success',
+    });
+
+    const deviceList = {
+      name: ALL_TARGETS_LIST_NAME,
+      id: ALL_TARGETS_LIST_NAME,
+    };
+    setCurrentList(deviceList);
+    onListSelected(deviceList);
   };
 
   const isFavorite = useMemo(() => {
@@ -407,21 +437,12 @@ export const TargetSearch = () => {
             </Text>
           </View>
         </View>
-        <View className="mt-4 flex w-full flex-row items-center">
-          <TextInputLabel
-            value={searchValue}
-            placeholder="Search Object (e.g NGC4665)"
-            onChange={onValueChange}
-            disabled={currentList.name !== 'All targets'}
-          />
-        </View>
         <View className="flex w-full flex-row items-center justify-between pt-2">
-          <View className="lg:w-72">
+          <View>
             <DropDown
-              width={300}
               isListExpanded={showListsDropDown}
               items={[
-                { name: 'All targets', id: 'All targets' },
+                { name: ALL_TARGETS_LIST_NAME, id: ALL_TARGETS_LIST_NAME },
                 ...favoritesState.lists.map((list) => ({
                   name: list.name,
                   id: list.name,
@@ -434,14 +455,37 @@ export const TargetSearch = () => {
             />
           </View>
         </View>
+        {currentList?.name === ALL_TARGETS_LIST_NAME && (
+          <View className="mt-4 flex w-full flex-row items-center">
+            <TextInputLabel
+              value={searchValue}
+              placeholder="Search Object (e.g NGC4665)"
+              onChange={onValueChange}
+              disabled={currentList.name !== ALL_TARGETS_LIST_NAME}
+            />
+          </View>
+        )}
+        {currentList?.name !== ALL_TARGETS_LIST_NAME && (
+          <View className="my-4 flex w-full flex-row items-center justify-end">
+            <View className="w-48 opacity-75">
+              <CustomButton
+                color="transparent"
+                icon="trash-can"
+                iconSize={20}
+                label="Delete List"
+                onPress={() => deleteList(currentList)}
+              />
+            </View>
+          </View>
+        )}
         <View className="mb-10 h-full">
           {ngcState.results.length === 0 && searchValue.length > 0 && (
-            <Text className="mt-8 text-center text-lg font-medium text-neutral-700">
+            <Text className="mt-4 text-center text-lg font-medium text-neutral-700">
               {`No results for '${searchValue}'`}
             </Text>
           )}
           {ngcState.results.length === 0 && searchValue.length === 0 && (
-            <View className="flex flex-1 items-center justify-center opacity-10">
+            <View className="mt-10 flex flex-1 items-center opacity-10">
               <Icon name="selection-search" size={140} color="gray" />
             </View>
           )}
