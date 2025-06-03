@@ -184,7 +184,11 @@ export const getCapturedImageWithRetries = async () => {
   let response = await getCapturedImage();
 
   let retries = 0;
-  while ((typeof response === 'string' || !response.Image) && retries < 10) {
+  while (
+    response &&
+    (typeof response === 'string' || !response.Image) &&
+    retries < 10
+  ) {
     response = await getCapturedImage();
     retries += 1;
     await sleep(250);
@@ -197,7 +201,7 @@ export const getCapturedImageWithRetries = async () => {
 
   if (response.Image) {
     cameraState.set({
-      image: response.Image,
+      image: response?.Image,
     });
   }
 

@@ -130,7 +130,7 @@ const Capture = () => {
         const currentImages = useSequenceStore.getState().images;
         const newImages = await getImageHistory(false, false);
 
-        if (currentImages.length !== newImages.length) {
+        if (newImages && currentImages.length !== newImages.length) {
           getImageHistory();
         }
       };

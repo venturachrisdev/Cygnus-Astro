@@ -7,6 +7,7 @@
 
 **Bugfixes**
 - Disable devices dropdown when connected
+- Add 5 seconds timemout for all HTTP requests
 
 ## 1.1.1 (Unreleased)
 

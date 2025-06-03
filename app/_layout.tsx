@@ -1,6 +1,9 @@
 import * as Sentry from '@sentry/react-native';
+import Axios from 'axios';
 import { Stack } from 'expo-router';
 import { NativeWindStyleSheet } from 'nativewind';
+
+Axios.defaults.timeout = 5000;
 
 Sentry.init({
   dsn: 'https://e9267766ffe96a22411f7b55fec08b55@o4509426100535296.ingest.us.sentry.io/4509426112724992',

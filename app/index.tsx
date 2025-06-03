@@ -31,7 +31,9 @@ export default function Layout() {
       configState.isConnected ||
       configState.connectionStatus !== ConnectionStatus.IDLE
     ) {
-      router.replace('/main');
+      setTimeout(() => {
+        router.replace('/main');
+      }, 100);
     }
   }, [configState.isConnected, configState.connectionStatus]);
 

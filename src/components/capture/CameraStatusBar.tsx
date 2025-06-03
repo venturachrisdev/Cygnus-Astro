@@ -25,7 +25,9 @@ export const CameraStatusBar = ({
       style={{ opacity: cameraConnected ? 1.0 : 0.4 }}
       className="mr-4 flex flex-row items-center justify-center"
     >
-      <Text className="text-xs font-medium text-gray-300">{cameraTemp}</Text>
+      <Text className="text-xs font-medium text-gray-300">
+        {cameraTemp?.toFixed(1) || 0}
+      </Text>
       <Icon name="temperature-celsius" size={10} color="gray" />
     </View>
 
