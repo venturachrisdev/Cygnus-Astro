@@ -10,10 +10,15 @@ Sentry.init({
   sendDefaultPii: false,
 
   // Configure Session Replay
-  // tracesSampleRate: 1.0,
-  replaysSessionSampleRate: 1,
+  replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1,
-  integrations: [Sentry.mobileReplayIntegration()],
+  integrations: [
+    Sentry.mobileReplayIntegration({
+      maskAllImages: false,
+      maskAllText: false,
+      maskAllVectors: false,
+    }),
+  ],
 
   // uncomment the line below to enable Spotlight (https://spotlightjs.com)
   // spotlight: __DEV__,

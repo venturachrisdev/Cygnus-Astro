@@ -439,9 +439,7 @@ export const TargetSearch = () => {
                 iconSize={24}
               />
             </View>
-            <Text className="ml-2 text-xl font-medium text-white">
-              Target Search
-            </Text>
+            <Text className="ml-2 text-xl font-medium text-white">Targets</Text>
           </View>
         </View>
         <View className="flex w-full flex-row items-center justify-between pt-2">
@@ -466,7 +464,7 @@ export const TargetSearch = () => {
           <View className="mt-4 flex w-full flex-row items-center">
             <TextInputLabel
               value={searchValue}
-              placeholder="Search Object (e.g NGC4665)"
+              placeholder="Search Object (e.g NGC4665, Andromeda Galaxy)"
               onChange={onValueChange}
               disabled={currentList.name !== ALL_TARGETS_LIST_NAME}
             />

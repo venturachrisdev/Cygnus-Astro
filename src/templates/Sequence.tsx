@@ -60,14 +60,16 @@ export const Sequence = () => {
         bounces={false}
         className="flex h-full flex-1 bg-neutral-950 px-4"
       >
-        <View className="flex w-full flex-row items-center justify-between">
+        <View className="flex w-full flex-row items-center justify-between pt-2">
           <Text className="text-xl font-semibold text-white">Sequence</Text>
           <View>
             <CustomButton
               onPress={() => router.push('/target-search')}
               color="transparent"
+              label="Targets"
               icon="star-shooting-outline"
-              iconSize={28}
+              iconSize={24}
+              reverse
             />
           </View>
         </View>
