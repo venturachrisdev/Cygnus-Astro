@@ -186,14 +186,16 @@ export const Mount = () => {
     setShowStarsList(false);
     setCurrentStar(item);
     setStarsInputText(item.id);
-    await setFramingSource();
+    if (configState.isConnected) {
+      await setFramingSource();
 
-    const selectedStar = starsFormatted.find((s) => s.name === item.id);
-    if (selectedStar) {
-      await setFramingCoordinates(
-        selectedStar.raInDegrees,
-        selectedStar.decInDegrees,
-      );
+      const selectedStar = starsFormatted.find((s) => s.name === item.id);
+      if (selectedStar) {
+        await setFramingCoordinates(
+          selectedStar.raInDegrees,
+          selectedStar.decInDegrees,
+        );
+      }
     }
   };
 
