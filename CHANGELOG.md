@@ -1,3 +1,13 @@
+## 1.2.0 (Unreleased)
+**Features**
+- Add overlay in Capture page to display the running step on the current sequence
+- Add sequence icons for flats and dome
+- Skip validation when starting a sequence
+- Favorite targets list
+
+**Bugfixes**
+- Disable devices dropdown when connected
+- Add 5 seconds timemout for all HTTP requests
 
 ## 1.1.1 (Unreleased)
 

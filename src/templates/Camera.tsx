@@ -32,15 +32,18 @@ export const Camera = () => {
   const [coolingTemp, setCoolingTemp] = useState('-10');
 
   useEffect(() => {
-    if (!cameraState.isConnected) {
-      rescanCameraDevices();
-    }
+    if (useConfigStore.getState().isConnected) {
+      if (!cameraState.isConnected) {
+        rescanCameraDevices();
+      }
 
-    getCurrentProfile();
-    getCameraInfo();
-
-    const interval = setInterval((_) => {
+      getCurrentProfile();
       getCameraInfo();
+    }
+    const interval = setInterval((_) => {
+      if (useConfigStore.getState().isConnected) {
+        getCameraInfo();
+      }
     }, 1000);
 
     return () => clearInterval(interval);
@@ -57,7 +60,7 @@ export const Camera = () => {
           onListExpand={() => setShowDevicesList(!showDevicesList)}
           currentDevice={cameraState.currentDevice}
           isConnected={cameraState.isConnected}
-          devices={cameraState.devices}
+          devices={!cameraState.isConnected ? cameraState.devices : []}
           isListExpanded={showDevicesList}
           onConnect={() => connectCamera()}
           onDisconnect={() => disconnectCamera()}

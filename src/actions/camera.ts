@@ -48,9 +48,9 @@ export const getCameraInfo = async () => {
     if (cameraState.exposureEndTime) {
       const now = new Date();
       const endTime = new Date(cameraState.exposureEndTime);
+      const countdown = Math.ceil((endTime - now) / 1000);
 
-      if (endTime - now > 0) {
-        const countdown = Math.ceil((endTime - now) / 1000);
+      if (countdown > 0) {
         cameraState.set({ countdown });
       } else {
         cameraState.set({ countdown: -1 });
@@ -184,7 +184,11 @@ export const getCapturedImageWithRetries = async () => {
   let response = await getCapturedImage();
 
   let retries = 0;
-  while ((typeof response === 'string' || !response.Image) && retries < 10) {
+  while (
+    response &&
+    (typeof response === 'string' || !response.Image) &&
+    retries < 10
+  ) {
     response = await getCapturedImage();
     retries += 1;
     await sleep(250);
@@ -197,7 +201,7 @@ export const getCapturedImageWithRetries = async () => {
 
   if (response.Image) {
     cameraState.set({
-      image: response.Image,
+      image: response?.Image,
     });
   }
 

@@ -9,7 +9,6 @@ export const setFramingSource = async (source: string = 'SKYATLAS') => {
   try {
     await Axios.get(`${await getApiUrl()}/framing/set-source?source=${source}`);
   } catch (e: Error | any) {
-    console.log(e.response.data);
     console.log('Error setting framing', e);
   }
 };

@@ -105,35 +105,39 @@ export const Accessories = () => {
   };
 
   useEffect(() => {
-    if (!filterWheelState.isConnected) {
-      rescanFilterWheelDevices();
-    }
-    if (!switchesState.isConnected) {
-      rescanSwitchesDevices();
-    }
-    if (!safetyMonitorState.isConnected) {
-      rescanSafetyMonitorDevices();
-    }
-    if (!rotatorState.isConnected) {
-      rescanRotatorDevices();
-    }
-    if (!weatherState.isConnected) {
-      rescanWeatherDevices();
-    }
+    if (useConfigStore.getState().isConnected) {
+      if (!filterWheelState.isConnected) {
+        rescanFilterWheelDevices();
+      }
+      if (!switchesState.isConnected) {
+        rescanSwitchesDevices();
+      }
+      if (!safetyMonitorState.isConnected) {
+        rescanSafetyMonitorDevices();
+      }
+      if (!rotatorState.isConnected) {
+        rescanRotatorDevices();
+      }
+      if (!weatherState.isConnected) {
+        rescanWeatherDevices();
+      }
 
-    getCurrentProfile();
-    getFilterWheelInfo();
-    getSwitchesInfo();
-    getSafetyMonitorInfo();
-    getRotatorInfo();
-    getWeatherInfo();
-
-    const interval = setInterval((_) => {
+      getCurrentProfile();
       getFilterWheelInfo();
       getSwitchesInfo();
       getSafetyMonitorInfo();
       getRotatorInfo();
       getWeatherInfo();
+    }
+
+    const interval = setInterval((_) => {
+      if (useConfigStore.getState().isConnected) {
+        getFilterWheelInfo();
+        getSwitchesInfo();
+        getSafetyMonitorInfo();
+        getRotatorInfo();
+        getWeatherInfo();
+      }
     }, 1000);
 
     return () => clearInterval(interval);
@@ -169,7 +173,7 @@ export const Accessories = () => {
         onListExpand={() => setShowFilterDevicesList(!showFilterDevicesList)}
         currentDevice={filterWheelState.currentDevice}
         isConnected={filterWheelState.isConnected}
-        devices={filterWheelState.devices}
+        devices={!filterWheelState.isConnected ? filterWheelState.devices : []}
         isListExpanded={showFilterDevicesList}
         onConnect={() => connectFilterWheel()}
         onDisconnect={() => disconnectFilterWheel()}
@@ -226,7 +230,7 @@ export const Accessories = () => {
         onListExpand={() => setShowSwitchesDevicesList(!showSwitchDevicesList)}
         currentDevice={switchesState.currentDevice}
         isConnected={switchesState.isConnected}
-        devices={switchesState.devices}
+        devices={!switchesState.isConnected ? switchesState.devices : []}
         isListExpanded={showSwitchDevicesList}
         onConnect={() => connectSwitches()}
         onDisconnect={() => disconnectSwitches()}
@@ -299,7 +303,7 @@ export const Accessories = () => {
         onListExpand={() => setShowRotatorDevicesList(!showRotatorDevicesList)}
         currentDevice={rotatorState.currentDevice}
         isConnected={rotatorState.isConnected}
-        devices={rotatorState.devices}
+        devices={!rotatorState.isConnected ? rotatorState.devices : []}
         isListExpanded={showRotatorDevicesList}
         onConnect={() => connectRotator()}
         onDisconnect={() => disconnectRotator()}
@@ -373,7 +377,9 @@ export const Accessories = () => {
         }
         currentDevice={safetyMonitorState.currentDevice}
         isConnected={safetyMonitorState.isConnected}
-        devices={safetyMonitorState.devices}
+        devices={
+          !safetyMonitorState.isConnected ? safetyMonitorState.devices : []
+        }
         isListExpanded={showSafetyMonitorDevicesList}
         onConnect={() => connectSafetyMonitor()}
         onDisconnect={() => disconnectSafetyMonitor()}
@@ -402,7 +408,7 @@ export const Accessories = () => {
         onListExpand={() => setShowWeatherDevicesList(!showWeatherDevicesList)}
         currentDevice={weatherState.currentDevice}
         isConnected={weatherState.isConnected}
-        devices={weatherState.devices}
+        devices={!weatherState.isConnected ? weatherState.devices : []}
         isListExpanded={showWeatherDevicesList}
         onConnect={() => connectWeather()}
         onDisconnect={() => disconnectWeather()}

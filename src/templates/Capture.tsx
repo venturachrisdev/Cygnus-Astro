@@ -1,6 +1,13 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 
 import {
   abortCaptureImage,
@@ -36,11 +43,13 @@ import { CameraFocuserControlBar } from '@/components/capture/CameraFocuserContr
 import { CameraGuidingBar } from '@/components/capture/CameraGuidingBar';
 import { CameraImage } from '@/components/capture/CameraImage';
 import { CameraMountControlBar } from '@/components/capture/CameraMountControlBar';
+import { CameraSequenceActiveStep } from '@/components/capture/CameraSequenceActiveStep';
 import { CameraStatusBar } from '@/components/capture/CameraStatusBar';
 import { CaptureButton } from '@/components/capture/CaptureButton';
 import { LabelSwitch } from '@/components/capture/LabelSwitch';
 import { ZoomableCameraImage } from '@/components/capture/ZoomableCameraImage';
 import { MenuItem } from '@/components/MenuItem';
+import { getRunningStep } from '@/helpers/sequence';
 import { useCameraStore } from '@/stores/camera.store';
 import { useCaptureStore } from '@/stores/capture.store';
 import { useConfigStore } from '@/stores/config.store';
@@ -68,6 +77,12 @@ const Capture = () => {
 
   const [showDurationView, setShowDurationView] = useState(false);
   const [showFilterView, setShowFilterView] = useState(false);
+  const spinValue = useRef(new Animated.Value(0)).current;
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   const abortCapture = async () => {
     await abortCaptureImage();
@@ -76,23 +91,38 @@ const Capture = () => {
 
   useEffect(() => {
     initializeMountSocket(() => {});
-    getCameraInfo();
-    getFocuserInfo();
-    getMountInfo();
-    getFilterWheelInfo();
-    getImageHistory();
-
-    const interval = setInterval((_) => {
-      getCurrentProfile();
+    if (useConfigStore.getState().isConnected) {
+      getCameraInfo();
       getFocuserInfo();
       getMountInfo();
       getFilterWheelInfo();
-      getGuidingGraph();
-      getGuiderInfo();
-      getSequenceState();
+      getImageHistory();
+    }
+
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 1200,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ).start();
+
+    const interval = setInterval((_) => {
+      if (useConfigStore.getState().isConnected) {
+        getCurrentProfile();
+        getFocuserInfo();
+        getMountInfo();
+        getFilterWheelInfo();
+        getGuidingGraph();
+        getGuiderInfo();
+        getSequenceState();
+      }
     }, 1000);
     const intervalCapture = setInterval((_) => {
-      getCameraInfo();
+      if (useConfigStore.getState().isConnected) {
+        getCameraInfo();
+      }
     }, 500);
 
     const intervalImages = setInterval(() => {
@@ -100,7 +130,7 @@ const Capture = () => {
         const currentImages = useSequenceStore.getState().images;
         const newImages = await getImageHistory(false, false);
 
-        if (currentImages.length !== newImages.length) {
+        if (newImages && currentImages.length !== newImages.length) {
           getImageHistory();
         }
       };
@@ -147,6 +177,21 @@ const Capture = () => {
     [filterWheelState.currentFilter, filterWheelState.availableFilters],
   );
 
+  const runningStep = useMemo(
+    () => getRunningStep(sequenceState.sequence),
+    [sequenceState.sequence],
+  );
+
+  const runnningExposureTime = useMemo(
+    () =>
+      runningStep &&
+      runningStep.Name.includes('Exposure') &&
+      runningStep.Items?.length
+        ? runningStep.Items[0]?.ExposureTime
+        : undefined,
+    [runningStep],
+  );
+
   return (
     <>
       <View className="flex h-full flex-1 bg-black">
@@ -163,6 +208,18 @@ const Capture = () => {
           </View>
 
           <View className="flex flex-row">
+            <MenuItem
+              disabled={!sequenceState.isRunning}
+              direction="horizontal"
+              size={24}
+              icon="format-list-numbered"
+              onPress={() =>
+                captureState.set({
+                  showSequenceControl: !captureState.showSequenceControl,
+                })
+              }
+              isActive={captureState.showSequenceControl}
+            />
             <MenuItem
               disabled={!filterWheelState.isConnected}
               direction="horizontal"
@@ -201,7 +258,6 @@ const Capture = () => {
             />
           </View>
         </CameraBarToggle>
-
         <View className="flex h-full w-full flex-1 items-center justify-center">
           <ZoomableCameraImage
             image={cameraState.image}
@@ -243,6 +299,14 @@ const Capture = () => {
             />
           )}
         </View>
+        {runningStep && (
+          <CameraSequenceActiveStep
+            step={runningStep}
+            spinValue={spin}
+            enabled={captureState.showSequenceControl}
+            isShowingGuiding={captureState.showGuiding}
+          />
+        )}
       </View>
 
       {showDurationView && (
@@ -290,6 +354,7 @@ const Capture = () => {
           }}
           className="flex w-full"
         >
+          <View className="h-4" />
           <CameraControl
             label={`${cameraState.duration}s`}
             onPress={() => setShowDurationView(!showDurationView)}
@@ -304,7 +369,8 @@ const Capture = () => {
               (cameraState.countdown /
                 (cameraState.isCapturing
                   ? cameraState.duration
-                  : configState.config.snapshot.duration)) *
+                  : runnningExposureTime ||
+                    configState.config.snapshot.duration)) *
               100
             }
             isCapturing={
@@ -353,6 +419,7 @@ const Capture = () => {
             value={cameraState.loop}
             onChange={(value) => cameraState.set({ loop: value })}
           />
+          <View className="h-4" />
         </ScrollView>
       </View>
     </>

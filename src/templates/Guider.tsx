@@ -25,14 +25,18 @@ export const Guider = () => {
   const [calibrate, setCalibrate] = useState(false);
 
   useEffect(() => {
-    if (!guiderState.isConnected) {
-      rescanGuiderDevices();
+    if (useConfigStore.getState().isConnected) {
+      if (!guiderState.isConnected) {
+        rescanGuiderDevices();
+      }
+      getGuiderInfo();
     }
-    getGuiderInfo();
 
     const interval = setInterval((_) => {
-      getGuiderInfo();
-      getGuidingGraph();
+      if (useConfigStore.getState().isConnected) {
+        getGuiderInfo();
+        getGuidingGraph();
+      }
     }, 1000);
 
     return () => clearInterval(interval);
@@ -53,7 +57,7 @@ export const Guider = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={guiderState.currentDevice}
         isConnected={guiderState.isConnected}
-        devices={guiderState.devices}
+        devices={!guiderState.isConnected ? guiderState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectGuider()}
         onDisconnect={() => disconnectGuider()}

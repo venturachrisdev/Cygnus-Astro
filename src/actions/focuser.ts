@@ -206,16 +206,20 @@ export const moveFocuser = async (position: number) => {
 
 export const moveFocuserUp = async () => {
   const focuser = await getFocuserInfo();
-  const position = focuser.Position;
-  const stepSize = focuser.StepSize || 100;
+  if (focuser && focuser.Position) {
+    const position = focuser.Position;
+    const stepSize = focuser.StepSize || 100;
 
-  await moveFocuser(position + stepSize);
+    await moveFocuser(position + stepSize);
+  }
 };
 
 export const moveFocuserDown = async () => {
   const focuser = await getFocuserInfo();
-  const position = focuser.Position;
-  const stepSize = focuser.StepSize || 100;
+  if (focuser && focuser.Position) {
+    const position = focuser.Position;
+    const stepSize = focuser.StepSize || 100;
 
-  await moveFocuser(position - stepSize);
+    await moveFocuser(position - stepSize);
+  }
 };

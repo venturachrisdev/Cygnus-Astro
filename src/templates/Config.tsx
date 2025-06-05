@@ -78,8 +78,10 @@ export const Config = () => {
       scanHosts();
     }
 
-    getProfiles();
-    getCurrentProfile(true);
+    if (useConfigStore.getState().isConnected) {
+      getProfiles();
+      getCurrentProfile(true);
+    }
   }, []);
 
   const allConnected =
@@ -117,6 +119,7 @@ export const Config = () => {
         <Text className="mb-4 text-lg font-semibold text-white">
           N.I.N.A. Advanced API
         </Text>
+
         <DeviceConnection
           isAPIConnected
           useInputText={!configState.isConnected}

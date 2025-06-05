@@ -131,7 +131,8 @@ export const getApiUrl = async (
 
   const apiUrl = configState.currentDevice?.name;
   if (!apiUrl) {
-    throw new Error('API URL not found. Please connect to the Advanced API.');
+    console.log('API URL not found. Not connected to Advanced API');
+    return;
   }
 
   if (

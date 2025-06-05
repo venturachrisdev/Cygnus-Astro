@@ -28,13 +28,17 @@ export const FlatPanel = () => {
   );
 
   useEffect(() => {
-    if (!flatPanelState.isConnected) {
-      rescanFlatPanelDevices();
+    if (useConfigStore.getState().isConnected) {
+      if (!flatPanelState.isConnected) {
+        rescanFlatPanelDevices();
+      }
+      getFlatPanelInfo();
     }
-    getFlatPanelInfo();
 
     const interval = setInterval((_) => {
-      getFlatPanelInfo();
+      if (useConfigStore.getState().isConnected) {
+        getFlatPanelInfo();
+      }
     }, 1000);
 
     return () => clearInterval(interval);
@@ -64,7 +68,7 @@ export const FlatPanel = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={flatPanelState.currentDevice}
         isConnected={flatPanelState.isConnected}
-        devices={flatPanelState.devices}
+        devices={!flatPanelState.isConnected ? flatPanelState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectFlatPanel()}
         onDisconnect={() => disconnectFlatPanel()}

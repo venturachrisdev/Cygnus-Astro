@@ -7,8 +7,6 @@ export const fetchGPSLocation = async () => {
   const alertState = useAlertsStore.getState();
   const configState = useConfigStore.getState();
 
-  console.log(GetLocation.getCurrentPosition());
-
   try {
     const location = await GetLocation.getCurrentPosition({
       enableHighAccuracy: true,

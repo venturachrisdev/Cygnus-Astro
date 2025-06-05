@@ -84,13 +84,17 @@ export const Mount = () => {
     initializeMountSocket((message) => {
       console.log('Message received', message);
     });
-    if (!mountState.isConnected) {
-      rescanMountDevices();
+    if (useConfigStore.getState().isConnected) {
+      if (!mountState.isConnected) {
+        rescanMountDevices();
+      }
+      getMountInfo();
     }
-    getMountInfo();
 
     const interval = setInterval((_) => {
-      getMountInfo();
+      if (useConfigStore.getState().isConnected) {
+        getMountInfo();
+      }
     }, 1000);
 
     return () => {
@@ -182,14 +186,16 @@ export const Mount = () => {
     setShowStarsList(false);
     setCurrentStar(item);
     setStarsInputText(item.id);
-    await setFramingSource();
+    if (configState.isConnected) {
+      await setFramingSource();
 
-    const selectedStar = starsFormatted.find((s) => s.name === item.id);
-    if (selectedStar) {
-      await setFramingCoordinates(
-        selectedStar.raInDegrees,
-        selectedStar.decInDegrees,
-      );
+      const selectedStar = starsFormatted.find((s) => s.name === item.id);
+      if (selectedStar) {
+        await setFramingCoordinates(
+          selectedStar.raInDegrees,
+          selectedStar.decInDegrees,
+        );
+      }
     }
   };
 
@@ -216,7 +222,7 @@ export const Mount = () => {
         onListExpand={() => setShowDevicesList(!showDevicesList)}
         currentDevice={mountState.currentDevice}
         isConnected={mountState.isConnected}
-        devices={mountState.devices}
+        devices={!mountState.isConnected ? mountState.devices : []}
         isListExpanded={showDevicesList}
         onConnect={() => connectMount()}
         onDisconnect={() => disconnectMount()}

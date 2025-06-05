@@ -34,7 +34,7 @@ export const ImageHistory = () => {
         const oldImagesCount = useSequenceStore.getState().images.length;
         const newImages = await getImageHistory(false, false);
 
-        if (newImages.length !== oldImagesCount) {
+        if (newImages && newImages.length !== oldImagesCount) {
           await getImageHistory();
         }
       };
