@@ -13,8 +13,8 @@ Sentry.init({
   sendDefaultPii: false,
 
   // Configure Session Replay
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1,
+  replaysSessionSampleRate: 0.05,
+  replaysOnErrorSampleRate: 0.5,
   integrations: [
     Sentry.mobileReplayIntegration({
       maskAllImages: false,
