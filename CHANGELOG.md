@@ -1,4 +1,4 @@
-## 1.2.0 (Unreleased)
+## 1.2.0 (06-06-2025)
 **Features**
 - Add overlay in Capture page to display the running step on the current sequence
 - Add sequence icons for flats and dome
