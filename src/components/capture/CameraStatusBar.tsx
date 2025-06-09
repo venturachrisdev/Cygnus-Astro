@@ -1,6 +1,8 @@
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { Text, View } from 'react-native';
 
+import { safeToFixed } from '@/helpers/parse';
+
 import { StatusChip } from '../StatusChip';
 
 interface CameraStatusBarProps {
@@ -26,7 +28,7 @@ export const CameraStatusBar = ({
       className="mr-4 flex flex-row items-center justify-center"
     >
       <Text className="text-xs font-medium text-gray-300">
-        {cameraTemp?.toFixed(1) || 0}
+        {safeToFixed(cameraTemp, 1)}
       </Text>
       <Icon name="temperature-celsius" size={10} color="gray" />
     </View>

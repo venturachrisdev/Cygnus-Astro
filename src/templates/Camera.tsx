@@ -21,6 +21,7 @@ import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
 import { StatusChip } from '@/components/StatusChip';
 import { TextInputLabel } from '@/components/TextInputLabel';
+import { safeToFixed } from '@/helpers/parse';
 import { useCameraStore } from '@/stores/camera.store';
 import { useConfigStore } from '@/stores/config.store';
 
@@ -78,7 +79,7 @@ export const Camera = () => {
               className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
             >
               <Text className="text-xs font-medium text-white">
-                {cameraState.temperature?.toFixed(1)}
+                {safeToFixed(cameraState.temperature, 1)}
               </Text>
               <Icon name="temperature-celsius" size={12} color="white" />
             </View>

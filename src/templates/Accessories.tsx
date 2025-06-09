@@ -41,6 +41,7 @@ import { DeviceConnection } from '@/components/DeviceConnection';
 import { DropDown } from '@/components/DropDown';
 import { StatusChip } from '@/components/StatusChip';
 import { TextInputLabel } from '@/components/TextInputLabel';
+import { safeToFixed } from '@/helpers/parse';
 import { useConfigStore } from '@/stores/config.store';
 import { useFilterWheelStore } from '@/stores/filterwheel.store';
 import { useRotatorStore } from '@/stores/rotator.store';
@@ -63,7 +64,7 @@ const WeatherItem = ({
     {!!value && (
       <>
         <Text className="text-2xl font-medium text-white">
-          {value.toFixed(decimals)}
+          {safeToFixed(value, decimals)}
         </Text>
         <Text className={`${top ? 'mt-1' : 'mb-1'} text-xs text-white`}>
           {' '}
@@ -322,7 +323,7 @@ export const Accessories = () => {
           <Text className="text-xs font-medium text-white">
             Position:{' '}
             <Text className="font-bold">
-              {rotatorState.position.toFixed(1)}°
+              {safeToFixed(rotatorState.position)}°
             </Text>
           </Text>
         </View>

@@ -19,6 +19,7 @@ import {
 import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
 import { StatusChip } from '@/components/StatusChip';
+import { safeToFixed } from '@/helpers/parse';
 import { useConfigStore } from '@/stores/config.store';
 import { useDomeStore } from '@/stores/dome.store';
 
@@ -27,9 +28,7 @@ export const Dome = () => {
   const configState = useConfigStore();
 
   const [showDevicesList, setShowDevicesList] = useState(false);
-  const [azimuth, setAzimuth] = useState(
-    String(domeState.azimuth?.toFixed() || 0),
-  );
+  const [azimuth, setAzimuth] = useState(safeToFixed(domeState.azimuth));
 
   useEffect(() => {
     if (useConfigStore.getState().isConnected) {
@@ -76,7 +75,7 @@ export const Dome = () => {
             className="mr-4 flex h-8 flex-row items-center justify-center rounded-xl bg-neutral-900 px-4 py-1"
           >
             <Text className="mr-1 text-xs font-medium text-white">
-              {domeState.azimuth?.toFixed()}°
+              {safeToFixed(domeState.azimuth)}°
             </Text>
           </View>
           <StatusChip
