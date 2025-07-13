@@ -16,6 +16,7 @@ import { getFullImageByIndex, getImageHistory } from '@/actions/sequence';
 import { CameraImage } from '@/components/capture/CameraImage';
 import { ZoomableCameraImage } from '@/components/capture/ZoomableCameraImage';
 import { CustomButton } from '@/components/CustomButton';
+import { safeToPrecision } from '@/helpers/parse';
 import type { ImageDetails } from '@/stores/sequence.store';
 import { useSequenceStore } from '@/stores/sequence.store';
 
@@ -161,13 +162,13 @@ export const ImageHistory = () => {
                         <Text className="text-sm text-white">
                           Mean:{' '}
                           <Text className="font-medium">
-                            {item.mean?.toPrecision(5)}
+                            {safeToPrecision(item.mean, 5)}
                           </Text>
                         </Text>
                         <Text className="text-sm text-white">
                           HFR:{' '}
                           <Text className="font-medium">
-                            {item.hfr?.toPrecision(3)}
+                            {safeToPrecision(item.hfr, 3)}
                           </Text>
                         </Text>
                       </View>

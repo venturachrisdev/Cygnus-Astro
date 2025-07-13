@@ -31,20 +31,20 @@ export const SequenceTarget = ({
           <Text className="text-lg text-gray-500">
             RA:{'     '}
             <Text className="text-white">
-              {container.Target.InputCoordinates.RAHours}h{' '}
-              {container.Target.InputCoordinates.RAMinutes}m{' '}
-              {Math.floor(container.Target.InputCoordinates.RASeconds)}s
+              {container.Target?.InputCoordinates?.RAHours}h{' '}
+              {container.Target.InputCoordinates?.RAMinutes}m{' '}
+              {Math.floor(container.Target.InputCoordinates?.RASeconds)}s
             </Text>
           </Text>
           <Text className="text-lg text-gray-500">
             Dec:{'   '}
             <Text className="text-white">
-              {container.Target.InputCoordinates.DecDegrees}°{' '}
-              {String(container.Target.InputCoordinates.DecMinutes).padStart(
+              {container.Target.InputCoordinates?.DecDegrees}°{' '}
+              {String(container.Target.InputCoordinates?.DecMinutes).padStart(
                 2,
                 '0',
               )}
-              m {Math.floor(container.Target.InputCoordinates.DecSeconds)}s
+              m {Math.floor(container.Target.InputCoordinates?.DecSeconds)}s
             </Text>
           </Text>
         </View>
@@ -120,8 +120,8 @@ export const SequenceTarget = ({
           dataPointsColor1="white"
           data={getAltitudePoints(
             {
-              ra: `${container.Target.InputCoordinates.RAHours}:${container.Target.InputCoordinates.RAMinutes}:${container.Target.InputCoordinates.RASeconds}`,
-              dec: `${container.Target.InputCoordinates.DecDegrees}:${container.Target.InputCoordinates.DecMinutes}:${container.Target.InputCoordinates.DecSeconds}`,
+              ra: `${container.Target.InputCoordinates?.RAHours}:${container.Target?.InputCoordinates.RAMinutes}:${container.Target?.InputCoordinates.RASeconds}`,
+              dec: `${container.Target.InputCoordinates?.DecDegrees}:${container.Target?.InputCoordinates.DecMinutes}:${container.Target?.InputCoordinates.DecSeconds}`,
             },
             longitude,
             latitude,
