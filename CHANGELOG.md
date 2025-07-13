@@ -1,3 +1,7 @@
+## 1.2.1 (07-13-2025)
+**Bugfixes**
+- Prevent app from crashing when some camera values are not valid
+
 ## 1.2.0 (06-06-2025)
 **Features**
 - Add overlay in Capture page to display the running step on the current sequence
