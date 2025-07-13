@@ -2,7 +2,7 @@
   "expo": {
     "name": "Cygnus Astro",
     "slug": "cygnus",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -12,9 +12,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ioflat.app.cygnus",
