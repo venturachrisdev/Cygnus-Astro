@@ -199,7 +199,7 @@ export const getCapturedImageWithRetries = async () => {
     countdown: 0,
   });
 
-  if (response.Image) {
+  if (response?.Image) {
     cameraState.set({
       image: response?.Image,
     });
