@@ -101,7 +101,7 @@ export const TargetSearch = () => {
       }
     });
 
-    const { latitude, longitude } = configState.draftConfig.astrometry;
+    const { latitude, longitude } = configState.draftConfig?.astrometry || {};
     if (!latitude || !longitude) {
       console.log('No coordinates found. Using GPS');
       fetchGPSLocation();
