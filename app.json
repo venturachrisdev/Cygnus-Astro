@@ -20,6 +20,10 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSAllowsLocalNetworking": true
+        },
         "NSExceptionDomains": {
           "localhost": {
             "NSExceptionAllowsInsecureHTTPLoads": true
