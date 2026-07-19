@@ -1,4 +1,5 @@
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import type { ComponentProps } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import {
   Modal,
@@ -21,7 +22,7 @@ interface DropDownProps {
   onItemSelected: (item: Device) => void;
   width?: number;
   defaultText: string;
-  icon?: string;
+  icon?: ComponentProps<typeof Icon>['name'];
 
   useInputText?: boolean;
   inputTextValue?: string;

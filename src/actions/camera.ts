@@ -48,7 +48,7 @@ export const getCameraInfo = async () => {
     if (cameraState.exposureEndTime) {
       const now = new Date();
       const endTime = new Date(cameraState.exposureEndTime);
-      const countdown = Math.ceil((endTime - now) / 1000);
+      const countdown = Math.ceil((endTime.getTime() - now.getTime()) / 1000);
 
       if (countdown > 0) {
         cameraState.set({ countdown });

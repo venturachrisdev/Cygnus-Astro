@@ -122,6 +122,7 @@ export const searchNGC = async (value: string) => {
     return results;
   } catch (e) {
     console.log('Error getting ngc', e);
+    return undefined;
   }
 };
 
@@ -156,4 +157,6 @@ export const filterNGC = async (
       results: [],
     });
   }
+
+  return undefined;
 };

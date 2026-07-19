@@ -1,9 +1,14 @@
 module.exports = (api) => {
   api.cache(true);
   return {
-    presets: ['babel-preset-expo'],
-    plugins: [
+    presets: [
+      [
+        'babel-preset-expo',
+        { jsxImportSource: 'nativewind', unstable_transformImportMeta: true },
+      ],
       'nativewind/babel',
+    ],
+    plugins: [
       [
         'module-resolver',
         {
@@ -13,8 +18,8 @@ module.exports = (api) => {
           },
         },
       ],
-      require.resolve('expo-router/babel'),
-      'react-native-reanimated/plugin',
+      /* Worklets plugin replaces react-native-reanimated/plugin in Reanimated 4 and must stay last. */
+      'react-native-worklets/plugin',
     ],
   };
 };

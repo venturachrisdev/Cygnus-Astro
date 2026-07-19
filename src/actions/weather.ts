@@ -4,9 +4,7 @@ import { useWeatherStore } from '@/stores/weather.store';
 
 import { getApiUrl } from './hosts';
 
-export const parseNaNValue = (
-  value: string | number,
-): string | number | undefined => {
+export const parseNaNValue = (value: string | number): number | undefined => {
   if (value === 'NaN') {
     return undefined;
   }

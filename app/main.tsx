@@ -1,4 +1,3 @@
-import { NativeWindStyleSheet } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,10 +16,6 @@ import { Guider } from '@/templates/Guider';
 import { Mount } from '@/templates/Mount';
 import { Sequence } from '@/templates/Sequence';
 import { TPPA } from '@/templates/TPPA';
-
-NativeWindStyleSheet.setOutput({
-  default: 'native',
-});
 
 export default function Layout() {
   const alertsState = useAlertsStore();

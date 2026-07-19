@@ -126,7 +126,7 @@ export const scanHosts = async (autoConnect?: boolean) => {
 export const getApiUrl = async (
   skipCheck: boolean = false,
   asHttp: boolean = true,
-): Promise<string> => {
+): Promise<string | undefined> => {
   const configState = useConfigStore.getState();
 
   const apiUrl = configState.currentDevice?.name;
@@ -184,12 +184,10 @@ export const getCurrentProfile = async (fillDeviceInventory?: boolean) => {
       },
       telescope: {
         name: response.Response.TelescopeSettings.Name,
-        focalLength: parseNaNValue(
-          response.Response.TelescopeSettings.FocalLength,
-        ),
-        focalRatio: parseNaNValue(
-          response.Response.TelescopeSettings.FocalRatio,
-        ),
+        focalLength:
+          parseNaNValue(response.Response.TelescopeSettings.FocalLength) ?? 0,
+        focalRatio:
+          parseNaNValue(response.Response.TelescopeSettings.FocalRatio) ?? 0,
       },
       snapshot: {
         duration: response.Response.SnapShotControlSettings.ExposureDuration,

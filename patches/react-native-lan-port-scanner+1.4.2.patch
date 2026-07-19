@@ -1,0 +1,20 @@
+diff --git a/node_modules/react-native-lan-port-scanner/ios/LanPortScanner.h b/node_modules/react-native-lan-port-scanner/ios/LanPortScanner.h
+index be9bb74..0b5c117 100644
+--- a/node_modules/react-native-lan-port-scanner/ios/LanPortScanner.h
++++ b/node_modules/react-native-lan-port-scanner/ios/LanPortScanner.h
+@@ -1,12 +1,9 @@
+ 
+-#ifdef RCT_NEW_ARCH_ENABLED
+-#import "RNLanPortScannerSpec.h"
+-
+-@interface LanPortScanner : NSObject <NativeLanPortScannerSpec>
+-#else
++/* Force the legacy RCTBridgeModule path: this module ships no codegen spec,
++   so RNLanPortScannerSpec.h is never generated under the New Architecture.
++   RN 0.81's interop layer runs legacy bridge modules fine under New Arch. */
+ #import <React/RCTBridgeModule.h>
+ 
+ @interface LanPortScanner : NSObject <RCTBridgeModule>
+-#endif
+ 
+ @end

@@ -1,7 +1,8 @@
+import '../global.css';
+
 import * as Sentry from '@sentry/react-native';
 import Axios from 'axios';
 import { Stack } from 'expo-router';
-import { NativeWindStyleSheet } from 'nativewind';
 
 Axios.defaults.timeout = 5000;
 
@@ -25,10 +26,6 @@ Sentry.init({
 
   // uncomment the line below to enable Spotlight (https://spotlightjs.com)
   // spotlight: __DEV__,
-});
-
-NativeWindStyleSheet.setOutput({
-  default: 'native',
 });
 
 export default Sentry.wrap(function Layout() {

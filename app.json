@@ -12,7 +12,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ioflat.app.cygnus",
@@ -55,6 +57,7 @@
       "@config-plugins/detox",
       "expo-router",
       "./plugins/trust-lan.js",
+      "./plugins/ios/withFmtFix.js",
       [
         "@sentry/react-native/expo",
         {
@@ -62,7 +65,9 @@
           "project": "cygnus-astro",
           "organization": "ioflat"
         }
-      ]
+      ],
+      "@sentry/react-native",
+      "expo-font"
     ],
     "extra": {
       "router": {

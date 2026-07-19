@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import type { ComponentProps } from 'react';
 import { Animated, Text, View } from 'react-native';
 
 import {
@@ -36,7 +37,15 @@ export const SequenceStep = ({
     >
       <View className="my-1 flex flex-row items-center">
         <View className="mr-3">
-          <Icon name={getIconNameForStep(item.Name)} size={24} color="gray" />
+          <Icon
+            name={
+              getIconNameForStep(item.Name) as ComponentProps<
+                typeof Icon
+              >['name']
+            }
+            size={24}
+            color="gray"
+          />
         </View>
         <View>
           <Text className="mb-1 font-semibold text-white">

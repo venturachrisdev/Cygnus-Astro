@@ -4,9 +4,10 @@ import {
   getAltitude,
 } from '@/actions/mount';
 import { convertTimespanToHMS } from '@/actions/sequence';
+import { useConfigStore } from '@/stores/config.store';
 import type { NGCObject } from '@/stores/ngc.store';
 
-const trackingMode: Record<String, String> = {
+const trackingMode: Record<string, string> = {
   '0': 'Sidereal',
   '5': 'Stopped',
   '1': 'Lunar',
@@ -34,19 +35,16 @@ export const getAltitudePoints = (
     return altitude.altDeg;
   });
 
-export const getCurrentAltitude = (
-  ngc: Partial<NGCObject>,
-  longitude: number,
-  latitude: number,
-) => {
+export const getCurrentAltitude = (ngc: Partial<NGCObject>) => {
+  const { astrometry } = useConfigStore.getState().config;
   const now = new Date();
 
   const altitude = getAltitude({
     decDeg: convertDMStoDegrees(ngc.dec!, true),
-    latDeg: latitude,
+    latDeg: astrometry.latitude,
     raDeg: convertHMStoDegrees(ngc.ra!, true),
     date: now,
-    lonDeg: longitude,
+    lonDeg: astrometry.longitude,
   });
 
   return altitude.altDeg;
