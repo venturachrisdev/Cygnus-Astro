@@ -1,7 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useEffect, useMemo } from 'react';
-import { Animated, Easing, ScrollView, Text, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 
 import { getCameraInfo } from '@/actions/camera';
 import {
@@ -12,6 +19,8 @@ import {
 import {
   disconnectEventsSocket,
   disconnectTPPASocket,
+  handleTPPAEventMessage,
+  handleTPPAMessage,
   initializeEventsSocket,
   initializeTPPASocket,
   pauseTPPAAlignment,
@@ -19,11 +28,15 @@ import {
   startTPPAAlignment,
   stopTPPAAlignment,
 } from '@/actions/tppa';
+import { LabelSwitch } from '@/components/capture/LabelSwitch';
 import { CircleButton } from '@/components/CircleButton';
 import { useCameraStore } from '@/stores/camera.store';
 import { useConfigStore } from '@/stores/config.store';
 import { useMountStore } from '@/stores/mount.store';
 import { useTPPAStore } from '@/stores/tppa.store';
+
+const MIN_TARGET_DISTANCE = 5;
+const MAX_TARGET_DISTANCE = 30;
 
 export const TPPA = () => {
   const configState = useConfigStore();
@@ -32,54 +45,9 @@ export const TPPA = () => {
   const tppaState = useTPPAStore();
 
   useEffect(() => {
-    initializeTPPASocket((message) => {
-      if (message.Response === 'started procedure') {
-        tppaState.set({
-          altitudeError: 0,
-          azimuthError: 0,
-          totalError: 0,
-          didPlatesolveFail: false,
-          isRunning: true,
-          isPaused: false,
-        });
-      } else if (message.Response === 'stopped procedure') {
-        tppaState.set({
-          didPlatesolveFail: false,
-          isRunning: false,
-          isPaused: false,
-        });
-      } else if (message.Response === 'paused procedure') {
-        tppaState.set({
-          isRunning: true,
-          isPaused: true,
-        });
-      } else if (message.Response === 'resumed procedure') {
-        tppaState.set({
-          isRunning: true,
-          isPaused: false,
-        });
-      } else if (message.Response.TotalError) {
-        tppaState.set({
-          isRunning: true,
-          isPaused: true,
-        });
-        pauseTPPAAlignment();
+    initializeTPPASocket(handleTPPAMessage);
 
-        tppaState.set({
-          altitudeError: message.Response.AltitudeError,
-          azimuthError: message.Response.AzimuthError,
-          totalError: message.Response.TotalError,
-        });
-      }
-    });
-
-    initializeEventsSocket((message) => {
-      if (message.Response.Event === 'ERROR-PLATESOLVE') {
-        tppaState.set({
-          didPlatesolveFail: true,
-        });
-      }
-    });
+    initializeEventsSocket(handleTPPAEventMessage);
 
     const interval = setInterval((_) => {
       if (useConfigStore.getState().isConnected) {
@@ -166,6 +134,19 @@ export const TPPA = () => {
               </View>
             </View>
             <View className="">
+              {tppaState.isRunning &&
+                !!tppaState.status &&
+                !mountState.isSlewing &&
+                !cameraState.isExposing && (
+                  <View className="mt-6 flex flex-row items-center">
+                    <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                      <Icon name="loading" size={16} color="white" />
+                    </Animated.View>
+                    <Text className="ml-1 text-xl text-white">
+                      {tppaState.status}
+                    </Text>
+                  </View>
+                )}
               {tppaState.isRunning && mountState.isSlewing && (
                 <View className="mt-6 flex flex-row items-center">
                   <Animated.View style={{ transform: [{ rotate: spin }] }}>
@@ -285,13 +266,64 @@ export const TPPA = () => {
             </View>
           </View>
         </View>
+
+        {!tppaState.isRunning && (
+          <View className="mt-10 flex flex-row items-start gap-x-12">
+            <LabelSwitch
+              label="Start from current position"
+              value={tppaState.startFromCurrentPosition}
+              onChange={(value) =>
+                tppaState.set({ startFromCurrentPosition: value })
+              }
+            />
+            <View className="mt-6 flex items-center justify-center">
+              <Text className="mb-3 text-center text-xs font-semibold text-white">
+                Target distance (°)
+              </Text>
+              <View className="flex flex-row items-center gap-x-4">
+                <Pressable
+                  onPress={() =>
+                    tppaState.set({
+                      targetDistance: Math.max(
+                        MIN_TARGET_DISTANCE,
+                        tppaState.targetDistance - 1,
+                      ),
+                    })
+                  }
+                >
+                  <Icon name="minus-circle" size={30} color="white" />
+                </Pressable>
+                <Text className="w-8 text-center text-xl font-light text-white">
+                  {tppaState.targetDistance}
+                </Text>
+                <Pressable
+                  onPress={() =>
+                    tppaState.set({
+                      targetDistance: Math.min(
+                        MAX_TARGET_DISTANCE,
+                        tppaState.targetDistance + 1,
+                      ),
+                    })
+                  }
+                >
+                  <Icon name="plus-circle" size={30} color="white" />
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        )}
       </ScrollView>
 
       <View className="absolute bottom-5 right-5 flex flex-row items-center justify-end gap-x-3 p-3">
         {!tppaState.isRunning && (
           <CircleButton
             disabled={!allComponentsConnected || mountState.isParked}
-            onPress={() => startTPPAAlignment()}
+            onPress={() =>
+              startTPPAAlignment({
+                StartFromCurrentPosition: tppaState.startFromCurrentPosition,
+                TargetDistance: tppaState.targetDistance,
+              })
+            }
             color="green"
             icon="play"
           />

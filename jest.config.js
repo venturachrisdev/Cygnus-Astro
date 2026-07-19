@@ -14,6 +14,8 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     './src/**/*.{js,ts}',
+    '!**/*.test.{js,ts}',
+    '!**/*.d.ts',
     '!**/coverage/**',
     '!**/node_modules/**',
     '!**/babel.config.js',

@@ -147,7 +147,7 @@ export const getCapturedImage = async () => {
   try {
     const response = (
       await Axios.get(
-        `${await getApiUrl()}/${API_CAMERA_CAPTURE}?getResult=true&quality=70&scale=0.5&resize=true&autoPrepare=true`,
+        `${await getApiUrl()}/${API_CAMERA_CAPTURE}?getResult=true&quality=70&scale=0.5&resize=true`,
       )
     ).data;
     return response.Response;
@@ -167,6 +167,11 @@ export const abortCaptureImage = async () => {
 
 export const sendCapture = async (duration: number, solve: boolean = false) => {
   try {
+    /* Deliberately do NOT set save: the Advanced API always writes the capture
+       to a temp file that getResult reads back, so the preview works without it.
+       save would additionally enqueue the image into NINA's image history, which
+       must stay reserved for sequence images (otherwise snapshots pollute the
+       sequence gallery). */
     await Axios.get(
       `${await getApiUrl()}/${API_CAMERA_CAPTURE}?duration=${duration}&gain=0&solve=${
         solve ? 'true' : 'false'
@@ -183,15 +188,19 @@ export const getCapturedImageWithRetries = async () => {
   cameraState.set({ isLoading: true });
   let response = await getCapturedImage();
 
+  /* Poll getResult until the capture finishes. The response is the string
+     "Capture already in progress" while the exposure/processing is still running,
+     so keep going for ~15s to cover slower sensors and downloads without relying
+     on the saved-to-history path. */
   let retries = 0;
   while (
     response &&
     (typeof response === 'string' || !response.Image) &&
-    retries < 10
+    retries < 60
   ) {
+    await sleep(250);
     response = await getCapturedImage();
     retries += 1;
-    await sleep(250);
   }
 
   cameraState.set({
