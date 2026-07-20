@@ -6,14 +6,18 @@ import { Alert } from '@/components/Alert';
 import { MenuItem } from '@/components/MenuItem';
 import { useAlertsStore } from '@/stores/alerts.store';
 import { Accessories } from '@/templates/Accessories';
+import { Application } from '@/templates/Application';
 import { Camera } from '@/templates/Camera';
 import { Capture } from '@/templates/Capture';
 import { Config } from '@/templates/Config';
 import { Dome } from '@/templates/Dome';
 import { FlatPanel } from '@/templates/FlatPanel';
+import { Flats } from '@/templates/Flats';
 import { Focuser } from '@/templates/Focuser';
 import { Guider } from '@/templates/Guider';
+import { LiveStack } from '@/templates/LiveStack';
 import { Mount } from '@/templates/Mount';
+import { Profile } from '@/templates/Profile';
 import { Sequence } from '@/templates/Sequence';
 import { TPPA } from '@/templates/TPPA';
 
@@ -98,6 +102,15 @@ export default function Layout() {
             <MenuItem
               direction="vertical"
               size={28}
+              icon="layers"
+              onPress={() => {
+                setCurrentTab('livestack');
+              }}
+              isActive={currentTab === 'livestack'}
+            />
+            <MenuItem
+              direction="vertical"
+              size={28}
               icon="target"
               onPress={() => {
                 setCurrentTab('guider');
@@ -152,6 +165,33 @@ export default function Layout() {
             <MenuItem
               direction="vertical"
               size={28}
+              icon="white-balance-sunny"
+              onPress={() => {
+                setCurrentTab('flats');
+              }}
+              isActive={currentTab === 'flats'}
+            />
+            <MenuItem
+              direction="vertical"
+              size={28}
+              icon="account-cog"
+              onPress={() => {
+                setCurrentTab('profile');
+              }}
+              isActive={currentTab === 'profile'}
+            />
+            <MenuItem
+              direction="vertical"
+              size={28}
+              icon="monitor-dashboard"
+              onPress={() => {
+                setCurrentTab('application');
+              }}
+              isActive={currentTab === 'application'}
+            />
+            <MenuItem
+              direction="vertical"
+              size={28}
               icon="cog"
               onPress={() => {
                 setCurrentTab('config');
@@ -172,6 +212,10 @@ export default function Layout() {
           {currentTab === 'tppa' && <TPPA />}
           {currentTab === 'dome' && <Dome />}
           {currentTab === 'flatpanel' && <FlatPanel />}
+          {currentTab === 'livestack' && <LiveStack />}
+          {currentTab === 'flats' && <Flats />}
+          {currentTab === 'profile' && <Profile />}
+          {currentTab === 'application' && <Application />}
         </View>
 
         <View className="absolute bottom-6 flex w-full items-center justify-center opacity-95">
