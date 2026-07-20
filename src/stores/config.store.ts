@@ -58,8 +58,6 @@ interface ConfigStore {
 
   currentDevice: Device | null;
   devices: Device[];
-  profiles: Device[];
-  currentProfile: Device | null;
   logs: EventLog[];
 
   config: ProfileConfig;
@@ -92,8 +90,6 @@ export const useConfigStore = create<ConfigStore>()(
       currentDevice: null,
       apiVersion: null,
       devices: [],
-      profiles: [],
-      currentProfile: null,
       logs: [],
       connectionStatus: ConnectionStatus.IDLE,
 

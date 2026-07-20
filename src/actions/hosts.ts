@@ -146,27 +146,6 @@ export const getApiUrl = async (
   return asHttp ? `http://${apiUrl}/v2/api` : apiUrl;
 };
 
-export const getProfiles = async () => {
-  const configState = useConfigStore.getState();
-  configState.set({ isLoading: true });
-
-  try {
-    const response = (
-      await Axios.get(`${await getApiUrl()}/profile/show?active=false`)
-    ).data;
-    configState.set({
-      profiles: response.Response.map((profile: any) => ({
-        id: profile.Id,
-        name: profile.Name,
-      })),
-    });
-  } catch (e) {
-    console.log('Error getting profile', e);
-  }
-
-  configState.set({ isLoading: false });
-};
-
 export const getCurrentProfile = async (fillDeviceInventory?: boolean) => {
   const configState = useConfigStore.getState();
   configState.set({ isLoading: true });
@@ -242,29 +221,11 @@ export const getCurrentProfile = async (fillDeviceInventory?: boolean) => {
     }
 
     configState.set({
-      currentProfile: {
-        id: response.Response.Id,
-        name: response.Response.Name,
-      },
       config: profileConfig,
       draftConfig: profileConfig,
     });
   } catch (e) {
     console.log('Error getting profile', e);
-  }
-
-  configState.set({ isLoading: false });
-};
-
-export const switchProfile = async (id: string) => {
-  const configState = useConfigStore.getState();
-  configState.set({ isLoading: true });
-
-  try {
-    await Axios.get(`${await getApiUrl()}/profile/switch?profileid=${id}`);
-    await getCurrentProfile();
-  } catch (e) {
-    console.log('Error updating profile', e);
   }
 
   configState.set({ isLoading: false });
@@ -322,7 +283,6 @@ export const getApplicationVersion = async (alertOnError?: boolean) => {
         connectionStatus: ConnectionStatus.CONNECTED,
       });
 
-      await getProfiles();
       await getCurrentProfile();
 
       // Initialize tabs

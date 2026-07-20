@@ -9,16 +9,13 @@ import {
   disconnectAllEquipment,
   getApplicationVersion,
   getCurrentProfile,
-  getProfiles,
   handleDraftConfigUpdate,
   scanHosts,
   setDraftConfigNumber,
-  switchProfile,
 } from '@/actions/hosts';
 import { CircleButton } from '@/components/CircleButton';
 import { CustomButton } from '@/components/CustomButton';
 import { DeviceConnection } from '@/components/DeviceConnection';
-import { DropDown } from '@/components/DropDown';
 import { TextInputLabel } from '@/components/TextInputLabel';
 import { useCameraStore } from '@/stores/camera.store';
 import { useConfigStore } from '@/stores/config.store';
@@ -48,7 +45,6 @@ export const Config = () => {
   const guiderState = useGuiderStore();
 
   const [showHostsList, setShowHostsList] = useState(false);
-  const [showProfilesList, setShowProfilesList] = useState(false);
 
   const onHostSelected = (host: Device) => {
     configState.set({ currentDevice: host });
@@ -64,11 +60,6 @@ export const Config = () => {
     });
   };
 
-  const onProfileSelected = (profile: Device) => {
-    switchProfile(profile.id);
-    setShowProfilesList(false);
-  };
-
   const onDisconnect = () => {
     configState.set({ isConnected: false, currentDevice: null });
   };
@@ -79,7 +70,6 @@ export const Config = () => {
     }
 
     if (useConfigStore.getState().isConnected) {
-      getProfiles();
       getCurrentProfile(true);
     }
   }, []);
@@ -134,15 +124,6 @@ export const Config = () => {
           onDisconnect={onDisconnect}
           onRescan={() => scanHosts()}
           onDeviceSelected={onHostSelected}
-        />
-        <View className="mt-3" />
-        <DropDown
-          onListExpand={() => setShowProfilesList(!showProfilesList)}
-          currentItem={configState.currentProfile}
-          items={configState.profiles}
-          isListExpanded={showProfilesList}
-          onItemSelected={onProfileSelected}
-          defaultText="Select Profile"
         />
 
         <Text className="my-4 text-right text-sm text-gray-500">
