@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import {
+  disconnectActivityEventsSocket,
+  initializeActivityEventsSocket,
+} from '@/actions/events';
 import { Alert } from '@/components/Alert';
 import { MenuItem } from '@/components/MenuItem';
 import { useAlertsStore } from '@/stores/alerts.store';
 import { Accessories } from '@/templates/Accessories';
+import { Activity } from '@/templates/Activity';
 import { Application } from '@/templates/Application';
 import { Camera } from '@/templates/Camera';
 import { Capture } from '@/templates/Capture';
@@ -32,6 +37,12 @@ export default function Layout() {
       clearTimeout(timeoutID);
     }
   };
+
+  useEffect(() => {
+    initializeActivityEventsSocket();
+
+    return () => disconnectActivityEventsSocket();
+  }, []);
 
   useEffect(() => {
     if (alertsState.message && alertsState.type) {
@@ -192,6 +203,15 @@ export default function Layout() {
             <MenuItem
               direction="vertical"
               size={28}
+              icon="bell-outline"
+              onPress={() => {
+                setCurrentTab('activity');
+              }}
+              isActive={currentTab === 'activity'}
+            />
+            <MenuItem
+              direction="vertical"
+              size={28}
               icon="cog"
               onPress={() => {
                 setCurrentTab('config');
@@ -201,6 +221,7 @@ export default function Layout() {
           </ScrollView>
         </View>
         <View className="flex h-full flex-1 flex-row justify-end">
+          {currentTab === 'activity' && <Activity />}
           {currentTab === 'capture' && <Capture />}
           {currentTab === 'accessories' && <Accessories />}
           {currentTab === 'camera' && <Camera />}
