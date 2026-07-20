@@ -1,28 +1,11 @@
 import { useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import {
-  getCurrentTab,
-  getLogs,
-  getNinaVersion,
-  getPlugins,
-  getScreenshot,
-  switchTab,
-} from '@/actions/application';
+import { getLogs, getNinaVersion, getScreenshot } from '@/actions/application';
 import { ZoomableCameraImage } from '@/components/capture/ZoomableCameraImage';
 import { CustomButton } from '@/components/CustomButton';
 import { useApplicationStore } from '@/stores/application.store';
-import { ApplicationTab, useConfigStore } from '@/stores/config.store';
-
-const TAB_LABELS: Record<ApplicationTab, string> = {
-  [ApplicationTab.EQUIPMENT]: 'Equipment',
-  [ApplicationTab.SKY_ATLAS]: 'Sky Atlas',
-  [ApplicationTab.FRAMING]: 'Framing',
-  [ApplicationTab.FLAT_WIZARD]: 'Flat Wizard',
-  [ApplicationTab.SEQUENCER]: 'Sequencer',
-  [ApplicationTab.IMAGING]: 'Imaging',
-  [ApplicationTab.OPTIONS]: 'Options',
-};
+import { useConfigStore } from '@/stores/config.store';
 
 const LOG_LEVEL_COLOR: Record<string, string> = {
   ERROR: 'text-red-400',
@@ -38,8 +21,6 @@ export const Application = () => {
   useEffect(() => {
     if (useConfigStore.getState().isConnected) {
       getNinaVersion();
-      getCurrentTab();
-      getPlugins();
       getLogs();
     }
   }, []);
@@ -82,39 +63,7 @@ export const Application = () => {
         </View>
       </View>
 
-      <Text className="mb-2 mt-4 font-medium text-white">Active Tab</Text>
-      <View className="flex flex-row flex-wrap gap-2">
-        {Object.values(ApplicationTab).map((tab) => (
-          <View key={tab} className="w-40">
-            <CustomButton
-              disabled={!isConnected}
-              color={applicationState.currentTab === tab ? 'green' : 'neutral'}
-              textSize="medium"
-              onPress={() => switchTab(tab)}
-              label={TAB_LABELS[tab]}
-            />
-          </View>
-        ))}
-      </View>
-
-      <Text className="mb-2 mt-6 font-medium text-white">
-        Installed Plugins{' '}
-        <Text className="text-xs font-normal text-gray-500">
-          ({applicationState.plugins.length})
-        </Text>
-      </Text>
-      <View className="rounded-lg bg-neutral-900 p-3">
-        {applicationState.plugins.length === 0 && (
-          <Text className="text-sm text-gray-500">No plugins found</Text>
-        )}
-        {applicationState.plugins.map((plugin) => (
-          <Text key={plugin} className="py-1 text-sm text-white">
-            {plugin}
-          </Text>
-        ))}
-      </View>
-
-      <View className="mb-2 mt-6 flex flex-row items-center justify-between">
+      <View className="mb-2 mt-4 flex flex-row items-center justify-between">
         <Text className="font-medium text-white">Recent Logs</Text>
         <View className="w-32">
           <CustomButton

@@ -2,7 +2,6 @@ import Axios from 'axios';
 
 import type { LogEntry } from '@/stores/application.store';
 import { useApplicationStore } from '@/stores/application.store';
-import type { ApplicationTab } from '@/stores/config.store';
 
 import { getApiUrl } from './hosts';
 import { fetchStreamedImage } from './image';
@@ -40,54 +39,6 @@ export const getScreenshot = async (params: ScreenshotParams = {}) => {
     console.log('Error getting application screenshot', e);
   } finally {
     applicationState.set({ isScreenshotLoading: false });
-  }
-
-  return undefined;
-};
-
-export const switchTab = async (tab: ApplicationTab) => {
-  const applicationState = useApplicationStore.getState();
-
-  try {
-    await Axios.get(`${await getApiUrl()}/application/switch-tab`, {
-      params: { tab },
-    });
-    applicationState.set({ currentTab: tab });
-  } catch (e) {
-    console.log('Error switching application tab', e);
-  }
-};
-
-export const getCurrentTab = async (): Promise<ApplicationTab | undefined> => {
-  const applicationState = useApplicationStore.getState();
-
-  try {
-    const response = (
-      await Axios.get(`${await getApiUrl()}/application/get-tab`)
-    ).data;
-
-    applicationState.set({ currentTab: response.Response as ApplicationTab });
-    return response.Response as ApplicationTab;
-  } catch (e) {
-    console.log('Error getting application tab', e);
-  }
-
-  return undefined;
-};
-
-export const getPlugins = async (): Promise<string[] | undefined> => {
-  const applicationState = useApplicationStore.getState();
-
-  try {
-    const response = (
-      await Axios.get(`${await getApiUrl()}/application/plugins`)
-    ).data;
-
-    const plugins = (response.Response ?? []) as string[];
-    applicationState.set({ plugins });
-    return plugins;
-  } catch (e) {
-    console.log('Error getting application plugins', e);
   }
 
   return undefined;

@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 
-import { ApplicationTab } from '@/stores/config.store';
-
 export interface LogEntry {
   timestamp: string;
   level: string;
@@ -12,8 +10,6 @@ export interface LogEntry {
 }
 
 interface ApplicationStore {
-  currentTab: ApplicationTab;
-  plugins: string[];
   logs: LogEntry[];
   ninaVersion: string | null;
 
@@ -24,8 +20,6 @@ interface ApplicationStore {
 }
 
 export const useApplicationStore = create<ApplicationStore>((set) => ({
-  currentTab: ApplicationTab.EQUIPMENT,
-  plugins: [],
   logs: [],
   ninaVersion: null,
 

@@ -1,15 +1,7 @@
 import Axios from 'axios';
 
-import {
-  getCurrentTab,
-  getLogs,
-  getNinaVersion,
-  getPlugins,
-  getScreenshot,
-  switchTab,
-} from '@/actions/application';
+import { getLogs, getNinaVersion, getScreenshot } from '@/actions/application';
 import { useApplicationStore } from '@/stores/application.store';
-import { ApplicationTab } from '@/stores/config.store';
 
 jest.mock('axios');
 jest.mock('@/actions/hosts', () => ({
@@ -22,8 +14,6 @@ beforeEach(() => {
   mockedGet.mockReset();
   mockedGet.mockResolvedValue({ data: { Response: {} } });
   useApplicationStore.getState().set({
-    currentTab: ApplicationTab.EQUIPMENT,
-    plugins: [],
     logs: [],
     ninaVersion: null,
     screenshot: null,
@@ -94,55 +84,6 @@ describe('getScreenshot', () => {
     mockedGet.mockRejectedValueOnce(new Error('network down'));
     await expect(getScreenshot()).resolves.toBeUndefined();
     expect(useApplicationStore.getState().isScreenshotLoading).toBe(false);
-  });
-});
-
-describe('switchTab', () => {
-  it('passes the tab param and updates the store', async () => {
-    await switchTab(ApplicationTab.SEQUENCER);
-
-    expect(mockedGet).toHaveBeenCalledWith(
-      'http://nina.test/v2/api/application/switch-tab',
-      { params: { tab: 'sequencer' } },
-    );
-    expect(useApplicationStore.getState().currentTab).toBe(
-      ApplicationTab.SEQUENCER,
-    );
-  });
-});
-
-describe('getCurrentTab', () => {
-  it('reads the active tab into the store', async () => {
-    mockedGet.mockResolvedValueOnce({ data: { Response: 'imaging' } });
-
-    const result = await getCurrentTab();
-
-    expect(mockedGet).toHaveBeenCalledWith(
-      'http://nina.test/v2/api/application/get-tab',
-    );
-    expect(useApplicationStore.getState().currentTab).toBe(
-      ApplicationTab.IMAGING,
-    );
-    expect(result).toBe(ApplicationTab.IMAGING);
-  });
-});
-
-describe('getPlugins', () => {
-  it('stores the plugin list', async () => {
-    mockedGet.mockResolvedValueOnce({
-      data: { Response: ['Advanced API', 'Astro-Physics Tools'] },
-    });
-
-    const result = await getPlugins();
-
-    expect(mockedGet).toHaveBeenCalledWith(
-      'http://nina.test/v2/api/application/plugins',
-    );
-    expect(useApplicationStore.getState().plugins).toEqual([
-      'Advanced API',
-      'Astro-Physics Tools',
-    ]);
-    expect(result).toHaveLength(2);
   });
 });
 
