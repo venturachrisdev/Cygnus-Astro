@@ -143,23 +143,41 @@ describe('listAvailableLivestackImages', () => {
 });
 
 describe('getLivestackImage', () => {
-  it('requests the target and filter image and stores the base64 payload', async () => {
+  const toArrayBuffer = (text: string): ArrayBuffer => {
+    const bytes = new Uint8Array(text.length);
+    for (let i = 0; i < text.length; i += 1) {
+      bytes[i] = text.charCodeAt(i);
+    }
+    return bytes.buffer;
+  };
+
+  it('streams the target and filter image and stores the base64 payload', async () => {
     mockedGet.mockResolvedValueOnce({
-      data: { Response: 'base64-image-data', StatusCode: 200 },
+      data: toArrayBuffer('hi'),
+      headers: { 'content-type': 'image/jpeg' },
     });
 
     const result = await getLivestackImage('M31', 'L');
 
     expect(mockedGet).toHaveBeenCalledWith(
-      'http://nina.test/v2/api/livestack/image/M31/L?resize=true&quality=90&scale=0.7',
+      'http://nina.test/v2/api/livestack/image/M31/L',
+      {
+        params: { resize: true, quality: 90, scale: 0.7, stream: true },
+        responseType: 'arraybuffer',
+      },
     );
-    expect(result).toBe('base64-image-data');
-    expect(useLivestackStore.getState().currentImage).toBe('base64-image-data');
+    expect(result).toBe(Buffer.from('hi').toString('base64'));
+    expect(useLivestackStore.getState().currentImage).toBe(
+      Buffer.from('hi').toString('base64'),
+    );
   });
 
   it('returns null when no image is available', async () => {
     mockedGet.mockResolvedValueOnce({
-      data: { Response: null, StatusCode: 404 },
+      data: toArrayBuffer(
+        JSON.stringify({ Error: 'No image found', StatusCode: 404 }),
+      ),
+      headers: { 'content-type': 'application/json' },
     });
 
     const result = await getLivestackImage('M31', 'L');

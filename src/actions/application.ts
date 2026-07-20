@@ -5,6 +5,7 @@ import { useApplicationStore } from '@/stores/application.store';
 import type { ApplicationTab } from '@/stores/config.store';
 
 import { getApiUrl } from './hosts';
+import { fetchStreamedImage } from './image';
 
 export interface ScreenshotParams {
   resize?: boolean;
@@ -23,22 +24,18 @@ export const getScreenshot = async (params: ScreenshotParams = {}) => {
   applicationState.set({ isScreenshotLoading: true });
 
   try {
-    const response = (
-      await Axios.get(`${await getApiUrl()}/application/screenshot`, {
-        params: {
-          resize: params.resize ?? true,
-          quality: params.quality ?? 70,
-          scale: params.scale ?? 0.5,
-          /* stream must stay false so the endpoint returns a base64 body in
-             Response instead of streaming raw image bytes */
-          stream: false,
-          ...(params.size ? { size: params.size } : {}),
-        },
-      })
-    ).data;
+    const screenshot = await fetchStreamedImage(
+      `${await getApiUrl()}/application/screenshot`,
+      {
+        resize: params.resize ?? true,
+        quality: params.quality ?? 70,
+        scale: params.scale ?? 0.5,
+        ...(params.size ? { size: params.size } : {}),
+      },
+    );
 
-    applicationState.set({ screenshot: response.Response });
-    return response.Response;
+    applicationState.set({ screenshot });
+    return screenshot;
   } catch (e) {
     console.log('Error getting application screenshot', e);
   } finally {

@@ -9,6 +9,7 @@ import {
   API_SEQUENCE_STOP,
 } from './constants';
 import { getApiUrl } from './hosts';
+import { getImageByIndex } from './image';
 
 export const getSequenceState = async () => {
   const sequenceState = useSequenceStore.getState();
@@ -107,46 +108,6 @@ export const setSequenceTarget = async (
       message: 'Target could not be added to Sequence',
       type: 'error',
     });
-  }
-};
-
-export const getFullImageByIndex = async (index: number) => {
-  try {
-    const response = (
-      await Axios.get(
-        `${await getApiUrl()}/image/${index}?autoPrepare=true&quality=90&scale=0.7`,
-      )
-    ).data;
-
-    if (response.Response && response.StatusCode === 200) {
-      return response.Response;
-    }
-
-    return null;
-  } catch (e) {
-    console.log('Error getting sequence', e);
-
-    return null;
-  }
-};
-
-export const getImageByIndex = async (index: number) => {
-  try {
-    const response = (
-      await Axios.get(
-        `${await getApiUrl()}/image/${index}?resize=true&autoPrepare=true&quality=40&scale=0.3`,
-      )
-    ).data;
-
-    if (response.Response && response.StatusCode === 200) {
-      return response.Response;
-    }
-
-    return null;
-  } catch (e) {
-    console.log('Error getting sequence', e);
-
-    return null;
   }
 };
 

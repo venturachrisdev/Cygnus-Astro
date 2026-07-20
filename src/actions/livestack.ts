@@ -3,6 +3,7 @@ import Axios from 'axios';
 import { useLivestackStore } from '@/stores/livestack.store';
 
 import { getApiUrl } from './hosts';
+import { fetchStreamedImage } from './image';
 
 export const getLivestackStatus = async () => {
   const livestackState = useLivestackStore.getState();
@@ -73,19 +74,14 @@ export const getLivestackImage = async (target: string, filter: string) => {
   const livestackState = useLivestackStore.getState();
 
   try {
-    const response = (
-      await Axios.get(
-        `${await getApiUrl()}/livestack/image/${target}/${filter}?resize=true&quality=90&scale=0.7`,
-      )
-    ).data;
+    const image = await fetchStreamedImage(
+      `${await getApiUrl()}/livestack/image/${target}/${filter}`,
+      { resize: true, quality: 90, scale: 0.7 },
+    );
 
-    if (response.Response && response.StatusCode === 200) {
-      livestackState.set({ currentImage: response.Response });
+    livestackState.set({ currentImage: image });
 
-      return response.Response;
-    }
-
-    return null;
+    return image;
   } catch (e) {
     console.log('Error getting live stack image', e);
 

@@ -32,21 +32,42 @@ beforeEach(() => {
 });
 
 describe('getScreenshot', () => {
-  it('requests a non-streamed screenshot and stores the base64 body', async () => {
-    mockedGet.mockResolvedValueOnce({ data: { Response: 'base64image' } });
+  const toArrayBuffer = (text: string): ArrayBuffer => {
+    const bytes = new Uint8Array(text.length);
+    for (let i = 0; i < text.length; i += 1) {
+      bytes[i] = text.charCodeAt(i);
+    }
+    return bytes.buffer;
+  };
+
+  it('streams the screenshot and stores the base64 body', async () => {
+    mockedGet.mockResolvedValueOnce({
+      data: toArrayBuffer('hi'),
+      headers: { 'content-type': 'image/jpeg' },
+    });
 
     const result = await getScreenshot();
 
     expect(mockedGet).toHaveBeenCalledWith(
       'http://nina.test/v2/api/application/screenshot',
-      { params: { resize: true, quality: 70, scale: 0.5, stream: false } },
+      {
+        params: { resize: true, quality: 70, scale: 0.5, stream: true },
+        responseType: 'arraybuffer',
+      },
     );
-    expect(useApplicationStore.getState().screenshot).toBe('base64image');
+    expect(useApplicationStore.getState().screenshot).toBe(
+      Buffer.from('hi').toString('base64'),
+    );
     expect(useApplicationStore.getState().isScreenshotLoading).toBe(false);
-    expect(result).toBe('base64image');
+    expect(result).toBe(Buffer.from('hi').toString('base64'));
   });
 
   it('forwards custom params including size', async () => {
+    mockedGet.mockResolvedValueOnce({
+      data: toArrayBuffer('hi'),
+      headers: { 'content-type': 'image/jpeg' },
+    });
+
     await getScreenshot({
       resize: true,
       quality: 90,
@@ -61,9 +82,10 @@ describe('getScreenshot', () => {
           resize: true,
           quality: 90,
           scale: 0,
-          stream: false,
           size: '800x600',
+          stream: true,
         },
+        responseType: 'arraybuffer',
       },
     );
   });

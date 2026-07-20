@@ -23,16 +23,13 @@ import {
 } from '@/actions/focuser';
 import { getGuiderInfo, getGuidingGraph } from '@/actions/guider';
 import { getCurrentProfile } from '@/actions/hosts';
+import { getFullImageByIndex } from '@/actions/image';
 import {
   getMountInfo,
   initializeMountSocket,
   sendMountEvent,
 } from '@/actions/mount';
-import {
-  getFullImageByIndex,
-  getImageHistory,
-  getSequenceState,
-} from '@/actions/sequence';
+import { getImageHistory, getSequenceState } from '@/actions/sequence';
 import { CameraBarToggle } from '@/components/capture/CameraBarToggle';
 import { CameraControl } from '@/components/capture/CameraControl';
 import {

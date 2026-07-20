@@ -12,7 +12,8 @@ import {
   View,
 } from 'react-native';
 
-import { getFullImageByIndex, getImageHistory } from '@/actions/sequence';
+import { getFullImageByIndex } from '@/actions/image';
+import { getImageHistory } from '@/actions/sequence';
 import { CameraImage } from '@/components/capture/CameraImage';
 import { ZoomableCameraImage } from '@/components/capture/ZoomableCameraImage';
 import { CustomButton } from '@/components/CustomButton';
