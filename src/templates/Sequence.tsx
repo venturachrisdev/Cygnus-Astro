@@ -84,7 +84,8 @@ export const Sequence = () => {
               color="transparent"
               label="Load"
               icon="folder-open-outline"
-              iconSize={24}
+              iconSize={18}
+              textSize="medium"
               reverse
             />
             <CustomButton
