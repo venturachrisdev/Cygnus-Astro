@@ -125,6 +125,15 @@ export const disconnectGuider = async () => {
   }
 };
 
+export const clearGuiderCalibration = async () => {
+  try {
+    await Axios.get(`${await getApiUrl()}/equipment/guider/clear-calibration`);
+    await getGuiderInfo();
+  } catch (e) {
+    console.log('Error getting guider', e);
+  }
+};
+
 export const startGuiding = async (calibrate: boolean = false) => {
   try {
     await Axios.get(

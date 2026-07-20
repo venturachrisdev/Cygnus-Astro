@@ -3,6 +3,7 @@ import { Dimensions, ScrollView, Switch, Text, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
 import {
+  clearGuiderCalibration,
   connectGuider,
   disconnectGuider,
   getGuiderInfo,
@@ -126,6 +127,15 @@ export const Guider = () => {
             color="red"
           />
         )}
+      </View>
+
+      <View className="mb-8">
+        <CustomButton
+          disabled={!guiderState.isConnected || !configState.isConnected}
+          onPress={() => clearGuiderCalibration()}
+          label="Clear Calibration"
+          color="neutral"
+        />
       </View>
 
       <Text className="mb-8 text-lg font-semibold text-white">
