@@ -107,6 +107,7 @@ export const Sequence = () => {
 
             return (
               <SequenceContainer
+                key={sequence.Name}
                 container={sequence}
                 hourDate={hourDate}
                 latitude={configState.config.astrometry.latitude}
