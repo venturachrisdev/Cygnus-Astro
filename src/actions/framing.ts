@@ -26,6 +26,60 @@ export const setFramingCoordinates = async (
   }
 };
 
+export const FRAMING_COMPLETION_IDLE_TICKS = 20;
+
+export interface FramingCompletionTracker {
+  sawActivity: boolean;
+  idleTicks: number;
+}
+
+export const initialFramingCompletionTracker: FramingCompletionTracker = {
+  sawActivity: false,
+  idleTicks: 0,
+};
+
+/* Poll-based completion for framing/centering. NINA's waitForResult HTTP call
+   can hang well past the visible end of the operation, so completion is instead
+   inferred from mount/camera activity: once the rig has gone idle for
+   FRAMING_COMPLETION_IDLE_TICKS consecutive polls after activity was seen, the
+   op is treated as done. The idle window absorbs the settle time and plate-solve
+   compute gaps that occur between centering iterations. */
+export const advanceFramingCompletion = (
+  tracker: FramingCompletionTracker,
+  isBusy: boolean,
+): { tracker: FramingCompletionTracker; complete: boolean } => {
+  if (isBusy) {
+    return { tracker: { sawActivity: true, idleTicks: 0 }, complete: false };
+  }
+
+  if (!tracker.sawActivity) {
+    return { tracker, complete: false };
+  }
+
+  const idleTicks = tracker.idleTicks + 1;
+  return {
+    tracker: { sawActivity: true, idleTicks },
+    complete: idleTicks >= FRAMING_COMPLETION_IDLE_TICKS,
+  };
+};
+
+export const framingStatusLabel = (args: {
+  didPlatesolveFail: boolean;
+  isSlewing: boolean;
+  isExposing: boolean;
+}): string => {
+  if (args.didPlatesolveFail) {
+    return 'Platesolve failed. Retrying...';
+  }
+  if (args.isSlewing) {
+    return 'Slewing to target...';
+  }
+  if (args.isExposing) {
+    return 'Exposing...';
+  }
+  return 'Framing...';
+};
+
 export const framingSlew = async (
   center: boolean = false,
   waitForResult: boolean = false,
@@ -51,6 +105,13 @@ export const framingSlew = async (
     });
   } catch (e) {
     console.log('Error setting framing', e);
+
+    /* Poll-based completion may have already ended the operation - the
+       waitForResult request can time out after framing visibly finished. Only
+       surface a failure if the op is still considered running. */
+    if (!useNGCStore.getState().isRunning) {
+      return;
+    }
 
     ngcState.set({
       isRunning: false,

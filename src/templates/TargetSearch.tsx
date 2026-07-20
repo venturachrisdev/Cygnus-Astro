@@ -15,7 +15,10 @@ import { LineChart } from 'react-native-gifted-charts';
 import { abortCaptureImage, getCameraInfo } from '@/actions/camera';
 import type { Device } from '@/actions/constants';
 import {
+  advanceFramingCompletion,
   framingSlew,
+  framingStatusLabel,
+  initialFramingCompletionTracker,
   setFramingCoordinates,
   setFramingSource,
 } from '@/actions/framing';
@@ -57,7 +60,7 @@ export const TargetSearch = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [debounceID, setDebounceID] = useState<NodeJS.Timer>();
   const [didPlatesolveFail, setDidPlatesolveFail] = useState<boolean>(false);
-  const [canShowFramingModal, setCanShowFramingModal] = useState<boolean>(true);
+  const [showFramingModal, setShowFramingModal] = useState<boolean>(true);
   const [newListName, setNewListName] = useState<string>();
   const [showFavoritesModal, setShowFavoritesModal] = useState<boolean>(false);
   const [showListsDropDown, setShowListsDropdown] = useState<boolean>(false);
@@ -65,6 +68,8 @@ export const TargetSearch = () => {
     name: ALL_TARGETS_LIST_NAME,
     id: ALL_TARGETS_LIST_NAME,
   });
+
+  const framingCompletionRef = useRef(initialFramingCompletionTracker);
 
   const spinValue = useRef(new Animated.Value(0)).current;
   const spin = spinValue.interpolate({
@@ -116,10 +121,30 @@ export const TargetSearch = () => {
       }),
     ).start();
 
-    const interval = setInterval((_) => {
+    const interval = setInterval(() => {
       if (useConfigStore.getState().isConnected) {
         getMountInfo();
         getCameraInfo();
+      }
+
+      const ngc = useNGCStore.getState();
+      if (!ngc.isRunning) {
+        framingCompletionRef.current = initialFramingCompletionTracker;
+        return;
+      }
+
+      const isBusy =
+        useMountStore.getState().isSlewing ||
+        useCameraStore.getState().isExposing;
+      const { tracker, complete } = advanceFramingCompletion(
+        framingCompletionRef.current,
+        isBusy,
+      );
+      framingCompletionRef.current = tracker;
+
+      if (complete) {
+        ngc.set({ isRunning: false });
+        framingCompletionRef.current = initialFramingCompletionTracker;
       }
     }, 1000);
 
@@ -141,10 +166,12 @@ export const TargetSearch = () => {
         true,
       );
 
+      framingCompletionRef.current = initialFramingCompletionTracker;
+      setShowFramingModal(true);
+
       await setFramingSource();
       await setFramingCoordinates(raInDegrees, decInDegrees);
       await framingSlew(center, true);
-      setCanShowFramingModal(true);
     }
   };
 
@@ -348,7 +375,7 @@ export const TargetSearch = () => {
       </Modal>
 
       <Modal
-        visible={ngcState.isRunning && canShowFramingModal}
+        visible={ngcState.isRunning && showFramingModal}
         transparent
         supportedOrientations={['landscape']}
       >
@@ -416,9 +443,9 @@ export const TargetSearch = () => {
               </View>
               <View className="h-12 flex-1">
                 <CustomButton
-                  label="Close"
+                  label="Minimize"
                   color="transparent"
-                  onPress={() => setCanShowFramingModal(false)}
+                  onPress={() => setShowFramingModal(false)}
                 />
               </View>
             </View>
@@ -650,6 +677,35 @@ export const TargetSearch = () => {
             label="Set as target"
           />
         </View>
+      )}
+
+      {ngcState.isRunning && !showFramingModal && (
+        <Pressable
+          onPress={() => setShowFramingModal(true)}
+          className="absolute bottom-0 w-full flex-row items-center justify-between bg-neutral-800 px-5 py-3"
+        >
+          <View className="flex flex-row items-center">
+            {didPlatesolveFail ? (
+              <Icon name="information-outline" size={18} color="#a71914" />
+            ) : (
+              <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                <Icon name="loading" size={16} color="white" />
+              </Animated.View>
+            )}
+            <Text
+              className={`ml-3 text-base ${
+                didPlatesolveFail ? 'text-red-600' : 'text-white'
+              }`}
+            >
+              {framingStatusLabel({
+                didPlatesolveFail,
+                isSlewing: mountState.isSlewing,
+                isExposing: cameraState.isExposing,
+              })}
+            </Text>
+          </View>
+          <Text className="text-sm text-neutral-400">Tap to expand</Text>
+        </Pressable>
       )}
     </>
   );
