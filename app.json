@@ -2,7 +2,7 @@
   "expo": {
     "name": "Cygnus Astro",
     "slug": "cygnus",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -57,7 +57,6 @@
       "@config-plugins/detox",
       "expo-router",
       "./plugins/trust-lan.js",
-      "./plugins/ios/withFmtFix.js",
       [
         "@sentry/react-native/expo",
         {
