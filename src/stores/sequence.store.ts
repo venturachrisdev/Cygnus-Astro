@@ -15,6 +15,7 @@ interface SequenceStore {
   isLoadingImages: boolean;
   images: ImageDetails[];
   sequence: any[];
+  availableSequences: string[];
 
   set: (options: Partial<SequenceStore>) => void;
 }
@@ -24,6 +25,7 @@ export const useSequenceStore = create<SequenceStore>((set) => ({
   isLoadingImages: false,
   images: [],
   sequence: [],
+  availableSequences: [],
 
   set: (options) => set({ ...options }),
 }));

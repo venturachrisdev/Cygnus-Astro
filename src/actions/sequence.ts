@@ -111,6 +111,80 @@ export const setSequenceTarget = async (
   }
 };
 
+export const listAvailableSequences = async () => {
+  const sequenceState = useSequenceStore.getState();
+
+  try {
+    const response = (
+      await Axios.get(`${await getApiUrl()}/sequence/list-available`)
+    ).data;
+
+    if (Array.isArray(response.Response)) {
+      sequenceState.set({ availableSequences: response.Response });
+    }
+
+    return response.Response;
+  } catch (e) {
+    console.log('Error getting sequence', e);
+    return undefined;
+  }
+};
+
+export const loadSequence = async (sequenceName: string) => {
+  const alertState = useAlertsStore.getState();
+
+  try {
+    const response = (
+      await Axios.get(`${await getApiUrl()}/sequence/load`, {
+        params: { sequenceName },
+      })
+    ).data;
+
+    /* HTTP status is always 200, even on error - the plugin reports failures via the response body */
+    if (response.Error) {
+      alertState.set({ message: response.Error, type: 'error' });
+      return;
+    }
+
+    await getSequenceState();
+    alertState.set({
+      message: 'Sequence loaded successfully!',
+      type: 'success',
+    });
+  } catch (e) {
+    console.log('Error getting sequence', e);
+    alertState.set({ message: 'Sequence could not be loaded', type: 'error' });
+  }
+};
+
+export const skipSequence = async (
+  type: 'CurrentItems' | 'ToEnd' | 'ToImaging',
+) => {
+  const alertState = useAlertsStore.getState();
+
+  try {
+    const response = (
+      await Axios.get(`${await getApiUrl()}/sequence/skip`, {
+        params: { type },
+      })
+    ).data;
+
+    if (response.Error) {
+      alertState.set({ message: response.Error, type: 'error' });
+      return;
+    }
+
+    await getSequenceState();
+    alertState.set({ message: 'Sequence step skipped', type: 'success' });
+  } catch (e) {
+    console.log('Error getting sequence', e);
+    alertState.set({
+      message: 'Sequence step could not be skipped',
+      type: 'error',
+    });
+  }
+};
+
 export const getImageHistory = async (
   queryThumbnails: boolean = true,
   autoSave: boolean = true,

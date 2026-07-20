@@ -1,11 +1,22 @@
 /* eslint-disable no-underscore-dangle */
 import { useRouter } from 'expo-router';
-import { useEffect, useRef } from 'react';
-import { Animated, Easing, ScrollView, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 
 import {
   getSequenceState,
+  listAvailableSequences,
+  loadSequence,
   resetSequence,
+  skipSequence,
   startSequence,
   stopSequence,
 } from '@/actions/sequence';
@@ -19,6 +30,7 @@ export const Sequence = () => {
   const sequenceState = useSequenceStore();
   const configState = useConfigStore();
   const router = useRouter();
+  const [showLoadSequenceModal, setShowLoadSequenceModal] = useState(false);
   const spinValue = useRef(new Animated.Value(0)).current;
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
@@ -62,7 +74,19 @@ export const Sequence = () => {
       >
         <View className="flex w-full flex-row items-center justify-between pt-2">
           <Text className="text-xl font-semibold text-white">Sequence</Text>
-          <View>
+          <View className="flex flex-row items-center gap-x-3">
+            <CustomButton
+              onPress={() => {
+                setShowLoadSequenceModal(true);
+                listAvailableSequences();
+              }}
+              disabled={!configState.isConnected}
+              color="transparent"
+              label="Load"
+              icon="folder-open-outline"
+              iconSize={24}
+              reverse
+            />
             <CustomButton
               onPress={() => router.push('/target-search')}
               color="transparent"
@@ -130,7 +154,61 @@ export const Sequence = () => {
             icon="stop"
           />
         )}
+
+        <CircleButton
+          disabled={!sequenceState.isRunning}
+          onPress={() => skipSequence('CurrentItems')}
+          color="yellow"
+          icon="skip-next"
+        />
       </View>
+
+      <Modal
+        visible={showLoadSequenceModal}
+        transparent
+        supportedOrientations={['landscape']}
+      >
+        <View className="absolute h-full w-full bg-black opacity-90">
+          <View className="flex flex-1 items-center justify-center">
+            <View className="flex max-h-[80%] w-96 rounded-lg bg-neutral-900 p-5">
+              <View className="flex w-full flex-row items-center justify-between">
+                <Text className="text-lg font-semibold text-white">
+                  Load Sequence
+                </Text>
+                <CustomButton
+                  onPress={() => setShowLoadSequenceModal(false)}
+                  color="transparent"
+                  icon="close"
+                  iconSize={20}
+                />
+              </View>
+
+              {sequenceState.availableSequences.length === 0 && (
+                <Text className="mt-6 text-center text-gray-600">
+                  No saved sequences found.
+                </Text>
+              )}
+
+              {sequenceState.availableSequences.length > 0 && (
+                <ScrollView className="mt-4">
+                  {sequenceState.availableSequences.map((name) => (
+                    <Pressable
+                      key={name}
+                      onPress={async () => {
+                        await loadSequence(name);
+                        setShowLoadSequenceModal(false);
+                      }}
+                      className="px-3 py-4"
+                    >
+                      <Text className="font-medium text-white">{name}</Text>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              )}
+            </View>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
