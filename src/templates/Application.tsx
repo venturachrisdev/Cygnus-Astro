@@ -1,11 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { getLogs, getNinaVersion, getScreenshot } from '@/actions/application';
+import {
+  getCurrentApplicationTab,
+  switchApplicationTab,
+} from '@/actions/hosts';
 import { ZoomableCameraImage } from '@/components/capture/ZoomableCameraImage';
 import { CustomButton } from '@/components/CustomButton';
 import { useApplicationStore } from '@/stores/application.store';
-import { useConfigStore } from '@/stores/config.store';
+import { ApplicationTab, useConfigStore } from '@/stores/config.store';
+
+const TAB_LABELS: Record<ApplicationTab, string> = {
+  [ApplicationTab.EQUIPMENT]: 'Equipment',
+  [ApplicationTab.SKY_ATLAS]: 'Sky Atlas',
+  [ApplicationTab.FRAMING]: 'Framing',
+  [ApplicationTab.FLAT_WIZARD]: 'Flat Wizard',
+  [ApplicationTab.SEQUENCER]: 'Sequencer',
+  [ApplicationTab.IMAGING]: 'Imaging',
+  [ApplicationTab.OPTIONS]: 'Options',
+};
 
 const LOG_LEVEL_COLOR: Record<string, string> = {
   ERROR: 'text-red-400',
@@ -17,13 +31,20 @@ const LOG_LEVEL_COLOR: Record<string, string> = {
 export const Application = () => {
   const applicationState = useApplicationStore();
   const configState = useConfigStore();
+  const [currentTab, setCurrentTab] = useState<ApplicationTab | null>(null);
 
   useEffect(() => {
     if (useConfigStore.getState().isConnected) {
       getNinaVersion();
       getLogs();
+      getCurrentApplicationTab().then(setCurrentTab);
     }
   }, []);
+
+  const switchTab = async (tab: ApplicationTab) => {
+    await switchApplicationTab(tab);
+    setCurrentTab(tab);
+  };
 
   const { isConnected } = configState;
 
@@ -61,6 +82,24 @@ export const Application = () => {
             label="Take Screenshot"
           />
         </View>
+      </View>
+
+      {/* Switching the N.I.N.A. tab then taking a screenshot lets the user
+          inspect a specific PC screen remotely, which is why this pairs with
+          the screenshot control above. */}
+      <Text className="mb-2 mt-4 font-medium text-white">Active Tab</Text>
+      <View className="flex flex-row flex-wrap gap-2">
+        {Object.values(ApplicationTab).map((tab) => (
+          <View key={tab} className="w-40">
+            <CustomButton
+              disabled={!isConnected}
+              color={currentTab === tab ? 'green' : 'neutral'}
+              textSize="medium"
+              onPress={() => switchTab(tab)}
+              label={TAB_LABELS[tab]}
+            />
+          </View>
+        ))}
       </View>
 
       <View className="mb-2 mt-4 flex flex-row items-center justify-between">

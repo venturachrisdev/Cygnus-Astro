@@ -19,9 +19,11 @@ jest.mock('@/services/web-socket.service', () => ({
 }));
 
 jest.mock('expo-notifications', () => ({
-  requestPermissionsAsync: jest.fn(),
+  requestPermissionsAsync: jest.fn().mockResolvedValue({ granted: true }),
   scheduleNotificationAsync: jest.fn(),
   setNotificationHandler: jest.fn(),
+  setNotificationChannelAsync: jest.fn().mockResolvedValue(undefined),
+  AndroidImportance: { HIGH: 4 },
 }));
 
 jest.mock('axios');
@@ -59,8 +61,8 @@ beforeEach(() => {
 });
 
 describe('activity events socket lifecycle', () => {
-  it('connects to the events socket and requests notification permissions', () => {
-    initializeActivityEventsSocket();
+  it('connects to the events socket and requests notification permissions', async () => {
+    await initializeActivityEventsSocket();
 
     expect(activitySocket.connect).toHaveBeenCalledWith(
       '/v2/socket',

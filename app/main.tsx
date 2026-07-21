@@ -220,7 +220,14 @@ export default function Layout() {
             />
           </ScrollView>
         </View>
-        <View className="flex h-full flex-1 flex-row justify-end">
+        {/* collapsable={false} keeps a real native backing view so Fabric does
+            not flatten this wrapper; without it, swapping the conditionally
+            rendered tab child under a flattened parent leaves the new subtree
+            unpainted until a remount. */}
+        <View
+          collapsable={false}
+          className="flex h-full flex-1 flex-row justify-end"
+        >
           {currentTab === 'activity' && <Activity />}
           {currentTab === 'capture' && <Capture />}
           {currentTab === 'accessories' && <Accessories />}

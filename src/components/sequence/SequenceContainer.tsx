@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key -- sequence steps have no unique id
+   and can share Name; the list order is stable, so Name+index is the safest key. */
 import { View } from 'react-native';
 
 import { filterOutEmptyStep } from '@/helpers/sequence';
@@ -37,7 +39,7 @@ export const SequenceContainer = ({
         container.Name &&
         container.Name !== 'Take Many Exposures_Container' &&
         container.Name !== 'Smart Exposure_Container' && (
-          <View key={index} className="my-1 rounded-lg">
+          <View key={index} collapsable={false} className="my-1 rounded-lg">
             {!!container.Target && (
               <SequenceTarget
                 container={container}
@@ -49,10 +51,11 @@ export const SequenceContainer = ({
             {container.Triggers?.filter(filterOutEmptyStep).length > 0 && (
               <View className="p-2">
                 <SequenceHeader icon="weather-lightning" title="Triggers" />
-                <View className="ml-2">
+                <View collapsable={false} className="ml-2">
                   {container.Triggers?.filter(filterOutEmptyStep).map(
                     (item: any, idx: number) => (
                       <SequenceContainer
+                        key={`${item.Name}-${idx}`}
                         container={item}
                         hourDate={hourDate}
                         latitude={latitude}
@@ -69,10 +72,11 @@ export const SequenceContainer = ({
               container.Name !== 'Take Many Exposures_Container' && (
                 <View className="p-2">
                   <SequenceHeader icon="rotate-right" title="Loop Conditions" />
-                  <View className="ml-2">
+                  <View collapsable={false} className="ml-2">
                     {container.Conditions?.filter(filterOutEmptyStep).map(
                       (item: any, idx: number) => (
                         <SequenceContainer
+                          key={`${item.Name}-${idx}`}
                           container={item}
                           hourDate={hourDate}
                           latitude={latitude}
@@ -89,10 +93,11 @@ export const SequenceContainer = ({
               container.Name !== 'Take Many Exposures_Container' && (
                 <View className="p-2">
                   <SequenceHeader icon="chevron-right" title={container.Name} />
-                  <View className="ml-2">
+                  <View collapsable={false} className="ml-2">
                     {container.Items?.filter(filterOutEmptyStep).map(
                       (item: any, idx: number) => (
                         <SequenceContainer
+                          key={`${item.Name}-${idx}`}
                           container={item}
                           hourDate={hourDate}
                           latitude={latitude}

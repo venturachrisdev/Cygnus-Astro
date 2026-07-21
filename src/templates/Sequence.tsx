@@ -99,7 +99,10 @@ export const Sequence = () => {
           </View>
         </View>
 
-        <View>
+        {/* collapsable={false}: this wrapper hosts the sequence list that
+            re-renders on the 1s poll; without a real native view Fabric
+            flattens it and the swapped children stop painting. */}
+        <View collapsable={false}>
           {sequenceState.sequence.map((sequence: any, idx: number) => {
             if (!sequence.Status || !sequence.Name) {
               return null;

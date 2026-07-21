@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 
 import { WebSocketService } from '@/services/web-socket.service';
 import type { ActivityEvent } from '@/stores/events.store';
@@ -77,9 +78,22 @@ export const handleActivityEvent = (message: any) => {
   }
 };
 
-export const initializeActivityEventsSocket = () => {
-  Notifications.requestPermissionsAsync();
+export const initializeActivityEventsSocket = async () => {
   activityEventsSocket.connect('/v2/socket', handleActivityEvent);
+
+  try {
+    const { granted } = await Notifications.requestPermissionsAsync();
+
+    /* Android 8+ drops notifications that are not posted to a channel. */
+    if (granted && Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'N.I.N.A. activity',
+        importance: Notifications.AndroidImportance.HIGH,
+      });
+    }
+  } catch (e) {
+    console.log('Error setting up notifications', e);
+  }
 };
 
 export const disconnectActivityEventsSocket = () => {
