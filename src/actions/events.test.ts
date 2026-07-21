@@ -117,12 +117,15 @@ describe('handleActivityEvent', () => {
 
 describe('fetchEventHistory', () => {
   it('maps the response array into the store, newest first', async () => {
+    /* The plugin serializes Time as an ISO date string, not an epoch
+       number - these fixtures mirror that so the sort is exercised
+       against the real shape of the data. */
     mockedGet.mockResolvedValueOnce({
       data: {
         Response: [
-          { Event: 'MOUNT-CONNECTED', Time: 100 },
-          { Event: 'IMAGE-SAVE', Time: 300 },
-          { Event: 'GUIDER-START', Time: 200 },
+          { Event: 'MOUNT-CONNECTED', Time: '2026-07-20T21:00:00' },
+          { Event: 'IMAGE-SAVE', Time: '2026-07-20T21:02:00' },
+          { Event: 'GUIDER-START', Time: '2026-07-20T21:01:00' },
         ],
       },
     });

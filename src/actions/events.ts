@@ -96,7 +96,8 @@ export const fetchEventHistory = async () => {
         id: `${item.Time}-${item.Event}-${Math.random()}`,
         event: item.Event,
         label: getEventLabel(item.Event),
-        time: item.Time,
+        /* the plugin serializes Time as an ISO date string, not an epoch number */
+        time: new Date(item.Time).getTime(),
       }),
     );
 
